@@ -176,24 +176,6 @@ h3 {
   overflow: visible;
 }
 
-.hero-visual::before {
-  position: absolute;
-  inset: 8% 2%;
-  border: 1px solid rgba(214, 208, 198, 0.15);
-  border-radius: 8px;
-  background:
-    radial-gradient(circle at 42% 68%, rgba(241, 143, 31, 0.12), transparent 13rem),
-    linear-gradient(135deg, rgba(214, 208, 198, 0.045), rgba(241, 143, 31, 0.035)),
-    linear-gradient(90deg, rgba(214, 208, 198, 0.045) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(214, 208, 198, 0.045) 1px, transparent 1px),
-    rgba(5, 5, 5, 0.9);
-  background-size: auto, auto, 54px 54px, 54px 54px, auto;
-  box-shadow:
-    inset 0 1px 0 rgba(245, 240, 232, 0.08),
-    0 34px 80px rgba(0, 0, 0, 0.5);
-  content: "";
-}
-
 .hero-visual img {
   position: relative;
   z-index: 1;
@@ -281,10 +263,6 @@ h3 {
 
 .page-hero .hero-visual {
   min-height: clamp(300px, 32vw, 460px);
-}
-
-.page-hero .hero-visual::before {
-  inset: 12% 0 8% 8%;
 }
 
 .page-hero .hero-visual img {
@@ -539,10 +517,6 @@ h3 {
 
   .hero-visual {
     min-height: 240px;
-  }
-
-  .hero-visual::before {
-    inset: 12% 0;
   }
 
   .brand-link img {
