@@ -1,0 +1,24 @@
+.DS_Store
+Thumbs.db
+
+# Editor and OS metadata
+.idea/
+.vscode/
+*.swp
+*.swo
+.local-server.log
+.local-server.pid
+
+# Local dependency/build folders if the static site grows later
+node_modules/
+dist/
+build/
+.cache/
+
+# Environment files
+.env
+.env.*
+
+# Local source logo exports; served copies live in rmxy-1/assets/
+RMXY1-Logo/
+RM_logo.png
