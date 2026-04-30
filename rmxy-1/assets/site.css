@@ -1,15 +1,15 @@
 :root {
   color-scheme: dark;
-  --bg: #050505;
-  --paper: #0d0d0c;
+  --bg: #030303;
+  --paper: #0b0b0a;
   --paper-soft: #141311;
-  --ink: #f4f0e8;
-  --muted: #b5afa5;
-  --line: rgba(244, 240, 232, 0.13);
-  --accent: #d76a45;
-  --accent-dark: #f0b17d;
-  --green: #78c4a2;
-  --blue: #9eb7da;
+  --ink: #f5f0e8;
+  --muted: #bab2a8;
+  --line: rgba(232, 224, 212, 0.15);
+  --accent: #d86f28;
+  --accent-dark: #f6a83d;
+  --accent-soft: #3a2114;
+  --steel: #8d8a84;
   --shadow: 0 24px 70px rgba(0, 0, 0, 0.46);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -21,6 +21,7 @@
 html {
   min-height: 100%;
   background: var(--bg);
+  overflow-x: hidden;
 }
 
 body {
@@ -28,10 +29,11 @@ body {
   margin: 0;
   color: var(--ink);
   background:
-    radial-gradient(circle at 82% 18%, rgba(120, 196, 162, 0.1), transparent 28rem),
-    radial-gradient(circle at 68% 42%, rgba(215, 106, 69, 0.12), transparent 26rem),
-    linear-gradient(180deg, #12110f 0, #060606 44rem, #050505 100%),
+    radial-gradient(circle at 78% 36%, rgba(216, 111, 40, 0.1), transparent 31rem),
+    radial-gradient(circle at 18% 78%, rgba(141, 138, 132, 0.11), transparent 30rem),
+    linear-gradient(180deg, #12110f 0, #050505 38rem, #030303 100%),
     var(--bg);
+  overflow-x: hidden;
 }
 
 img {
@@ -58,7 +60,7 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 22px 0 30px;
+  padding: 20px 0 24px;
 }
 
 .brand-link {
@@ -105,12 +107,20 @@ a:hover {
   grid-template-columns: minmax(0, 0.94fr) minmax(360px, 0.82fr);
   gap: clamp(36px, 6vw, 84px);
   align-items: center;
-  padding: clamp(36px, 7vh, 72px) 0 58px;
+  padding: clamp(34px, 6vh, 68px) 0 58px;
+}
+
+.hero > *,
+.content-grid > *,
+.policy-layout,
+.section-stack,
+.side-note {
+  min-width: 0;
 }
 
 .eyebrow {
   margin: 0 0 14px;
-  color: var(--green);
+  color: var(--accent-dark);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -129,6 +139,7 @@ h1 {
   max-width: 820px;
   font-size: clamp(4rem, 11vw, 9.2rem);
   font-weight: 850;
+  overflow-wrap: break-word;
 }
 
 h2 {
@@ -168,24 +179,28 @@ h3 {
 .hero-visual::before {
   position: absolute;
   inset: 8% 2%;
-  border: 1px solid rgba(244, 240, 232, 0.12);
-  border-radius: 10px;
+  border: 1px solid rgba(232, 224, 212, 0.16);
+  border-radius: 8px;
   background:
-    linear-gradient(135deg, rgba(215, 106, 69, 0.16), rgba(120, 196, 162, 0.12)),
-    linear-gradient(90deg, rgba(244, 240, 232, 0.05) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(244, 240, 232, 0.05) 1px, transparent 1px),
-    rgba(7, 7, 7, 0.72);
-  background-size: auto, 54px 54px, 54px 54px, auto;
-  box-shadow: 0 34px 80px rgba(0, 0, 0, 0.5);
+    radial-gradient(circle at 42% 68%, rgba(246, 168, 61, 0.18), transparent 14rem),
+    linear-gradient(135deg, rgba(232, 224, 212, 0.08), rgba(216, 111, 40, 0.08)),
+    linear-gradient(90deg, rgba(232, 224, 212, 0.055) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(232, 224, 212, 0.055) 1px, transparent 1px),
+    rgba(7, 7, 7, 0.82);
+  background-size: auto, auto, 54px 54px, 54px 54px, auto;
+  box-shadow:
+    inset 0 1px 0 rgba(245, 240, 232, 0.08),
+    0 34px 80px rgba(0, 0, 0, 0.5);
   content: "";
 }
 
 .hero-visual img {
   position: relative;
   z-index: 1;
-  width: min(78%, 500px);
-  border-radius: 28px;
-  box-shadow: 0 34px 74px rgba(0, 0, 0, 0.62);
+  width: min(80%, 520px);
+  border-radius: 12%;
+  box-shadow: none;
+  filter: drop-shadow(0 34px 62px rgba(0, 0, 0, 0.7));
 }
 
 .status-strip {
@@ -230,7 +245,7 @@ h3 {
 }
 
 .page-main {
-  padding: 52px 0 72px;
+  padding: 42px 0 72px;
 }
 
 .page-heading {
@@ -246,6 +261,40 @@ h3 {
   max-width: 760px;
 }
 
+.page-hero {
+  padding: clamp(32px, 5.5vh, 58px) 0 clamp(42px, 6vw, 68px);
+}
+
+.page-hero h1 {
+  max-width: 760px;
+  font-size: clamp(3.1rem, 7.4vw, 6.6rem);
+}
+
+.page-hero .lede {
+  max-width: 760px;
+  font-size: clamp(1.25rem, 2.2vw, 2rem);
+}
+
+.page-hero .hero-copy {
+  margin-top: 18px;
+}
+
+.page-hero .hero-visual {
+  min-height: clamp(300px, 32vw, 460px);
+}
+
+.page-hero .hero-visual::before {
+  inset: 12% 0 8% 8%;
+}
+
+.page-hero .hero-visual img {
+  width: min(72%, 390px);
+}
+
+.page-content {
+  padding-bottom: 72px;
+}
+
 .section-stack {
   display: grid;
   gap: 28px;
@@ -255,7 +304,8 @@ h3 {
 .support-card {
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(13, 13, 12, 0.88);
+  background:
+    linear-gradient(180deg, rgba(18, 17, 15, 0.94), rgba(8, 8, 7, 0.94));
   box-shadow: 0 14px 42px rgba(0, 0, 0, 0.28);
 }
 
@@ -317,7 +367,8 @@ h3 {
   padding: 24px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(13, 13, 12, 0.94);
+  background:
+    linear-gradient(180deg, rgba(18, 17, 15, 0.96), rgba(8, 8, 7, 0.96));
   box-shadow: 0 14px 42px rgba(0, 0, 0, 0.28);
 }
 
@@ -335,7 +386,7 @@ h3 {
   margin-top: 18px;
   padding: 0 18px;
   border-radius: 6px;
-  background: var(--ink);
+  background: linear-gradient(180deg, #fff5e4, #d8c9b8);
   color: #060606;
   font-weight: 750;
   text-decoration: none;
@@ -375,7 +426,8 @@ h3 {
 .policy-layout {
   display: grid;
   gap: 28px;
-  max-width: 860px;
+  max-width: 940px;
+  padding-bottom: 72px;
 }
 
 .policy-section {
@@ -427,7 +479,8 @@ h3 {
 
 @media (max-width: 820px) {
   .site-shell {
-    width: min(100% - 24px, 680px);
+    width: calc(100% - 24px);
+    max-width: 680px;
   }
 
   .site-header,
@@ -494,6 +547,17 @@ h3 {
 
   .brand-link img {
     width: 152px;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(2.75rem, 12.5vw, 3.35rem);
+  }
+
+  .page-hero > div:first-child,
+  .page-hero .lede,
+  .page-hero .hero-copy {
+    width: 100%;
+    max-width: 21.5rem;
   }
 
   .panel,
