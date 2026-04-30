@@ -1,15 +1,15 @@
 :root {
   color-scheme: dark;
   --bg: #030303;
-  --paper: #0b0b0a;
-  --paper-soft: #141311;
+  --paper: #080808;
+  --paper-soft: #111110;
   --ink: #f5f0e8;
-  --muted: #bab2a8;
-  --line: rgba(232, 224, 212, 0.15);
-  --accent: #d86f28;
-  --accent-dark: #f6a83d;
-  --accent-soft: #3a2114;
-  --steel: #8d8a84;
+  --muted: #b9b3aa;
+  --line: rgba(214, 208, 198, 0.14);
+  --accent: #f18f1f;
+  --accent-dark: #d7d0c4;
+  --accent-soft: #1a120d;
+  --steel: #928f88;
   --shadow: 0 24px 70px rgba(0, 0, 0, 0.46);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -29,9 +29,9 @@ body {
   margin: 0;
   color: var(--ink);
   background:
-    radial-gradient(circle at 78% 36%, rgba(216, 111, 40, 0.1), transparent 31rem),
-    radial-gradient(circle at 18% 78%, rgba(141, 138, 132, 0.11), transparent 30rem),
-    linear-gradient(180deg, #12110f 0, #050505 38rem, #030303 100%),
+    radial-gradient(circle at 74% 58%, rgba(241, 143, 31, 0.045), transparent 34rem),
+    radial-gradient(circle at 34% 0%, rgba(214, 208, 198, 0.035), transparent 28rem),
+    linear-gradient(180deg, #010101 0, #050505 36rem, #030303 100%),
     var(--bg);
   overflow-x: hidden;
 }
@@ -179,14 +179,14 @@ h3 {
 .hero-visual::before {
   position: absolute;
   inset: 8% 2%;
-  border: 1px solid rgba(232, 224, 212, 0.16);
+  border: 1px solid rgba(214, 208, 198, 0.15);
   border-radius: 8px;
   background:
-    radial-gradient(circle at 42% 68%, rgba(246, 168, 61, 0.18), transparent 14rem),
-    linear-gradient(135deg, rgba(232, 224, 212, 0.08), rgba(216, 111, 40, 0.08)),
-    linear-gradient(90deg, rgba(232, 224, 212, 0.055) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(232, 224, 212, 0.055) 1px, transparent 1px),
-    rgba(7, 7, 7, 0.82);
+    radial-gradient(circle at 42% 68%, rgba(241, 143, 31, 0.12), transparent 13rem),
+    linear-gradient(135deg, rgba(214, 208, 198, 0.045), rgba(241, 143, 31, 0.035)),
+    linear-gradient(90deg, rgba(214, 208, 198, 0.045) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(214, 208, 198, 0.045) 1px, transparent 1px),
+    rgba(5, 5, 5, 0.9);
   background-size: auto, auto, 54px 54px, 54px 54px, auto;
   box-shadow:
     inset 0 1px 0 rgba(245, 240, 232, 0.08),

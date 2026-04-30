@@ -44,10 +44,10 @@ Use these final URL paths when the domain is ready:
 
 Use this wording for public App Store privacy/support descriptions:
 
-RMXY-1 uses microphone input in the standalone app for live audio processing. Audio is processed locally on device and is not uploaded, stored on our servers, or shared. The AUv3 extension processes audio provided by the host app.
+RMXY-1 processes audio locally on device. Audio is not uploaded, stored on our servers, or shared. The standalone app does not request microphone access. The AUv3 extension processes audio provided by the host app.
 
 The standalone app does not currently provide background audio. When RMXY-1 is used as an AUv3 extension, audio behavior is controlled by the host app.
 
 ## App Review Notes
 
-RMXY-1 uses microphone input in the standalone app for local live audio processing. The AUv3 extension receives audio from the host app and does not request microphone access directly. RMXY-1 does not upload, collect, or share audio.
+RMXY-1 does not request microphone access in the standalone app. The AUv3 extension receives audio from the host app and does not request microphone access directly. RMXY-1 does not upload, collect, or share audio.
