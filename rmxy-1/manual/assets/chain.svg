@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 317" role="img" aria-labelledby="title desc"><title id="title">FX rail controls</title><desc id="desc">Eight serial slots, power, solo, replace, and the top-right reorder grip.</desc><rect width="900" height="317" rx="8" fill="#090c0f"/><g font-family="-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif"><text x="30" y="38" font-size="18" fill="#eff2f6" text-anchor="start" font-weight="500">FX chain</text><path d="M39,73 H111 L124,86 V153 L115,162 H30 V82 Z" stroke="#444f59" stroke-width="1" fill="#161d23" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(36 79) scale(0.1875)" fill="none" stroke="#c9f427" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"><path  d="M32 9V29" />
+  <path  d="M20.5 18.5C14.7 22.6 11 29.3 11 37C11 48.6 20.4 57 32 57C43.6 57 53 48.6 53 37C53 29.3 49.3 22.6 43.5 18.5" />
+</g><text x="55" y="89" font-size="9" fill="#9fa6ae" text-anchor="start" font-weight="500">S</text><g transform="translate(62.0 98) scale(0.46875)" fill="none" stroke="#eff2f6" stroke-width="4.00481" stroke-linecap="round" stroke-linejoin="round"><g  transform="translate(4.0336 4.0336) scale(0.8739)">
+<path d="M4 20H33C39 20 42 26 45 33C48 41 52 44 58 44H60" />
+  </g>
+</g><g transform="translate(103 139) scale(0.203125)" fill="none" stroke="#9fa6ae" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round"><g  transform="translate(2.0180 2.0180) scale(0.9369)">
+<path d="M24 15H40L50 25V40" />
+  <path d="M42 34L50 42L58 34" />
+  <path d="M40 49H24L14 39V24" />
+  <path d="M22 30L14 22L6 30" />
+  </g>
+</g><path d="M106,79 l9,9 M102,82 l10,10" stroke="#444f59" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="77.0" y="147" font-size="9" fill="#9fa6ae" text-anchor="middle" font-weight="500">FILTER</text><path d="M147,73 H219 L232,86 V153 L223,162 H138 V82 Z" stroke="#444f59" stroke-width="1" fill="#161d23" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(144 79) scale(0.1875)" fill="none" stroke="#c9f427" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"><path  d="M32 9V29" />
+  <path  d="M20.5 18.5C14.7 22.6 11 29.3 11 37C11 48.6 20.4 57 32 57C43.6 57 53 48.6 53 37C53 29.3 49.3 22.6 43.5 18.5" />
+</g><text x="163" y="89" font-size="9" fill="#9fa6ae" text-anchor="start" font-weight="500">S</text><g transform="translate(170.0 98) scale(0.46875)" fill="none" stroke="#eff2f6" stroke-width="2.65865" stroke-linecap="round" stroke-linejoin="round"><g  transform="translate(-10.1266 -10.1266) scale(1.3165)">
+<path d="M14 32V29C14 23 19 20 25 20H44" />
+  <polyline points="38 14 44 20 38 26" />
+  <path d="M50 32V35C50 41 45 44 39 44H20" />
+  <polyline points="26 38 20 44 26 50" />
+  </g>
+</g><g transform="translate(211 139) scale(0.203125)" fill="none" stroke="#9fa6ae" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round"><g  transform="translate(2.0180 2.0180) scale(0.9369)">
+<path d="M24 15H40L50 25V40" />
+  <path d="M42 34L50 42L58 34" />
+  <path d="M40 49H24L14 39V24" />
+  <path d="M22 30L14 22L6 30" />
+  </g>
+</g><path d="M214,79 l9,9 M210,82 l10,10" stroke="#444f59" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="185.0" y="147" font-size="9" fill="#9fa6ae" text-anchor="middle" font-weight="500">DELAY</text><path d="M255,73 H327 L340,86 V153 L331,162 H246 V82 Z" stroke="#444f59" stroke-width="1" fill="#161d23" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(252 79) scale(0.1875)" fill="none" stroke="#c9f427" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"><path  d="M32 9V29" />
+  <path  d="M20.5 18.5C14.7 22.6 11 29.3 11 37C11 48.6 20.4 57 32 57C43.6 57 53 48.6 53 37C53 29.3 49.3 22.6 43.5 18.5" />
+</g><text x="271" y="89" font-size="9" fill="#9fa6ae" text-anchor="start" font-weight="500">S</text><g transform="translate(278.0 98) scale(0.46875)" fill="none" stroke="#eff2f6" stroke-width="3.46635" stroke-linecap="round" stroke-linejoin="round"><g  transform="translate(-0.3107 -0.3107) scale(1.0097)">
+<circle cx="32" cy="32" r="7" /><circle cx="32" cy="32" r="15" /><circle cx="32" cy="32" r="24" />
+  </g>
+</g><g transform="translate(319 139) scale(0.203125)" fill="none" stroke="#9fa6ae" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round"><g  transform="translate(2.0180 2.0180) scale(0.9369)">
+<path d="M24 15H40L50 25V40" />
+  <path d="M42 34L50 42L58 34" />
+  <path d="M40 49H24L14 39V24" />
+  <path d="M22 30L14 22L6 30" />
+  </g>
+</g><path d="M322,79 l9,9 M318,82 l10,10" stroke="#444f59" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="293.0" y="147" font-size="9" fill="#9fa6ae" text-anchor="middle" font-weight="500">REVERB</text><path d="M363,73 H435 L448,86 V153 L439,162 H354 V82 Z" stroke="#444f59" stroke-width="1" fill="#161d23" stroke-linecap="round" stroke-linejoin="round"/><text x="401.0" y="122" font-size="25" fill="#9fa6ae" text-anchor="middle" font-weight="500">+</text><path d="M430,79 l9,9 M426,82 l10,10" stroke="#444f59" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="401.0" y="147" font-size="9" fill="#9fa6ae" text-anchor="middle" font-weight="500">EMPTY</text><path d="M471,73 H543 L556,86 V153 L547,162 H462 V82 Z" stroke="#444f59" stroke-width="1" fill="#161d23" stroke-linecap="round" stroke-linejoin="round"/><text x="509.0" y="122" font-size="25" fill="#9fa6ae" text-anchor="middle" font-weight="500">+</text><path d="M538,79 l9,9 M534,82 l10,10" stroke="#444f59" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="509.0" y="147" font-size="9" fill="#9fa6ae" text-anchor="middle" font-weight="500">EMPTY</text><path d="M579,73 H651 L664,86 V153 L655,162 H570 V82 Z" stroke="#444f59" stroke-width="1" fill="#161d23" stroke-linecap="round" stroke-linejoin="round"/><text x="617.0" y="122" font-size="25" fill="#9fa6ae" text-anchor="middle" font-weight="500">+</text><path d="M646,79 l9,9 M642,82 l10,10" stroke="#444f59" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="617.0" y="147" font-size="9" fill="#9fa6ae" text-anchor="middle" font-weight="500">EMPTY</text><path d="M687,73 H759 L772,86 V153 L763,162 H678 V82 Z" stroke="#444f59" stroke-width="1" fill="#161d23" stroke-linecap="round" stroke-linejoin="round"/><text x="725.0" y="122" font-size="25" fill="#9fa6ae" text-anchor="middle" font-weight="500">+</text><path d="M754,79 l9,9 M750,82 l10,10" stroke="#444f59" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="725.0" y="147" font-size="9" fill="#9fa6ae" text-anchor="middle" font-weight="500">EMPTY</text><path d="M795,73 H867 L880,86 V153 L871,162 H786 V82 Z" stroke="#444f59" stroke-width="1" fill="#161d23" stroke-linecap="round" stroke-linejoin="round"/><text x="833.0" y="122" font-size="25" fill="#9fa6ae" text-anchor="middle" font-weight="500">+</text><path d="M862,79 l9,9 M858,82 l10,10" stroke="#444f59" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="833.0" y="147" font-size="9" fill="#9fa6ae" text-anchor="middle" font-weight="500">EMPTY</text><path d="M35,190 H866" stroke="#9fa6ae" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M858,184 l8,6 l-8,6" stroke="#9fa6ae" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="30" y="220" font-size="14" fill="#9fa6ae" text-anchor="start" font-weight="500">Audio passes through the slots from left to right.</text><g transform="translate(40 263) scale(0.34375)" fill="none" stroke="#c9f427" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"><path  d="M32 9V29" />
+  <path  d="M20.5 18.5C14.7 22.6 11 29.3 11 37C11 48.6 20.4 57 32 57C43.6 57 53 48.6 53 37C53 29.3 49.3 22.6 43.5 18.5" />
+</g><text x="75" y="280" font-size="14" fill="#eff2f6" text-anchor="start" font-weight="500">Power</text><text x="241" y="280" font-size="17" fill="#c9f427" text-anchor="start" font-weight="500">S</text><text x="268" y="280" font-size="14" fill="#eff2f6" text-anchor="start" font-weight="500">Solo</text><g transform="translate(421 263) scale(0.34375)" fill="none" stroke="#9fa6ae" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round"><g  transform="translate(2.0180 2.0180) scale(0.9369)">
+<path d="M24 15H40L50 25V40" />
+  <path d="M42 34L50 42L58 34" />
+  <path d="M40 49H24L14 39V24" />
+  <path d="M22 30L14 22L6 30" />
+  </g>
+</g><text x="457" y="280" font-size="14" fill="#eff2f6" text-anchor="start" font-weight="500">Replace</text><path d="M680,264 l18,18 M674,270 l18,18" stroke="#9fa6ae" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="716" y="280" font-size="14" fill="#eff2f6" text-anchor="start" font-weight="500">Reorder grip</text></g></svg>

@@ -22,3 +22,6 @@ build/
 # Local source logo exports; served copies live in rmxy-1/assets/
 RMXY1-Logo/
 RM_logo.png
+
+# Internal review notes, capture recipes and review boards stay local; GitHub Pages would publish them
+docs/

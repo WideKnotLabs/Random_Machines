@@ -1,115 +1,129 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Support information for RMXY-1, a live audio performance effect surface from Random Machines.">
-    <title>RMXY-1 Support | Random Machines</title>
-    <link rel="icon" href="../assets/favicon.ico">
-    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-    <link rel="stylesheet" href="../assets/site.css">
-  </head>
-  <body>
-    <div class="site-shell">
-      <header class="site-header">
-        <a class="brand-link" href="../" aria-label="RMXY-1 home">
-          <img src="../assets/random-machines-logo-transparent.png" alt="Random Machines">
-        </a>
-        <nav class="nav-links" aria-label="Main navigation">
-          <a href="../">RMXY-1</a>
-          <a href="./">Support</a>
-          <a href="../privacy/">Privacy Policy</a>
-        </nav>
-      </header>
-
-      <main>
-        <section class="hero page-hero" aria-labelledby="support-title">
-          <div>
-            <p class="eyebrow">RMXY-1 Support</p>
-            <h1 id="support-title">RMXY-1<br>Support</h1>
-            <p class="lede">Contact Random Machines for app support, review questions, and privacy questions.</p>
-            <p class="hero-copy">Include your device model, iOS version, RMXY-1 version, and whether you are using standalone mode or AUv3 mode.</p>
-          </div>
-          <div class="hero-visual" aria-label="RMXY-1 app icon">
-            <img src="../assets/rmxy1-logo.png" alt="RMXY-1 app icon">
-          </div>
-        </section>
-
-        <div class="content-grid page-content">
-          <div class="section-stack">
-            <section class="panel" aria-labelledby="contact-title">
-              <h2 id="contact-title">Contact</h2>
-              <p>Email: <a href="mailto:wideknotlabs@gmail.com">wideknotlabs@gmail.com</a></p>
-              <p>Postal address: Huizerweg 47A2, 1401GH Bussum, The Netherlands.</p>
-              <p>Please include your device model, iOS version, RMXY-1 version, and whether you are using standalone mode or AUv3 mode.</p>
-            </section>
-
-            <section class="panel" aria-labelledby="issues-title">
-              <h2 id="issues-title">Common Issues</h2>
-              <div class="support-list">
-                <article class="support-card">
-                  <h3>Standalone mode</h3>
-                  <p>The standalone app does not request microphone access. To process host audio, use RMXY-1 as an AUv3 extension inside a compatible iOS audio host.</p>
-                </article>
-
-                <article class="support-card">
-                  <h3>No sound output</h3>
-                  <p>Check your device volume, audio route, connected headphones or audio interface, and whether the effect is bypassed.</p>
-                </article>
-
-                <article class="support-card">
-                  <h3>AUv3 host issues</h3>
-                  <p>When RMXY-1 is loaded inside another app, the host app controls audio routing, recording, background behavior, and session handling. Check the host app's track, input monitoring, and plugin settings.</p>
-                </article>
-
-                <article class="support-card">
-                  <h3>Background audio</h3>
-                  <p>The standalone app does not currently provide background audio. When RMXY-1 is used as an AUv3 extension, audio behavior is controlled by the host app.</p>
-                </article>
-              </div>
-            </section>
-
-            <section class="panel" aria-labelledby="support-privacy-title">
-              <h2 id="support-privacy-title">Privacy</h2>
-              <p>RMXY-1 processes audio locally on device and does not upload, store, or share audio on our servers. The standalone app does not request microphone access. The AUv3 extension processes audio provided by the host app.</p>
-              <p>RMXY-1 does not include third-party analytics, advertising, or tracking SDKs.</p>
-            </section>
-
-            <section class="panel" aria-labelledby="support-publisher-title">
-              <h2 id="support-publisher-title">Publisher</h2>
-              <p>RMXY-1 is published by Borja Deudero Gracia under the Random Machines name.</p>
-            </section>
-          </div>
-
-          <aside class="side-note" aria-label="Support summary">
-            <div class="contact-block">
-              <h3>Support Email</h3>
-              <p>Use this address for App Review and user support.</p>
-              <a class="button-link" href="mailto:wideknotlabs@gmail.com">wideknotlabs@gmail.com</a>
-            </div>
-            <div class="contact-block">
-              <h3>Legal Contact</h3>
-              <p>Borja Deudero Gracia<br>Huizerweg 47A2<br>1401GH Bussum<br>The Netherlands</p>
-            </div>
-            <div class="contact-block">
-              <h3>Privacy Policy</h3>
-              <p>RMXY-1 does not collect app data from users.</p>
-              <a class="button-link" href="../privacy/">Read privacy policy</a>
-            </div>
-          </aside>
-        </div>
-      </main>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Support — RMXY-1 | Random Machines</title>
+  <meta name="description" content="Help for RMXY-1: contact Random Machines, read the manual, and solve common audio, AUv3 and MIDI issues.">
+  <meta name="theme-color" content="#07090b">
+  <link rel="canonical" href="https://wideknotlabs.github.io/Random_Machines/rmxy-1/support/">
+  <link rel="icon" href="../assets/favicon.ico">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="preload" href="../assets/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <!-- chrome:header -->
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="nav__brand" href="../" aria-label="Random Machines, RMXY-1 home">
+        <img class="nav__logo nav__logo--full" src="../assets/logo/rm-lockup-stacked-on-dark.svg" alt="" width="157" height="40">
+        <img class="nav__logo nav__logo--symbol" src="../assets/logo/rm-symbol-on-dark.svg" alt="" width="40" height="40">
+      </a>
+      <nav class="nav__links" aria-label="Main"><a href="../manual/">Manual</a><a href="../support/" aria-current="page">Support</a></nav>
     </div>
+  </header>
+  <!-- /chrome:header -->
 
-    <footer class="site-footer">
-      <div class="site-shell footer-inner">
-        <p>© 2026 Random Machines. RMXY-1 is published by Borja Deudero Gracia.</p>
-        <nav class="footer-links" aria-label="Footer navigation">
-          <a href="./">Support</a>
-          <a href="../privacy/">Privacy Policy</a>
-          <a href="mailto:wideknotlabs@gmail.com">Contact</a>
-        </nav>
+  <main id="main">
+    <section class="doc-hero">
+      <div class="wrap">
+        <h1 class="h1">Support</h1>
+        <p class="lede">Email for help. Most answers are in the manual.</p>
       </div>
-    </footer>
-  </body>
+    </section>
+
+    <div class="wrap narrow">
+      <dl class="contact">
+        <div><dt>Support and App Review</dt><dd><a href="mailto:wideknotlabs@gmail.com?subject=RMXY-1%20support">wideknotlabs@gmail.com</a><br>Include your device, iOS version, RMXY-1 version, and whether you use standalone or AUv3 (with the host app).</dd></div>
+        <div><dt>Manual</dt><dd><a href="../manual/">Read the manual</a><br>Every control, all effects, the looper, scenes, MIDI and AUv3.</dd></div>
+        <div><dt>Publisher</dt><dd>Borja Deudero Gracia, under the Random Machines name</dd></div>
+        <div><dt>Postal address</dt><dd><address class="address">Huizerweg 47A2<br>1401GH Bussum<br>The Netherlands</address></dd></div>
+      </dl>
+
+      <h2 class="faq-title" id="faq">Common questions</h2>
+      <div class="faq">
+          <details>
+            <summary>There is no sound</summary>
+            <div>
+              <p>First check the source. In a host, confirm the channel has audio before RMXY-1 and that monitoring is on. In standalone, choose an available input and output in Settings and allow microphone access if that input needs it. <em>No Input</em> intentionally supplies silence.</p>
+              <p>Then release BRAKE, clear any held gesture, and check the master dry/wet. If the looper is at 100% wet, make sure it holds a playing loop.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Moving the pad changes nothing</summary>
+            <div>
+              <p>Check that the effect is powered on, that the parameter has a target on the axis you are moving, and that the target differs from Base. Also check the effect mix and master dry/wet.</p>
+              <p>If you just used the looper, check <strong>Bypass Dry</strong>: with it on, live input intentionally skips the chain.</p>
+            </div>
+          </details>
+          <details>
+            <summary>A sound keeps going after I lift my finger</summary>
+            <div>
+              <p>Turn Hold off and clear any motion loop. Then check scene Decay, reverb and delay tails, feedback, Freeze and generator Base levels. BRAKE is the quickest recovery in performance.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Timing feels wrong</summary>
+            <div>
+              <p>In AUv3, check the host tempo and that its transport is running. In standalone, check the BPM and the Clock Sync source in Settings → MIDI &amp; Sync. Bluetooth and AirPlay outputs add latency that can make correct timing feel late.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Using RMXY-1 inside a host (AUv3)</summary>
+            <div>
+              <p>The host controls audio routing, recording, transport, background audio and session saving. Check the host's input, monitoring and effect settings. The standalone app does not currently play audio in the background.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Controlling RMXY-1 from a MIDI controller</summary>
+            <div>
+              <p>Standalone does not currently accept incoming MIDI control. Load RMXY-1 as an AUv3 in AUM or another compatible host and map your controller to RMXY-1's exposed parameters there.</p>
+            </div>
+          </details>
+          <details>
+            <summary>An external MIDI instrument does not respond</summary>
+            <div>
+              <p>Confirm the output route, the receiver's channel and CC or Note mode. For CC, check the receiving instrument's own assignment. A MIDI connection is not an audio connection: the instrument needs its own audio route.</p>
+            </div>
+          </details>
+          <details>
+            <summary>I hear crackles or delayed monitoring</summary>
+            <div>
+              <p>Reduce the chain load and try a larger I/O buffer, or the equivalent host setting. For delayed monitoring, avoid wireless outputs when timing matters.</p>
+            </div>
+          </details>
+          <details>
+            <summary>An exported program did not bring my audio loop</summary>
+            <div>
+              <p>Scene and program files hold setup data, not recorded audio or motion loops. Use your host's session and recording features to keep audio.</p>
+            </div>
+          </details>
+      </div>
+    </div>
+  </main>
+
+  <!-- chrome:footer -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <a class="footer__brand" href="../" aria-label="Random Machines, RMXY-1 home">
+        <img src="../assets/logo/rm-lockup-stacked-on-dark.svg" alt="" width="204" height="52" loading="lazy">
+      </a>
+      <ul class="footer__links">
+        <li><a href="../manual/">Manual</a></li>
+        <li><a href="../support/">Support</a></li>
+        <li><a href="../privacy/">Privacy Policy</a></li>
+        <li><a href="../terms/">Terms of Use</a></li>
+        <li><a href="mailto:wideknotlabs@gmail.com">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer__legal">
+      <p>© 2026 Random Machines. RMXY-1 is published by Borja Deudero Gracia.</p>
+      <p>iPhone, iPad and App Store are trademarks of Apple Inc., registered in the U.S. and other countries. Elektron, Digitakt, Arturia and MicroFreak are trademarks of their respective owners. Random Machines is not affiliated with them.</p>
+    </div>
+  </footer>
+  <!-- /chrome:footer -->
+  <script src="../assets/site.js" defer></script>
+</body>
 </html>

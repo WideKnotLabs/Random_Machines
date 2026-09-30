@@ -1,109 +1,244 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="RMXY-1 is a live audio performance effect surface for iPhone and iPad from Random Machines.">
-    <title>RMXY-1 | Random Machines</title>
-    <link rel="icon" href="assets/favicon.ico">
-    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-    <link rel="stylesheet" href="assets/site.css">
-  </head>
-  <body>
-    <div class="site-shell">
-      <header class="site-header">
-        <a class="brand-link" href="./" aria-label="RMXY-1 home">
-          <img src="assets/random-machines-logo-transparent.png" alt="Random Machines">
-        </a>
-        <nav class="nav-links" aria-label="Main navigation">
-          <a href="./">RMXY-1</a>
-          <a href="support/">Support</a>
-          <a href="privacy/">Privacy Policy</a>
-        </nav>
-      </header>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>RMXY-1: Live toolbox for iPhone and iPad | Random Machines</title>
+  <meta name="description" content="RMXY-1 is a live performance surface for audio effects. Eight effect slots share one XY pad. For iPhone and iPad.">
+  <meta name="theme-color" content="#07090b">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="RMXY-1: Live toolbox for iPhone and iPad">
+  <meta property="og:description" content="A live performance surface for audio effects. Eight effect slots share one XY pad.">
+  <meta property="og:image" content="https://wideknotlabs.github.io/Random_Machines/rmxy-1/assets/shots/og.png">
+  <link rel="canonical" href="https://wideknotlabs.github.io/Random_Machines/rmxy-1/">
+  <link rel="icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
 
-      <main>
-        <section class="hero" aria-labelledby="hero-title">
-          <div>
-            <p class="eyebrow">First app from Random Machines</p>
-            <h1 id="hero-title">RMXY-1</h1>
-            <p class="lede">A live audio performance effect surface for iPhone and iPad.</p>
-            <p class="hero-copy">RMXY-1 processes audio locally on device and does not upload, store, or share audio on our servers. The standalone app does not request microphone access. The AUv3 extension processes audio provided by the host app.</p>
-          </div>
-          <div class="hero-visual" aria-label="RMXY-1 app icon">
-            <img src="assets/rmxy1-logo.png" alt="RMXY-1 app icon">
-          </div>
-        </section>
-
-        <section class="status-strip" aria-label="RMXY-1 highlights">
-          <div>
-            <span>Mode</span>
-            <strong>Standalone and AUv3</strong>
-          </div>
-          <div>
-            <span>Processing</span>
-            <strong>Real-time local audio</strong>
-          </div>
-          <div>
-            <span>Privacy</span>
-            <strong>No account, analytics, or cloud upload</strong>
-          </div>
-        </section>
-
-        <div class="content-grid">
-          <div class="section-stack">
-            <section class="panel" aria-labelledby="features-title">
-              <h2 id="features-title">Features</h2>
-              <ul class="feature-list">
-                <li>Real-time audio effect processing</li>
-                <li>Standalone mode without microphone permission</li>
-                <li>AUv3 mode for compatible iOS host apps</li>
-                <li>Designed for full-screen touch performance</li>
-                <li>Audio processing happens locally on the device</li>
-                <li>No account required</li>
-                <li>No third-party analytics, advertising, tracking, or cloud audio upload</li>
-              </ul>
-            </section>
-
-            <section class="panel" aria-labelledby="compatibility-title">
-              <h2 id="compatibility-title">Compatibility</h2>
-              <p>RMXY-1 is available for iPhone and iPad. AUv3 mode requires a compatible iOS audio host.</p>
-              <p>The standalone app does not currently provide background audio. When RMXY-1 is used as an AUv3 extension, audio behavior is controlled by the host app.</p>
-            </section>
-
-            <section class="panel" aria-labelledby="privacy-title">
-              <h2 id="privacy-title">Privacy</h2>
-              <p>RMXY-1 does not send audio, MIDI, analytics, identifiers, or user data off the device.</p>
-              <p>RMXY-1 does not include third-party analytics, advertising, or tracking SDKs.</p>
-            </section>
-
-            <section class="panel" aria-labelledby="publisher-title">
-              <h2 id="publisher-title">Publisher</h2>
-              <p>RMXY-1 is published by Borja Deudero Gracia under the Random Machines name.</p>
-            </section>
-          </div>
-
-          <aside class="side-note" aria-label="Support and project links">
-            <div class="contact-block">
-              <h3>Support</h3>
-              <p>For help with RMXY-1, visit the support page or contact Random Machines by email.</p>
-              <a class="button-link" href="mailto:wideknotlabs@gmail.com">wideknotlabs@gmail.com</a>
-              <p>Postal address: Huizerweg 47A2, 1401GH Bussum, The Netherlands.</p>
-            </div>
-          </aside>
-        </div>
-      </main>
+  <!-- chrome:header -->
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="nav__brand" href="./" aria-label="Random Machines, RMXY-1 home">
+        <img class="nav__logo nav__logo--full" src="assets/logo/rm-lockup-stacked-on-dark.svg" alt="" width="157" height="40">
+        <img class="nav__logo nav__logo--symbol" src="assets/logo/rm-symbol-on-dark.svg" alt="" width="40" height="40">
+      </a>
+      <nav class="nav__links" aria-label="Main"><a href="manual/">Manual</a><a href="support/">Support</a></nav>
     </div>
+  </header>
+  <!-- /chrome:header -->
 
-    <footer class="site-footer">
-      <div class="site-shell footer-inner">
-        <p>© 2026 Random Machines. RMXY-1 is published by Borja Deudero Gracia.</p>
-        <nav class="footer-links" aria-label="Footer navigation">
-          <a href="support/">Support</a>
-          <a href="privacy/">Privacy Policy</a>
-          <a href="mailto:wideknotlabs@gmail.com">Contact</a>
-        </nav>
+  <main id="main">
+    <section class="hero">
+      <div class="wrap">
+        <h1 class="h1">RMXY-1</h1>
+        <p class="lede">Live toolbox for iPhone and iPad.</p>
+        <figure class="shot">
+          <img src="assets/shots/ipad-hero-sm.webp" srcset="assets/shots/ipad-hero-sm.webp 1180w, assets/shots/ipad-hero.webp 2360w" sizes="(min-width: 1240px) 1160px, calc(100vw - 40px)" width="2360" height="1640" alt="RMXY-1 on iPad: eight effect slots along the top, the XY pad with a crosshair, and a scene list on the right." fetchpriority="high">
+        </figure>
       </div>
-    </footer>
-  </body>
+    </section>
+
+    <section class="section" id="xy" aria-labelledby="xy-title">
+      <div class="wrap feature">
+        <div>
+          <h2 id="xy-title">One XY pad</h2>
+          <p>RMXY-1 is a live performance surface for audio effects. Eight effect slots share one XY pad.</p>
+          <p>FX parameters have mappable values. Give them a target on X and Y, and use the XY pad to play the effect chain.</p>
+        </div>
+        <div class="xy-module" data-xy>
+          <div class="xy-pad">
+            <span class="xy-pad__h"></span><span class="xy-pad__v"></span><span class="xy-pad__dot"></span>
+            <span class="xy-pad__axis xy-pad__axis--y" aria-hidden="true">Y</span>
+            <span class="xy-pad__axis xy-pad__axis--x" aria-hidden="true">X</span>
+            <input type="range" min="0" max="100" value="30" aria-label="Pad X position" data-axis="x">
+            <input type="range" min="0" max="100" value="25" aria-label="Pad Y position" data-axis="y">
+          </div>
+          <ul class="xy-params">
+            <li class="xy-param" data-base="88" data-x="25" data-cx="log" data-fmt="hz">
+              <div class="xy-param__row"><span>Filter frequency</span><span class="xy-param__val">8.7 kHz</span></div>
+              <div class="xy-param__track"><span class="xy-param__fill" style="--v:88%"></span><span class="xy-param__base" style="--b:88%"></span></div>
+              <small>Base 8.7 kHz, X to 112 Hz</small>
+            </li>
+            <li class="xy-param" data-base="10" data-y="85">
+              <div class="xy-param__row"><span>Reverb wet/dry</span><span class="xy-param__val">10%</span></div>
+              <div class="xy-param__track"><span class="xy-param__fill" style="--v:10%"></span><span class="xy-param__base" style="--b:10%"></span></div>
+              <small>Base 10%, Y to 85%</small>
+            </li>
+            <li class="xy-param" data-base="30" data-x="65" data-cx="exp" data-y="90">
+              <div class="xy-param__row"><span>Delay feedback</span><span class="xy-param__val">30%</span></div>
+              <div class="xy-param__track"><span class="xy-param__fill" style="--v:30%"></span><span class="xy-param__base" style="--b:30%"></span></div>
+              <small>Base 30%, X to 65%, Y to 90%</small>
+            </li>
+            <li class="xy-param" data-base="0" data-x="80" data-cx="exp">
+              <div class="xy-param__row"><span>Bloom amount</span><span class="xy-param__val">0%</span></div>
+              <div class="xy-param__track"><span class="xy-param__fill" style="--v:0%"></span><span class="xy-param__base" style="--b:0%"></span></div>
+              <small>Base 0%, X to 80%</small>
+            </li>
+          </ul>
+          <p class="xy-note">Drag the square or tap the pad. The tick on each bar is its Base value.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="slots-title">
+      <div class="wrap feature">
+        <div>
+          <h2 id="slots-title">Eight effect slots</h2>
+          <p>Reorder, bypass, solo or replace any slot. Choose from nineteen processors: filters, drive, reverb, delay, granular effects, generators and more.</p>
+        </div>
+        <div>
+          <ul class="slots" data-slots>
+            <li><button class="slot" type="button" aria-pressed="true"><span>1</span>Filter</button></li>
+            <li><button class="slot" type="button" aria-pressed="true"><span>2</span>EQ</button></li>
+            <li><button class="slot" type="button" aria-pressed="false"><span>3</span>Delay</button></li>
+            <li><button class="slot" type="button" aria-pressed="true"><span>4</span>LFO</button></li>
+            <li><button class="slot" type="button" aria-pressed="true"><span>5</span>Time</button></li>
+            <li><button class="slot" type="button" aria-pressed="true"><span>6</span>Shift</button></li>
+            <li><button class="slot" type="button" aria-pressed="true"><span>7</span>Erode</button></li>
+            <li><button class="slot" type="button" aria-pressed="true"><span>8</span>Fold</button></li>
+          </ul>
+          <p class="slot-note">Tap a slot to bypass it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="editors-title">
+      <div class="wrap feature">
+        <div>
+          <h2 id="editors-title">Base, X and Y</h2>
+          <p>Every parameter has a Base value and a target on X and on Y. Each axis has its own LOG, LIN or EXP curve.</p>
+        </div>
+        <figure class="shot">
+          <img src="assets/shots/ipad-editor-sm.webp" srcset="assets/shots/ipad-editor-sm.webp 800w, assets/shots/ipad-editor.webp 1600w" sizes="(min-width: 900px) 640px, calc(100vw - 40px)" width="1600" height="1112" alt="The Bloom editor on iPad with Base, X and Y pages and a knob for each parameter." loading="lazy">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="use-title">
+      <div class="wrap">
+        <h2 id="use-title">Sound design and insert effects</h2>
+        <div class="two">
+          <div>
+            <h3>Sound design and exploration</h3>
+            <p>Generators make sound without an input. Randomize a whole scene, then map what you find to the pad.</p>
+          </div>
+          <div>
+            <h3>Insert effect chain</h3>
+            <p>Load RMXY-1 as an AUv3 effect in AUM or another host, or run it standalone with your audio interface.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="looper-title">
+      <div class="wrap feature">
+        <div>
+          <h2 id="looper-title">Audio looper</h2>
+          <p>Record one, two or four bars, synced or free. Overdub, recapture, and send the loop through the chain.</p>
+        </div>
+        <figure class="shot">
+          <img src="assets/shots/ipad-looper-sm.webp" srcset="assets/shots/ipad-looper-sm.webp 800w, assets/shots/ipad-looper.webp 1600w" sizes="(min-width: 900px) 640px, calc(100vw - 40px)" width="1600" height="1112" alt="The audio looper panel on iPad with a recorded two-bar loop playing." loading="lazy">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="scenes-title">
+      <div class="wrap feature">
+        <div>
+          <h2 id="scenes-title">Scenes</h2>
+          <p>A scene is a chain with its mappings. Eight scenes make a bank and four banks make a program: 32 scenes. Edits stay a working copy until you save.</p>
+        </div>
+        <div data-banks>
+          <div class="banks">
+            <div class="bank"><b>A</b><button class="cell" type="button" aria-label="Bank A, scene 1" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank A, scene 2" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank A, scene 3" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank A, scene 4" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank A, scene 5" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank A, scene 6" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank A, scene 7" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank A, scene 8" aria-pressed="false"></button></div>
+            <div class="bank"><b>B</b><button class="cell" type="button" aria-label="Bank B, scene 1" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank B, scene 2" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank B, scene 3" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank B, scene 4" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank B, scene 5" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank B, scene 6" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank B, scene 7" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank B, scene 8" aria-pressed="false"></button></div>
+            <div class="bank"><b>C</b><button class="cell" type="button" aria-label="Bank C, scene 1" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank C, scene 2" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank C, scene 3" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank C, scene 4" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank C, scene 5" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank C, scene 6" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank C, scene 7" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank C, scene 8" aria-pressed="false"></button></div>
+            <div class="bank"><b>D</b><button class="cell" type="button" aria-label="Bank D, scene 1" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank D, scene 2" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank D, scene 3" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank D, scene 4" aria-pressed="true"></button><button class="cell" type="button" aria-label="Bank D, scene 5" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank D, scene 6" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank D, scene 7" aria-pressed="false"></button><button class="cell" type="button" aria-label="Bank D, scene 8" aria-pressed="false"></button></div>
+          </div>
+          <p class="bank-note" aria-live="polite">Bank D, scene 4</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="midi-title">
+      <div class="wrap feature">
+        <div>
+          <h2 id="midi-title">MIDI out</h2>
+          <p>Six lanes send MIDI CC or notes to external gear, such as a Digitakt II or a MicroFreak. One move on the pad changes your effects and your hardware.</p>
+        </div>
+        <div class="midi">
+          <figure class="shot">
+            <img src="assets/shots/ipad-midi-sm.webp" srcset="assets/shots/ipad-midi-sm.webp 800w, assets/shots/ipad-midi.webp 1600w" sizes="(min-width: 900px) 640px, calc(100vw - 40px)" width="1600" height="1013" alt="The MIDI editor on iPad with six parameter lanes, each set to a CC or note target." loading="lazy">
+          </figure>
+          <div class="midi__devices">
+            <figure class="midi__dev">
+              <img src="assets/shots/hw-digitakt.svg" width="440" height="272" alt="Line drawing of an Elektron Digitakt II" loading="lazy">
+              <figcaption>Digitakt II</figcaption>
+            </figure>
+            <figure class="midi__dev">
+              <img src="assets/shots/hw-microfreak.svg" width="460" height="250" alt="Line drawing of an Arturia MicroFreak" loading="lazy">
+              <figcaption>MicroFreak</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="phone-title">
+      <div class="wrap stack">
+        <h2 id="phone-title">iPhone</h2>
+        <p>The same surface in portrait and landscape.</p>
+        <div class="phones">
+          <figure class="shot shot--p"><img src="assets/shots/phone-reverb-sm.webp" srcset="assets/shots/phone-reverb-sm.webp 402w, assets/shots/phone-reverb.webp 804w" sizes="(min-width: 1200px) 280px, 45vw" width="804" height="1481" alt="RMXY-1 on iPhone in portrait with the Reverb editor open." loading="lazy"></figure>
+          <figure class="shot shot--p"><img src="assets/shots/phone-looper-sm.webp" srcset="assets/shots/phone-looper-sm.webp 402w, assets/shots/phone-looper.webp 804w" sizes="(min-width: 1200px) 280px, 45vw" width="804" height="1481" alt="RMXY-1 on iPhone in portrait with the audio looper open." loading="lazy"></figure>
+          <figure class="shot shot--l"><img src="assets/shots/phone-land-sm.webp" srcset="assets/shots/phone-land-sm.webp 700w, assets/shots/phone-land.webp 1400w" sizes="(min-width: 1200px) 530px, calc(100vw - 40px)" width="1400" height="644" alt="RMXY-1 on iPhone in landscape with the Bloom editor open." loading="lazy"></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="specs" aria-labelledby="specs-title">
+      <div class="wrap">
+        <h2 class="specs-title" id="specs-title">Specifications</h2>
+        <dl class="specs">
+          <div class="spec"><dt>Platforms</dt><dd>iPhone and iPad</dd></div>
+          <div class="spec"><dt>Formats</dt><dd>Standalone app and AUv3 audio effect<span>AUv3 runs in AUM and other compatible hosts</span></dd></div>
+          <div class="spec"><dt>Effect slots</dt><dd>Eight, with bypass, solo, reorder and replace</dd></div>
+          <div class="spec"><dt>Processors</dt><dd>Filter, EQ, Distortion, Fold, Erode, Reverb, Delay, Stereo Widener, Modulation, Shifter, Ring Mod, Time FX, Grain Shifter, Granular Cloud, Noise, OSC, Shepard, Resonator, Bloom<span>Plus LFO, MIDI out and AUv3 hosting (standalone)</span></dd></div>
+          <div class="spec"><dt>Performance</dt><dd>XY pad with Base, X and Y targets per parameter<span>LOG, LIN and EXP curves · Hold · one-bar motion recording · Brake · Decay</span></dd></div>
+          <div class="spec"><dt>Looper</dt><dd>1, 2 or 4 bars · sync or free · overdub · recapture · Bypass Dry</dd></div>
+          <div class="spec"><dt>Library</dt><dd>4 banks × 8 scenes per program · scene library · import and export<span>.rmxyscene and .rmxyprogram files</span></dd></div>
+          <div class="spec"><dt>MIDI</dt><dd>6 output lanes of CC or notes · MIDI clock sync in standalone<span>Incoming MIDI control through the AUv3 host</span></dd></div>
+          <div class="spec"><dt>Appearance</dt><dd>Dark, Onyx, Bone Light, Pure White, Adaptive · three text sizes</dd></div>
+          <div class="spec"><dt>Privacy</dt><dd>No account, analytics, advertising or tracking. Audio is processed on device.</dd></div>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <!-- chrome:footer -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <a class="footer__brand" href="./" aria-label="Random Machines, RMXY-1 home">
+        <img src="assets/logo/rm-lockup-stacked-on-dark.svg" alt="" width="204" height="52" loading="lazy">
+      </a>
+      <ul class="footer__links">
+        <li><a href="manual/">Manual</a></li>
+        <li><a href="support/">Support</a></li>
+        <li><a href="privacy/">Privacy Policy</a></li>
+        <li><a href="terms/">Terms of Use</a></li>
+        <li><a href="mailto:wideknotlabs@gmail.com">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer__legal">
+      <p>© 2026 Random Machines. RMXY-1 is published by Borja Deudero Gracia.</p>
+      <p>iPhone, iPad and App Store are trademarks of Apple Inc., registered in the U.S. and other countries. Elektron, Digitakt, Arturia and MicroFreak are trademarks of their respective owners. Random Machines is not affiliated with them.</p>
+    </div>
+  </footer>
+  <!-- /chrome:footer -->
+  <script src="assets/site.js" defer></script>
+</body>
 </html>
