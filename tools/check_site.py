@@ -39,7 +39,7 @@ for page in PAGES:
         if img.get('alt') is None:
             problems.append(f'{page.relative_to(ROOT)}: image without alt {img.get("src")}')
     for tag, ref in p.refs:
-        if re.match(r'(mailto:|https://wideknotlabs\.github\.io/Random_Machines/|https://www\.apple\.com/legal/)', ref) or ref.startswith('#'):
+        if re.match(r'(mailto:|https://wideknotlabs\.github\.io/Random_Machines/|https://www\.apple\.com/legal/|https://www\.instagram\.com/randommachines/$)', ref) or ref.startswith('#'):
             if ref.startswith('#') and ref[1:] not in p.ids:
                 problems.append(f'{page.relative_to(ROOT)}: broken anchor {ref}')
             continue
