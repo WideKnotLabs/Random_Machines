@@ -50,13 +50,14 @@
                 <span><b>App Store</b><small>Coming soon</small></span>
               </span>
             </div>
-            <div class="beat" data-beat="move">
-              <h2>One move.<br>Every effect.</h2>
-              <p>Each parameter has a Base value and a target on X and Y. Drag across the pad and the whole chain moves with you.</p>
-            </div>
+
           </div>
 
           <div class="story__copy story__copy--top">
+            <div class="beat" data-beat="move">
+              <h2 class="beat__h--line">One move. Every effect.</h2>
+              <p>Each parameter has a Base value and a target on X and Y. Drag across the pad and the whole chain moves with you.</p>
+            </div>
             <div class="beat" data-beat="slots">
               <h2>8 slots.</h2>
               <p>Load any effect into any slot, in any order.</p>
@@ -65,31 +66,49 @@
               <h2>19 effects.</h2>
               <p>Plus an LFO, a MIDI lane or another AUv3 in any slot.</p>
             </div>
+            <div class="beat" data-beat="endless">
+              <h2>Endless possibilities.</h2>
+              <p>Roll the dice and the whole chain is new: effects, order and every mapping.</p>
+            </div>
           </div>
 
-          <figure class="device device--phone story__phone" data-phone>
+          <div class="story__scrim" data-scrim aria-hidden="true"></div>
+          <div class="story__pad-shade" data-pad-shade aria-hidden="true"></div>
+          <figure class="device device--ipad story__ipad" data-ipad>
             <div class="device__frame"><div class="device__screen">
-              <video data-src-webm="assets/media/phone-main.webm" data-src-mp4="assets/media/phone-main.mp4" poster="assets/media/phone-main.webp" muted loop playsinline preload="none" aria-label="RMXY-1 on iPhone: the touch point moves across the XY pad under the eight-slot effect rail."></video>
+              <video data-src-webm="assets/media/hero-ipad.webm" data-src-mp4="assets/media/hero-ipad.mp4" poster="assets/media/hero-ipad-poster.webp" muted loop playsinline preload="auto" aria-label="RMXY-1 on iPad: the touch point moves across the XY pad with the Granular Cloud editor open."></video>
             </div></div>
           </figure>
+
 
           <div class="story__rail" data-rail aria-hidden="true">
             <img src="assets/media/rail-strip.webp" width="3450" height="368" alt="">
           </div>
 
-          <div class="story__grid" data-grid>
-            <div class="cat"><h3>Filter</h3><p>Sweep, carve and ring.</p><ul>
-              <li data-id="filter">Filter</li><li data-id="eq">EQ</li><li data-id="reson">Resonator</li></ul></div>
-            <div class="cat"><h3>Drive</h3><p>Saturate, fold, break it down.</p><ul>
-              <li data-id="dist">Distortion</li><li data-id="fold">Fold</li><li data-id="erode">Erode</li></ul></div>
-            <div class="cat"><h3>Space</h3><p>Rooms, echoes, rising textures.</p><ul>
-              <li data-id="verb">Reverb</li><li data-id="delay">Delay</li><li data-id="bloom">Bloom</li><li data-id="wide">Stereo Widener</li></ul></div>
-            <div class="cat"><h3>Time</h3><p>Repeat, reverse, re-sequence.</p><ul>
-              <li data-id="time">Time FX</li><li data-id="grain">Grain Shifter</li><li data-id="cloud">Granular Cloud</li></ul></div>
-            <div class="cat"><h3>Modulation</h3><p>Phasers, shifts, metal.</p><ul>
-              <li data-id="mod">Modulation</li><li data-id="shift">Shifter</li><li data-id="ring">Ring Mod</li></ul></div>
-            <div class="cat"><h3>Generators</h3><p>Sound with no input at all.</p><ul>
-              <li data-id="noise">Noise</li><li data-id="osc">OSC</li><li data-id="shep">Shepard</li></ul></div>
+          <div class="fxr" data-fxr>
+            <div class="fxr__tray" data-tray aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <ul class="fxr__keys" aria-label="The 19 effects">
+            <li class="fxk" data-id="filter"><img src="assets/media/keyart-filter.webp" width="288" height="299" alt="Filter" loading="lazy"></li>
+            <li class="fxk" data-id="eq"><img src="assets/media/keyart-eq.webp" width="288" height="299" alt="EQ" loading="lazy"></li>
+            <li class="fxk" data-id="reson"><img src="assets/media/keyart-reson.webp" width="288" height="299" alt="Resonator" loading="lazy"></li>
+            <li class="fxk" data-id="dist"><img src="assets/media/keyart-dist.webp" width="288" height="299" alt="Distortion" loading="lazy"></li>
+            <li class="fxk" data-id="fold"><img src="assets/media/keyart-fold.webp" width="288" height="299" alt="Fold" loading="lazy"></li>
+            <li class="fxk" data-id="erode"><img src="assets/media/keyart-erode.webp" width="288" height="299" alt="Erode" loading="lazy"></li>
+            <li class="fxk" data-id="verb"><img src="assets/media/keyart-verb.webp" width="288" height="299" alt="Reverb" loading="lazy"></li>
+            <li class="fxk" data-id="delay"><img src="assets/media/keyart-delay.webp" width="288" height="299" alt="Delay" loading="lazy"></li>
+            <li class="fxk" data-id="bloom"><img src="assets/media/keyart-bloom.webp" width="288" height="299" alt="Bloom" loading="lazy"></li>
+            <li class="fxk" data-id="wide"><img src="assets/media/keyart-wide.webp" width="288" height="299" alt="Stereo Widener" loading="lazy"></li>
+            <li class="fxk" data-id="time"><img src="assets/media/keyart-time.webp" width="288" height="299" alt="Time FX" loading="lazy"></li>
+            <li class="fxk" data-id="grain"><img src="assets/media/keyart-grain.webp" width="288" height="299" alt="Grain Shifter" loading="lazy"></li>
+            <li class="fxk" data-id="cloud"><img src="assets/media/keyart-cloud.webp" width="288" height="299" alt="Granular Cloud" loading="lazy"></li>
+            <li class="fxk" data-id="mod"><img src="assets/media/keyart-mod.webp" width="288" height="299" alt="Modulation" loading="lazy"></li>
+            <li class="fxk" data-id="shift"><img src="assets/media/keyart-shift.webp" width="288" height="299" alt="Shifter" loading="lazy"></li>
+            <li class="fxk" data-id="ring"><img src="assets/media/keyart-ring.webp" width="288" height="299" alt="Ring Mod" loading="lazy"></li>
+            <li class="fxk" data-id="noise"><img src="assets/media/keyart-noise.webp" width="288" height="299" alt="Noise" loading="lazy"></li>
+            <li class="fxk" data-id="osc"><img src="assets/media/keyart-osc.webp" width="288" height="299" alt="OSC" loading="lazy"></li>
+            <li class="fxk" data-id="shep"><img src="assets/media/keyart-shep.webp" width="288" height="299" alt="Shepard" loading="lazy"></li>
+            </ul>
+            <div class="fxr__slots" data-slots aria-hidden="true"><span class="fxk"><img src="assets/media/keyart-filter.webp" width="288" height="299" alt=""></span><span class="fxk"><img src="assets/media/keyart-filter.webp" width="288" height="299" alt=""></span><span class="fxk"><img src="assets/media/keyart-filter.webp" width="288" height="299" alt=""></span><span class="fxk"><img src="assets/media/keyart-filter.webp" width="288" height="299" alt=""></span><span class="fxk"><img src="assets/media/keyart-filter.webp" width="288" height="299" alt=""></span><span class="fxk"><img src="assets/media/keyart-filter.webp" width="288" height="299" alt=""></span><span class="fxk"><img src="assets/media/keyart-filter.webp" width="288" height="299" alt=""></span><span class="fxk"><img src="assets/media/keyart-filter.webp" width="288" height="299" alt=""></span></div>
           </div>
         </div>
       </div>
@@ -113,11 +132,11 @@
             </div>
             <svg class="perform__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" data-lines></svg>
             <ol class="callouts">
-              <li data-rect="23.5 42 80 46" data-side="left" style="--y:6%"><b>Hold</b><span>Lift your finger. The pad stays put.</span></li>
-              <li data-rect="23.5 95.5 80 42" data-side="left" style="--y:34%"><b>Motion record</b><span>One bar of pad movement, repeating in time.</span></li>
-              <li data-rect="1031 68.5 60 60" data-side="right" style="--y:6%"><b>Decay</b><span>How the chain glides back, 0 to 5 seconds.</span></li>
-              <li data-rect="1118.5 102 30 30" data-side="right" style="--y:34%"><b>Dice</b><span>A whole new chain in one tap.</span></li>
-              <li data-rect="649.5 757 59 29.5" data-side="below" style="--y:81%"><b>Brake</b><span>Mute, vinyl stop, reverse or glitch.</span></li>
+              <li data-rect="23.5 42 80 46" data-side="left" style="--y:8%"><b>Hold</b><span>Lift your finger. The pad stays put.</span></li>
+              <li data-rect="23.5 95.5 80 42" data-side="left" style="--y:30%"><b>Motion record</b><span>One bar of pad movement, repeating in time.</span></li>
+              <li data-rect="1031 68.5 60 60" data-side="right" style="--y:8%"><b>Decay</b><span>How the chain glides back, 0 to 5 seconds.</span></li>
+              <li data-rect="1118.5 102 30 30" data-side="right" style="--y:30%"><b>Dice</b><span>A whole new chain in one tap.</span></li>
+              <li data-rect="649.5 757 59 29.5" data-side="right" data-route="under" style="--y:72%"><b>Brake</b><span>Mute, vinyl stop, reverse or glitch.</span></li>
             </ol>
           </div>
         </div>
