@@ -279,21 +279,5 @@
     });
   }
 
-  /* Generators: cycle the three editors */
-  const gen = $('[data-gen]');
-  if (gen && !still) {
-    const imgs = $$('.gen__shots img', gen);
-    const names = $$('.gen__names li', gen);
-    if (imgs.length > 1) {
-      let i = 0, t = 0;
-      const step = () => {
-        i = (i + 1) % imgs.length;
-        imgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
-        names.forEach((n, k) => n.classList.toggle('is-on', k === i));
-      };
-      new IntersectionObserver(([e]) => { clearInterval(t); if (e.isIntersecting) t = setInterval(step, 3200); }).observe(gen);
-    }
-  }
-
   queue();
 })();

@@ -169,34 +169,38 @@
         <div class="sec__head">
           <h2 id="sound-title" data-reveal>Make sound.<br>Or shape it.</h2>
         </div>
-        <div class="bento">
-          <article class="tile" data-reveal>
-            <h3>No input needed.</h3>
-            <p>Noise, OSC and Shepard make sound on their own. Roll the dice, then map what you find to the pad.</p>
-            <div class="tile__vis" data-gen>
-              <div class="gen__shots">
-                <img class="is-on" src="assets/media/gen-noise-crop.webp" width="1204" height="1060" alt="The Noise editor in RMXY-1" loading="lazy">
-                <img src="assets/media/gen-osc-crop.webp" width="1204" height="1060" alt="The OSC editor in RMXY-1" loading="lazy">
-                <img src="assets/media/gen-shep-crop.webp" width="1204" height="1060" alt="The Shepard editor in RMXY-1" loading="lazy">
-              </div>
-              <ul class="gen__names" aria-hidden="true"><li class="is-on">Noise</li><li>OSC</li><li>Shepard</li></ul>
-            </div>
-          </article>
-          <article class="tile" data-reveal="2">
-            <h3>Drop it into your set.</h3>
-            <p>Load RMXY-1 as an AUv3 effect in AUM or any AUv3 host, one per channel. Or run it standalone with your audio interface.</p>
-            <div class="tile__vis">
-              <div class="host" role="img" aria-label="A host with four channels, RMXY-1 inserted on three of them, and the RMXY-1 window open on the Pads channel">
-                <ul class="host__ch">
-                  <li><span>Drums</span><img src="assets/rmxy-1-icon.svg" alt=""></li>
-                  <li><span>Bass</span><b></b></li>
-                  <li class="is-on"><span>Pads</span><img src="assets/rmxy-1-icon.svg" alt=""></li>
-                  <li><span>Vox</span><img src="assets/rmxy-1-icon.svg" alt=""></li>
-                </ul>
-                <div class="host__win"><div class="host__bar">RMXY-1 · Pads</div><video data-src-webm="assets/media/hero-ipad.webm" data-src-mp4="assets/media/hero-ipad.mp4" poster="assets/media/host-ipad.webp" muted loop playsinline preload="none" aria-hidden="true"></video></div>
-              </div>
-            </div>
-          </article>
+
+        <div class="gen">
+          <div class="gen__copy">
+            <h3 data-reveal>No input needed.</h3>
+            <p data-reveal="2">Three of the nineteen make sound on their own. Roll the dice, then map what you find to the pad.</p>
+          </div>
+          <ul class="gen__keys">
+            <li data-reveal><span class="key"><img src="assets/media/keyart-noise.webp" width="288" height="299" alt="Noise"></span><b>Noise</b><span>White, pink, green or blue.</span></li>
+            <li data-reveal="2"><span class="key"><img src="assets/media/keyart-osc.webp" width="288" height="299" alt="OSC"></span><b>OSC</b><span>Multi saw, sync, X-mod or PWM.</span></li>
+            <li data-reveal="3"><span class="key"><img src="assets/media/keyart-shep.webp" width="288" height="299" alt="Shepard"></span><b>Shepard</b><span>A tone that rises or falls forever.</span></li>
+          </ul>
+        </div>
+
+        <div class="modes">
+          <div class="modes__head">
+            <h3 data-reveal>Drop it into your set.</h3>
+            <p data-reveal="2">Run it on its own with your audio interface, or load it on every channel of your host.</p>
+          </div>
+          <div class="modes__cols">
+            <dl class="mode" data-reveal>
+              <dt>Standalone</dt>
+              <dd><b>Your audio interface</b>Choose the input, or No Input for the generators.</dd>
+              <dd><b>MIDI clock sync</b>Lock the chain and the looper to your gear.</dd>
+              <dd><b>AUv3 in a slot</b>Host another plug-in inside the chain.</dd>
+            </dl>
+            <dl class="mode" data-reveal="2">
+              <dt>AUv3</dt>
+              <dd><b>AUM and any AUv3 host</b>Load it as an audio effect.</dd>
+              <dd><b>One per channel</b>A different chain on drums, bass and vocals.</dd>
+              <dd><b>MIDI through the host</b>Control it from the host's MIDI routing.</dd>
+            </dl>
+          </div>
         </div>
       </div>
     </section>
