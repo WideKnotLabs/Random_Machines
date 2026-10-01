@@ -11,7 +11,7 @@ import re
 SITE = Path(__file__).resolve().parents[1] / 'rmxy-1'
 CONTACT = 'wideknotlabs@gmail.com'
 
-NAV = [('manual', 'manual/', 'Manual'), ('support', 'support/', 'Support')]
+NAV = [('effects', '#effects', 'Effects', True), ('looper', '#looper', 'Looper', True), ('midi', '#midi', 'MIDI', True), ('specs', '#specs', 'Specifications', False), ('manual', 'manual/', 'Manual', False), ('support', 'support/', 'Support', False)]
 
 # page path relative to rmxy-1/ -> (prefix back to rmxy-1/, current nav key)
 PAGES = {
@@ -33,8 +33,8 @@ def logo_width(name, height):
 def header(prefix, current):
     here = ' aria-current="page"'
     links = ''.join(
-        f'<a href="{prefix}{href}"{here if key == current else ""}>{label}</a>'
-        for key, href, label in NAV
+        f'<a{' class="nav__sec"' if section else ''} href="{prefix}{href}"{here if key == current else ""}>{label}</a>'
+        for key, href, label, section in NAV
     )
     return f'''<header class="nav">
     <div class="nav__inner">

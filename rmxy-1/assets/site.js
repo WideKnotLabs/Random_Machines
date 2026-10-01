@@ -1,86 +1,10 @@
-/* Random Machines site behaviour. Progressive enhancement: every page reads fine without it.
-   Nothing here moves on its own: no scroll effects, no timers, no animation loops. */
+/* Random Machines site behaviour: document contents and the manual. Progressive enhancement: every page reads fine without it.
+   The landing page's live demonstrations are in landing.js. */
 (() => {
   'use strict';
   document.documentElement.classList.add('js');
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-  const clamp = (v, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
-
-  /* XY pad demonstration. A parameter starts at its Base value and moves toward its X and Y targets;
-     both contributions add, then clamp, like the app's anchor model. Drag the square or tap the pad.
-     On touch screens only the square captures the finger, so the page still scrolls. */
-  $$('[data-xy]').forEach(module => {
-    const pad = $('.xy-pad', module);
-    const dot = $('.xy-pad__dot', pad);
-    const inputs = { x: $('input[data-axis="x"]', pad), y: $('input[data-axis="y"]', pad) };
-    const curve = (t, c) => (c === 'exp' ? t * t : c === 'log' ? Math.sqrt(t) : t);
-    const format = (v, kind) => {
-      if (kind === 'hz') {
-        const hz = 20 * Math.pow(1000, v / 100);
-        return hz >= 1000 ? `${(hz / 1000).toFixed(1)} kHz` : `${Math.round(hz)} Hz`;
-      }
-      return `${Math.round(v)}%`;
-    };
-    const rows = $$('.xy-param', module).map(el => ({
-      base: +el.dataset.base,
-      x: el.dataset.x === undefined ? null : +el.dataset.x,
-      y: el.dataset.y === undefined ? null : +el.dataset.y,
-      cx: el.dataset.cx, cy: el.dataset.cy, fmt: el.dataset.fmt,
-      fill: $('.xy-param__fill', el), val: $('.xy-param__val', el),
-    }));
-    const set = (nx, ny) => {
-      pad.style.setProperty('--px', `${(nx * 100).toFixed(2)}%`);
-      pad.style.setProperty('--py', `${((1 - ny) * 100).toFixed(2)}%`);
-      inputs.x.value = Math.round(nx * 100);
-      inputs.y.value = Math.round(ny * 100);
-      rows.forEach(r => {
-        let v = r.base;
-        if (r.x !== null) v += (r.x - r.base) * curve(nx, r.cx);
-        if (r.y !== null) v += (r.y - r.base) * curve(ny, r.cy);
-        v = clamp(v, 0, 100);
-        r.fill.style.setProperty('--v', `${v}%`);
-        r.val.textContent = format(v, r.fmt);
-      });
-    };
-    const at = e => {
-      const r = pad.getBoundingClientRect();
-      return [clamp((e.clientX - r.left) / r.width), clamp(1 - (e.clientY - r.top) / r.height)];
-    };
-    let dragging = false, tap = null;
-    pad.addEventListener('pointerdown', e => {
-      if (e.pointerType === 'touch' && e.target !== dot) { tap = { id: e.pointerId, x: e.clientX, y: e.clientY }; return; }
-      dragging = true;
-      pad.setPointerCapture(e.pointerId);
-      set(...at(e));
-    });
-    pad.addEventListener('pointermove', e => { if (dragging) set(...at(e)); });
-    const end = e => {
-      if (tap && tap.id === e.pointerId && e.type === 'pointerup' && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 8) set(...at(e));
-      tap = null; dragging = false;
-    };
-    pad.addEventListener('pointerup', end);
-    pad.addEventListener('pointercancel', end);
-    const fromInputs = () => set(inputs.x.value / 100, inputs.y.value / 100);
-    inputs.x.addEventListener('input', fromInputs);
-    inputs.y.addEventListener('input', fromInputs);
-    set(0.3, 0.25);
-  });
-
-  /* Effect slots: tap to bypass. */
-  $$('[data-slots] .slot').forEach(btn => {
-    btn.addEventListener('click', () => btn.setAttribute('aria-pressed', String(btn.getAttribute('aria-pressed') !== 'true')));
-  });
-
-  /* Scene banks: pick one of 32. */
-  $$('[data-banks]').forEach(module => {
-    const cells = $$('.cell', module);
-    const note = $('.bank-note', module);
-    cells.forEach(cell => cell.addEventListener('click', () => {
-      cells.forEach(c => c.setAttribute('aria-pressed', String(c === cell)));
-      if (note) note.textContent = cell.getAttribute('aria-label');
-    }));
-  });
 
   /* Active section in document tables of contents */
   const tocLinks = $$('.toc a[href^="#"]');

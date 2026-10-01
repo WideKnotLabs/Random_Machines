@@ -21,7 +21,7 @@ Use these final URL paths when the domain is ready:
 - Public pages only: no login, password, or account gate.
 - HTTPS only when published.
 - Mobile-friendly layout.
-- No "coming soon" or placeholder user-facing copy.
+- No "coming soon" or placeholder user-facing copy, except the greyed-out App Store button on the landing page until the app is live.
 - No broken contact links.
 - Same identity across all pages: RMXY-1, Random Machines, Borja Deudero Gracia.
 - No analytics, tracking pixels, newsletter forms, advertising scripts, or cloud media upload claims while the privacy policy says no data is collected.

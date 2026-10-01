@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200">
+  <title>RMXY-1 share image source</title>
+  <!-- Source for rmxy-1/assets/shots/og.png: the XY-1 wordmark, the headline and the app on an iPad.
+       tools/og-screen.png (the real screen, 2360 × 1640) is composed by build_og.py. Render with: python3 tools/build_og.py -->
+  <link rel="stylesheet" href="../rmxy-1/assets/site.css">
+  <style>
+    html, body { width: 1200px; height: 630px; margin: 0; overflow: hidden; }
+    body { background: #07090b; }
+
+    .head { position: absolute; left: 0; right: 0; top: 46px; display: flex; align-items: center; justify-content: center; gap: 34px; }
+    .mark { display: block; height: 80px; width: auto; }
+    .rule { width: 1px; height: 72px; background: rgba(247, 245, 239, 0.2); }
+    h1 { margin: 0; font-size: 36px; font-weight: 500; line-height: 1.06; letter-spacing: -0.035em; color: #f7f5ef; }
+
+    /* iPad, landscape: a thin aluminium edge, black glass border, the screen at 1180 × 820 pt scaled to 1000 px. */
+    .ipad { position: absolute; left: 77px; top: 176px; width: 1046px; height: 741px; border-radius: 40px;
+      background: linear-gradient(160deg, #6b7076 0%, #34373b 22%, #1e2023 50%, #2d3034 78%, #5a5f65 100%);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28), 0 40px 80px -30px rgba(0, 0, 0, 0.9); }
+    .ipad::before { content: ""; position: absolute; inset: 3px; border-radius: 37px; background: #010101; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+    .cam { position: absolute; left: 518px; top: 9px; width: 8px; height: 8px; border-radius: 50%; background: #0b0d10; box-shadow: inset 0 0 0 1.5px #1a1d21; }
+    .screen { position: absolute; left: 23px; top: 23px; width: 1000px; height: 694.92px; border-radius: 17px; overflow: hidden; background: #0d1216; }
+    .screen img { display: block; width: 1000px; height: 694.92px; }
+
+    /* iPadOS status bar, laid out in points and scaled with the screen. */
+    .status { position: absolute; left: 0; top: 0; width: 1180px; height: 24px; padding: 0 22px; box-sizing: border-box; transform: scale(0.847458); transform-origin: 0 0;
+      display: flex; align-items: center; justify-content: space-between; color: #fff;
+      font: 600 12.5px/1 -apple-system, "SF Pro Text", system-ui, sans-serif; letter-spacing: 0.01em; }
+    .status span { display: flex; align-items: center; gap: 6px; }
+    .status svg { display: block; fill: #fff; }
+  </style>
+</head>
+<body>
+  <div class="head">
+    <img class="mark" src="../rmxy-1/assets/logo/xy-1-wordmark.svg" width="208" height="80" alt="">
+    <span class="rule"></span>
+    <h1>The most powerful FX chain,<br>everywhere you go.</h1>
+  </div>
+  <div class="ipad">
+    <i class="cam"></i>
+    <div class="screen">
+      <img src="og-screen.png" alt="">
+      <div class="status">
+        <span>9:41&nbsp;&nbsp;Tue 30 Sep</span>
+        <span>
+          <svg width="16" height="12" viewBox="0 0 16 12" aria-hidden="true"><path d="M8 2.2c2.4 0 4.6.9 6.3 2.5l1.2-1.2A10.6 10.6 0 0 0 8 .5 10.6 10.6 0 0 0 .5 3.5l1.2 1.2C3.4 3.1 5.6 2.2 8 2.2z"/><path d="M8 5.6c1.5 0 2.9.6 4 1.6l1.2-1.2A7.3 7.3 0 0 0 8 3.9 7.3 7.3 0 0 0 2.8 6l1.2 1.2c1.1-1 2.5-1.6 4-1.6z"/><path d="M8 9l2-2a2.9 2.9 0 0 0-4 0z"/><circle cx="8" cy="10.3" r="1.2"/></svg>
+          100%
+          <svg width="27" height="13" viewBox="0 0 27 13" aria-hidden="true"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" stroke-opacity="0.45"/><rect x="2" y="2" width="20" height="9" rx="2"/><path d="M25 4.5v4a2 2 0 0 0 0-4z" fill-opacity="0.45"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
