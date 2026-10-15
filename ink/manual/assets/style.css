@@ -106,6 +106,31 @@ table{border-collapse:collapse;min-width:60%;font-size:16.5px;line-height:1.4}
 th{font-family:var(--hand);font-size:19px;text-align:left;border-bottom:var(--line) solid var(--ink);padding:4px 14px 4px 8px;letter-spacing:.04em}
 td{border-bottom:1px solid var(--faintline);padding:8px 14px 8px 8px;vertical-align:top}
 
+/* Strum's rhythm table: handwritten values and bare ink marks, as in the comparison graph. */
+.rhythm-table table{width:100%;table-layout:fixed;min-width:0}
+.rhythm-table thead th{font-size:23px;padding:10px 4px 12px;white-space:nowrap}
+.rhythm-table thead th:first-child{width:24%}
+.rhythm-table tbody th{font-family:var(--hand);font-size:27px;letter-spacing:.02em;border-bottom:1px solid var(--faintline);padding:24px 4px;vertical-align:middle}
+.rhythm-table td{padding:24px 4px;vertical-align:middle}
+.rhythm-marks{display:flex;align-items:center;gap:7px;min-height:20px}
+.rhythm-beat{display:block;width:11px;height:11px;flex:none}
+.rhythm-beat.hit{background:var(--ink);border-radius:47% 53% 48% 52%/53% 45% 55% 47%;transform:rotate(-13deg)}
+.rhythm-beat.gap{height:2px;width:7px;margin:0 2px;background:var(--pencil);border-radius:2px;transform:rotate(-6deg)}
+@media(max-width:640px){
+  .rhythm-table thead th{font-size:19px;letter-spacing:0;padding-left:2px;padding-right:2px}
+  .rhythm-table tbody th{font-size:24px}
+  .rhythm-table tbody th,.rhythm-table td{padding:22px 2px}
+  .rhythm-marks{gap:3px}
+  .rhythm-beat{width:6px;height:6px}
+  .rhythm-beat.gap{width:4px;margin:0 1px}
+}
+@media(max-width:370px){
+  .rhythm-table thead th{font-size:17px}
+  .rhythm-marks{gap:2px}
+  .rhythm-beat{width:5px;height:5px}
+  .rhythm-beat.gap{width:3px}
+}
+
 /* on-screen label & terms */
 .lbl{display:inline-block;font-family:var(--hand);font-weight:700;font-size:1.06em;line-height:1.05;border:1.4px solid var(--ink);border-radius:var(--r3);padding:0 7px 1px;white-space:nowrap;background:color-mix(in srgb,var(--paper) 70%,transparent);vertical-align:.02em}
 dfn.term,a.term-ref{font-style:normal;font-weight:700;text-decoration:underline dotted 2px;text-underline-offset:4px;cursor:help}
