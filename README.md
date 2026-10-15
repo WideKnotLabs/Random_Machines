@@ -71,3 +71,15 @@ python3 tools/build_manual.py ~/Desktop/RMXY
 - Same identity everywhere: RMXY-1, Random Machines, Borja Deudero Gracia.
 - Keep the privacy policy in step with App Store Connect's privacy answers.
 - Third-party names (Apple, Elektron, Arturia) are trademarks of their owners; the footer says so.
+
+## INK Synth manual
+
+The shared top navigation links to `/ink/manual/`. Export the reader-only manual from the INK project with:
+
+```sh
+python3 tools/build_ink_manual.py "~/Desktop/RM INK"
+python3 tools/site_chrome.py
+python3 tools/check_site.py
+```
+
+The public build retains search, themes, chapter navigation and figures, and self-hosts its fonts. It omits the comment controls, review scripts, comments page, review data, uploaded images and drafts. The local review guide at port 8800 keeps its commenting tools. Do not copy that review site's output or comment folders into this repository.

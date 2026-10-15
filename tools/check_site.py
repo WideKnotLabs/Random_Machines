@@ -7,7 +7,7 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = [ROOT / 'index.html'] + sorted((ROOT / 'rmxy-1').rglob('index.html'))
+PAGES = [ROOT / 'index.html'] + sorted((ROOT / 'rmxy-1').rglob('index.html')) + sorted((ROOT / 'ink').rglob('*.html'))
 problems = []
 
 
