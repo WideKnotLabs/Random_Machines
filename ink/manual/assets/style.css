@@ -218,6 +218,10 @@ a.term-ref{cursor:pointer;font-weight:inherit}
 .shot{position:relative;margin:0 auto;cursor:zoom-in;
   width:min(100%,var(--nat,780px),var(--cap,9999px),calc(var(--maxh) * var(--ar,1.5)))}
 .shot:not([data-zoom]){width:100%;cursor:default}
+picture.loop{display:contents}
+.loop-play{position:absolute;left:10px;bottom:10px;z-index:2;font:inherit;font-size:.85rem;line-height:1;padding:.35em .8em;border-radius:999px;
+  border:var(--line) solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
+.loop-play:focus-visible{outline:2px dashed currentColor;outline-offset:3px}
 .shot:focus-visible{outline:2px dashed currentColor;outline-offset:4px}
 .fig .pic,.lb .pic{display:block;width:100%;height:auto;border:var(--line) solid var(--ink);border-radius:14px;box-shadow:4px 4px 0 color-mix(in srgb,var(--ink) 35%,transparent);background:var(--paper)}
 .fig-inline{max-width:330px}
@@ -275,6 +279,18 @@ a.term-ref{cursor:pointer;font-weight:inherit}
 .hero h1{font-size:110px;margin:0 0 6px;letter-spacing:.02em}
 .hero .ink-wordmark{width:156px}
 .hero .lede{margin:0 0 20px}
+/* Quick moves strip: the gestures' loops in a row that scrolls sideways */
+.qstrip{margin:0 0 34px}
+.qstrip h2{font-family:var(--hand);font-size:30px;margin:0 0 10px;display:flex;align-items:baseline;gap:12px}
+.qstrip h2 a{text-decoration:none}
+.qstrip h2 small{font-family:inherit;font-size:19px;color:var(--pencil);font-weight:400}
+.qstrip ol{list-style:none;margin:0;padding:0 0 10px;display:grid;grid-auto-flow:column;grid-auto-columns:168px;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
+.qstrip li{scroll-snap-align:start}
+.qstrip li a{display:flex;flex-direction:column;gap:7px;height:100%;text-decoration:none;border:var(--line) solid var(--ink);border-radius:var(--r2);padding:8px;background:var(--paper)}
+.qstrip li a:hover{background:var(--wash)}
+.qstrip .q-img{display:flex;align-items:center;justify-content:center;height:190px;overflow:hidden;border-radius:var(--r1);background:var(--paper)}
+.qstrip .q-pic{display:block;max-width:100%;max-height:190px;width:auto;height:auto}
+.qstrip b{font-family:var(--hand);font-size:20px;line-height:1.05;font-weight:700}
 .partnav{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
 .partnav a{display:flex;align-items:center;gap:7px;text-decoration:none;font-family:var(--hand);font-size:21px;line-height:1;border:1.4px solid var(--ink);border-radius:var(--r1);padding:4px 12px 3px}
 .partnav a:hover{background:var(--wash)}

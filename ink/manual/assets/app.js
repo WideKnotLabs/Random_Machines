@@ -8,13 +8,59 @@
     if (save) { try { localStorage.setItem(KEY, t); } catch (e) {} }
     var btns = document.querySelectorAll('.th');
     for (var i = 0; i < btns.length; i++) btns[i].setAttribute('aria-pressed', btns[i].dataset.th === t ? 'true' : 'false');
-    var imgs = document.querySelectorAll('img[data-paper],img[data-dark],img[data-blue]');
+    var imgs = document.querySelectorAll('img[data-paper],img[data-dark],img[data-blue],img[data-loop]');
     for (var j = 0; j < imgs.length; j++) {
       var im = imgs[j], want = im.dataset[t] || im.dataset.base || im.getAttribute('src');
       if (!im.dataset.base) im.dataset.base = im.getAttribute('src');
       if (im.getAttribute('src') !== want) im.setAttribute('src', want);
+      if (im.hasAttribute('data-loop')) syncLoop(im, t);
     }
   }
+
+  /* loops (make_loops.py): an animated figure in a <picture> whose <source> gives the still poster to readers who asked
+     for less motion. For them a Play button (or a tap on the picture) plays it here; the theme picks loop and poster. */
+  var lessMotion = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : null;
+  function themeNow() { return root.getAttribute('data-theme') || 'paper'; }
+  function posterOf(im, t) { return im.dataset['poster' + t.charAt(0).toUpperCase() + t.slice(1)] || im.dataset.posterPaper || ''; }
+  function syncLoop(im, t) {
+    var pic = im.parentNode, src = pic && pic.tagName === 'PICTURE' ? pic.querySelector('source') : null;
+    if (!src) return;
+    var want = pic.classList.contains('playing') ? (im.dataset[t] || im.dataset.base || im.getAttribute('src')) : posterOf(im, t);
+    if (src.getAttribute('srcset') !== want) src.setAttribute('srcset', want);
+  }
+  function setPlaying(pic, on) {
+    pic.classList.toggle('playing', on);
+    var b = pic.parentNode && pic.parentNode.querySelector('.loop-play');
+    if (b) { b.textContent = on ? 'Pause' : 'Play'; b.setAttribute('aria-pressed', on ? 'true' : 'false'); }
+    var im = pic.querySelector('img'); if (im) syncLoop(im, themeNow());
+  }
+  function loopButtons() {
+    var pics = document.querySelectorAll('picture.loop');
+    for (var i = 0; i < pics.length; i++) {
+      var pic = pics[i], box = pic.parentNode, b = box.querySelector('.loop-play');
+      if (lessMotion && lessMotion.matches) {
+        if (!b && !box.closest('#lb') && !box.closest('.qstrip')) {   /* strip tiles are links: their poster stays */
+          b = document.createElement('button'); b.type = 'button'; b.className = 'loop-play';
+          b.setAttribute('aria-label', 'Play the animation'); box.appendChild(b);
+        }
+        setPlaying(pic, pic.classList.contains('playing'));
+      } else {
+        if (b) b.remove();
+        pic.classList.remove('playing');
+      }
+    }
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.loop-play');
+    var shot = !b && e.target.closest && e.target.closest('.shot');
+    var pic = b ? b.parentNode.querySelector('picture.loop') : shot ? shot.querySelector('picture.loop') : null;
+    if (!pic || !(lessMotion && lessMotion.matches)) return;
+    if (b || !pic.classList.contains('playing')) {   /* a paused loop plays on a tap; once playing, a tap enlarges it */
+      e.preventDefault(); e.stopImmediatePropagation();
+      setPlaying(pic, !pic.classList.contains('playing'));
+    }
+  }, true);
+  if (lessMotion) { if (lessMotion.addEventListener) lessMotion.addEventListener('change', loopButtons); else if (lessMotion.addListener) lessMotion.addListener(loopButtons); }
   document.addEventListener('click', function (e) {
     var b = e.target.closest && e.target.closest('.th');
     if (!b) return;
@@ -25,6 +71,7 @@
     setTheme(t, true);
   });
   setTheme(root.getAttribute('data-theme') || 'paper', false);
+  loopButtons();
 
   /* print always uses Paper (colours and picture variants), then puts the reader's theme back */
   var beforePrint = null;
@@ -87,7 +134,7 @@
     var c = shot.cloneNode(true);
     c.removeAttribute('data-zoom'); c.removeAttribute('tabindex'); c.removeAttribute('role'); c.removeAttribute('aria-label');
     var im = c.querySelector('img'); if (im) im.removeAttribute('loading');
-    var cp = c.querySelectorAll('.ck-pin'); for (var q = 0; q < cp.length; q++) cp[q].remove();
+    var cp = c.querySelectorAll('.ck-pin,.loop-play'); for (var q = 0; q < cp.length; q++) cp[q].remove();
     lbBox.innerHTML = ''; lbBox.appendChild(c); lbBox.scrollTop = 0;
     var fig = shot.closest('figure'), cap = fig && fig.querySelector('.cap');
     lbCap.textContent = cap ? cap.textContent : '';
