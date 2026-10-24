@@ -116,6 +116,13 @@ td{border-bottom:1px solid var(--faintline);padding:8px 14px 8px 8px;vertical-al
 .rhythm-beat{display:block;width:11px;height:11px;flex:none}
 .rhythm-beat.hit{background:var(--ink);border-radius:47% 53% 48% 52%/53% 45% 55% 47%;transform:rotate(-13deg)}
 .rhythm-beat.gap{height:2px;width:7px;margin:0 2px;background:var(--pencil);border-radius:2px;transform:rotate(-6deg)}
+/* Numbered rhythm table (the sequencer's): each step is a column, its mark on top and the step it plays under a hit. */
+.rhythm-table.numbered td,.rhythm-table.numbered tbody th{padding:14px 4px 12px}
+.rhythm-table.numbered .rhythm-marks{align-items:flex-start}
+.rhythm-step{display:flex;flex-direction:column;align-items:center;flex:none;width:11px}
+.rhythm-slot{display:flex;align-items:center;justify-content:center;height:11px}
+.rhythm-table.numbered .rhythm-beat.gap{margin:0}
+.rhythm-n{font-family:var(--hand);font-size:17px;line-height:1;color:var(--pencil);margin-top:5px;min-height:17px;white-space:nowrap}
 @media(max-width:640px){
   .rhythm-table thead th{font-size:19px;letter-spacing:0;padding-left:2px;padding-right:2px}
   .rhythm-table tbody th{font-size:24px}
@@ -123,12 +130,27 @@ td{border-bottom:1px solid var(--faintline);padding:8px 14px 8px 8px;vertical-al
   .rhythm-marks{gap:3px}
   .rhythm-beat{width:6px;height:6px}
   .rhythm-beat.gap{width:4px;margin:0 1px}
+  .rhythm-table.numbered thead th{font-size:17px;line-height:1.05;white-space:normal;vertical-align:bottom}
+  .rhythm-table.numbered thead th:first-child{width:25%}
+  .rhythm-table.numbered tbody th{font-size:22px}
+  .rhythm-table.numbered td,.rhythm-table.numbered tbody th{padding:16px 2px 12px}
+  .rhythm-table.numbered .rhythm-marks{gap:2px}
+  .rhythm-step{width:6px}
+  .rhythm-slot{height:6px}
+  .rhythm-table.numbered .rhythm-beat.gap{margin:0;width:4px}
+  .rhythm-n{font-size:12px;margin-top:4px;min-height:12px}
 }
 @media(max-width:370px){
   .rhythm-table thead th{font-size:17px}
   .rhythm-marks{gap:2px}
   .rhythm-beat{width:5px;height:5px}
   .rhythm-beat.gap{width:3px}
+  .rhythm-table.numbered thead th{font-size:16px}
+  .rhythm-table.numbered tbody th{font-size:20px}
+  .rhythm-step{width:5px}
+  .rhythm-slot{height:5px}
+  .rhythm-table.numbered .rhythm-beat.gap{width:3px}
+  .rhythm-n{font-size:11px;min-height:11px}
 }
 
 /* on-screen label & terms */
