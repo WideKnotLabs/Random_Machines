@@ -200,9 +200,10 @@ main + .footer { margin-top: 0; }
 
 /* ---------- The story: hero, the pad, into the rail, the nineteen ---------- */
 
-.story__track { position: relative; height: 1000vh; }
+/* heights in svh, the screen with a phone's toolbars showing, so nothing pinned hides under them and nothing resizes as they slide */
+.story__track { position: relative; height: 1000vh; height: 1000svh; }
 .story__anchor { position: absolute; top: 40%; left: 0; }
-.story__pin { position: sticky; top: var(--nav-h); height: calc(100vh - var(--nav-h)); overflow: hidden; }
+.story__pin { position: sticky; top: var(--nav-h); height: calc(100vh - var(--nav-h)); height: calc(100svh - var(--nav-h)); overflow: hidden; }
 .story__copy { position: absolute; z-index: 3; }
 .story__copy--side { left: max(var(--gutter), calc((100% - var(--max)) / 2)); top: 50%; transform: translateY(-50%); width: min(660px, 52%); }
 .story__copy--top { left: 50%; top: clamp(24px, 8vh, 88px); transform: translateX(-50%); width: min(92%, 900px); text-align: center; }
@@ -249,28 +250,29 @@ a.store:hover { border-color: var(--ink-2); }
 @keyframes fxk-flip-img { 0% { transform: rotateX(0); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0); } }
 
 @media (max-width: 900px) {
-  .story__track { height: 1000vh; }
+  .story__track { height: 900vh; height: 900svh; }
   .story__copy--side { left: var(--gutter); right: var(--gutter); width: auto; top: 28px; transform: none; }
   .beat { transform: none; }
   .beat h2 { font-size: clamp(2rem, 9vw, 3.25rem); }
   .beat p { margin-top: 12px; font-size: var(--t-l); }
-  .hero__title { font-size: clamp(2.25rem, 10.5vw, 3.5rem); }
+  .hero__title, .beat--hero .hero__title { font-size: clamp(2.25rem, 10.5vw, 3.5rem); }
   .beat .label { margin-bottom: 14px; }
   .store { margin-top: 20px; }
   .story__ipad { --iw: calc(100vw - 2 * var(--gutter)); top: 58%; }
 }
 
-/* reduced motion or no JavaScript: the story becomes a plain sequence */
+/* reduced motion, or a phone on its side: the story becomes a plain sequence */
 .story--static .story__track { height: auto; }
 .story--static .story__pin { position: static; height: auto; overflow: visible; display: grid; gap: 64px; padding: var(--sec) var(--gutter); }
 .story--static .story__copy, .story--static .beat, .story--static .story__ipad, .story--static .story__rail { position: static; transform: none; translate: none; opacity: 1; visibility: visible; width: auto; margin-inline: auto; }
 .story--static .story__ipad { width: min(900px, 92vw); margin: 0 auto; }
-.story--static .fxr { display: none; }
+.story--static .fxr, .story--static .story__scrim, .story--static .story__pad-shade { display: none; }
+.story--static .beat + .beat { margin-top: 56px; }
 
 /* ---------- Built to perform: a pinned diagram, one control lit per step, callouts that stay ---------- */
 
-.perform__track { position: relative; height: 520vh; }
-.perform__pin { position: sticky; top: var(--nav-h); height: calc(100vh - var(--nav-h)); display: flex; flex-direction: column; justify-content: center; gap: clamp(24px, 4vh, 48px); width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; }
+.perform__track { position: relative; height: 520vh; height: 520svh; }
+.perform__pin { position: sticky; top: var(--nav-h); height: calc(100vh - var(--nav-h)); height: calc(100svh - var(--nav-h)); display: flex; flex-direction: column; justify-content: center; gap: clamp(24px, 4vh, 48px); width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; }
 .perform__head { text-align: center; }
 .perform__head h2 { font-size: clamp(2.5rem, 5.5vw, 5rem); }
 .perform__head p { margin: 14px 0 0; font-size: var(--t-xl); color: var(--ink-2); }
@@ -308,6 +310,7 @@ a.store:hover { border-color: var(--ink-2); }
 /* ---------- Looper ---------- */
 
 .looper__device { width: min(100%, 330px); margin-inline: auto; }
+@media (orientation: landscape) and (max-height: 500px) { .looper__device { width: min(100%, 330px, calc((100svh - var(--nav-h)) * 0.42)); } }
 @media (min-width: 901px) { #looper .split { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
 
 /* ---------- Make sound, shape it ---------- */

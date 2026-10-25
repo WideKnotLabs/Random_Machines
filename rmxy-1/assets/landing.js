@@ -47,7 +47,9 @@
   const seg = (p, a, b) => clamp((p - a) / (b - a));            /* 0→1 across [a, b] */
   const band = (p, a, b, c, d) => Math.min(seg(p, a, b), 1 - seg(p, c, d)); /* in a→b, out c→d */
   const lerp = (a, b, t) => a + (b - a) * t;
-  const progress = track => { const r = track.getBoundingClientRect(); return clamp(-r.top / Math.max(1, r.height - window.innerHeight)); };
+  /* a pinned stage plus the bar above it is 100svh: unlike innerHeight it holds still while a phone's toolbars slide */
+  const viewH = pin => pin.offsetHeight + (parseFloat(getComputedStyle(pin).top) || 0);
+  const progress = (track, pin) => { const r = track.getBoundingClientRect(); return clamp(-r.top / Math.max(1, r.height - viewH(pin))); };
 
   /* The story: hero → the pad → zoom into the rail → 8 slots → the nineteen */
   const story = $('[data-story]');
@@ -97,10 +99,24 @@
       el.classList.toggle('is-vis', v > 0.01);
       el.style.translate = `0 ${((1 - v) * dy).toFixed(1)}px`;
     };
+    const copyTop = $('.story__copy--top', story);
+    const below = (box, b) => box.offsetTop + b.offsetTop + b.offsetHeight;   /* bottom of a beat's copy in the stage, ignoring its slide */
+    /* a phone on its side has too little height for the pinned story: it reads as the plain sequence instead */
+    const short = window.matchMedia('(orientation: landscape) and (max-height: 500px)');
+    const staged = [ipad, rail, scrim, padShade, side, tray, ...Object.values(beats), ...keys, ...slots, ...wells];
+    let flat = false;
     if (still) story.classList.add('story--static');
     else onScroll.push(() => {
+      if (story.classList.toggle('story--static', short.matches)) {
+        if (!flat) { flat = true; staged.forEach(el => el.removeAttribute('style')); }
+        return;
+      }
+      flat = false;
+      const U = viewH(pin);
+      const phone = narrow.matches;
       const r0 = track.getBoundingClientRect();
-      const P = clamp(-r0.top, 0, r0.height - window.innerHeight) / (5.2 * window.innerHeight), p = P;   /* one scroll scale for every beat */
+      const P = clamp(-r0.top, 0, r0.height - U) / (5.2 * U), p = P;   /* one scroll scale for every beat */
+      const Pend = (r0.height - U) / (5.2 * U);
       /* copy */
       setBeat(beats.hero, 1 - seg(p, 0.012, 0.042), -24);
       setBeat(beats.move, band(p, 0.15, 0.20, 0.29, 0.33), 20);
@@ -118,23 +134,33 @@
       const S = railW / (1150 / 1180 * sw);
       const z = ease(seg(p, 0.31, 0.43));
       const H = W * 0.7124, L = ipad.offsetLeft, T0 = ipad.offsetTop;
+      /* where the iPad settles: on a phone, in the space under the tallest copy it shares the stage with */
+      let Yf = 0;
+      if (phone) {
+        const lo = below(copyTop, beats.move) + 24, hi = pr.height - H - 20;
+        Yf = (lo <= hi ? (lo + hi) / 2 : lo) - T0;
+      }
+      /* the rail strip lands on the middle of the stage; on a phone it stays where the iPad's rail already is */
+      const midY = phone ? T0 + Yf + oy : pr.height / 2;
       let s, X, Y;
       if (z > 0) {            /* zoom: carry the rail centre to the middle of the stage */
         s = lerp(1, S, z);
         X = lerp(L + ox, pr.width / 2, z) - L - s * ox;
-        Y = lerp(T0 + oy, pr.height / 2, z) - T0 - s * oy;
+        Y = lerp(T0 + Yf + oy, midY, z) - T0 - s * oy;
       } else {                /* enter: from edge to edge to its place in the frame */
-        const s0 = narrow.matches ? pr.width / sw : Math.max(pr.width / sw, pr.height / sh);
+        const s0 = phone ? pr.width / sw : Math.max(pr.width / sw, pr.height / sh);
         s = lerp(s0, 1, h);
-        /* start with the app's top edge (under the status band) at the top of the stage, rail fully in view */
+        /* start with the app's top edge (under the status band) at the top of the stage, rail fully in view;
+           on a phone the screen spans the width just under the hero copy */
         const X0 = pr.width / 2 - L - s0 * W / 2;
-        const Y0 = narrow.matches ? pr.height * 0.62 - T0 - s0 * H / 2 : -s0 * (bz + 28 / 820 * sh) - T0;
+        const Y0 = phone ? Math.max(pr.height * 0.62 - s0 * H / 2, below(side, beats.hero) + 24 - s0 * bz) - T0
+          : -s0 * (bz + 28 / 820 * sh) - T0;
         X = lerp(X0, 0, h);
-        Y = lerp(Y0, 0, h);
+        Y = lerp(Y0, Yf, h);
       }
       ipad.style.transformOrigin = '0 0';
       /* hero copy sits inside the XY pad (28–778 × 160–743 pt of the capture), fitted to what is on screen */
-      if (!narrow.matches && p < 0.06) {
+      if (!phone && p < 0.06) {
         const px = v => L + X + s * (bz + v / 1180 * sw), py = v => T0 + Y + s * (bz + v / 820 * sh);
         const left = px(28), right = px(778), top = Math.max(py(160), 0), bottom = Math.min(py(743), pr.height);
         const padW = right - left;
@@ -144,49 +170,59 @@
         side.style.setProperty('--fit-h', `${(bottom - top).toFixed(0)}px`);
         padShade.style.left = `${left}px`; padShade.style.top = `${top}px`;
         padShade.style.width = `${padW}px`; padShade.style.height = `${bottom - top}px`;
-      }
+      } else if (phone && side.style.top) side.removeAttribute('style');   /* back to the stylesheet after a rotation */
       padShade.style.opacity = (1 - h).toFixed(3);
       ipad.style.transform = `translate(${X.toFixed(1)}px, ${Y.toFixed(1)}px) scale(${s.toFixed(4)})`;
       ipad.style.opacity = (1 - seg(p, 0.42, 0.46)).toFixed(3);
       /* rail strip from the capture: in for "8 slots.", then it hands over to clean keys in a tray */
       rail.style.opacity = Math.min(seg(P, 0.42, 0.45), 1 - seg(P, 0.49, 0.53)).toFixed(3);
-      rail.style.transform = 'translate(-50%, -50%)';
-      const pw = pr.width, ph = pr.height;
-      const railH = railW * 122.67 / 1150, kw = 96 / 1150 * railW, kh = kw * 299 / 288;
-      const slotAt = (i, cy) => [pw / 2 - railW / 2 + (99 + 113.33 * i) / 1150 * railW, cy - railH / 2 + 11.67 / 122.67 * railH, kw];
-      const midY = ph / 2, upY = Math.max(ph * 0.11, 30) + railH / 2, endY = ph * 0.58;
-      /* grid: the rail's eight drop straight down as the first row; the other eleven rise into the rows below */
-      const ROWS = narrow.matches ? [4, 4, 4, 4, 3] : [8, 6, 5];
+      const pw = pr.width, ph = pr.height, kr = 299 / 288;
+      const railH = railW * 122.67 / 1150, kw = 96 / 1150 * railW;
+      /* the eight keys as they sit in the rail strip */
+      const rowAt = (i, cy) => [pw / 2 - railW / 2 + (99 + 113.33 * i) / 1150 * railW, cy - railH / 2 + 11.67 / 122.67 * railH, kw];
+      rail.style.transform = `translate(-50%, -50%) translateY(${(midY - ph / 2).toFixed(1)}px)`;
+      /* grid: the rail's eight drop straight down as the first row (on a phone, the first two rows of four);
+         the other eleven rise into the rows below */
+      const ROWS = phone ? [4, 4, 4, 4, 3] : [8, 6, 5];
       const order = FIRST.concat(keys.map(k => k.dataset.id).filter(id => !FIRST.includes(id)));
-      const gTop = Math.max(narrow.matches ? 190 : 230, ph * (narrow.matches ? 0.27 : 0.31));
+      const gTop = phone ? Math.max(below(copyTop, beats.fx), below(copyTop, beats.slots)) + 24 : Math.max(230, ph * 0.31);
       const maxC = Math.max(...ROWS), R = ROWS.length;
-      const G = Math.min(124, (pw * 0.88) / (maxC + (maxC - 1) * 0.22), (ph - gTop - 28) / (R * 299 / 288 + (R - 1) * 0.22));
+      const G = Math.min(phone ? 112 : 124, (pw * (phone ? 0.9 : 0.88)) / (maxC + (maxC - 1) * 0.22), (ph - gTop - 28) / (R * kr + (R - 1) * 0.22));
       const gap = G * 0.22;
       const gridAt = id => {
         let i = order.indexOf(id), row = 0;
         while (i >= ROWS[row]) { i -= ROWS[row]; row++; }
         const rowW = ROWS[row] * G + (ROWS[row] - 1) * gap;
-        return [pw / 2 - rowW / 2 + i * (G + gap), gTop + row * (G * 299 / 288 + gap), G];
+        return [pw / 2 - rowW / 2 + i * (G + gap), gTop + row * (G * kr + gap), G];
       };
+      /* a phone holds the eight as a rack of two rows of four, the size of the grid's keys, so they stay readable */
+      const rackH = 2 * G * kr + gap, rackY = gTop + rackH / 2;
+      const rackAt = (i, cy) => [pw / 2 - (4 * G + 3 * gap) / 2 + (i % 4) * (G + gap), cy - rackH / 2 + Math.floor(i / 4) * (G * kr + gap), G];
+      const slotAt = phone ? rackAt : rowAt;
+      const upY = Math.max(ph * 0.11, 30) + railH / 2;
+      const endY = phone ? Math.max((below(copyTop, beats.endless) + ph) / 2, below(copyTop, beats.endless) + 32 + rackH / 2) : ph * 0.58;
       const place = (el, [x, y, w], o) => {
         el.style.opacity = o.toFixed(3);
         el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${(w / 120).toFixed(4)})`;
       };
       const mix = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+      /* the eight before the grid opens: the rail rises to the top, or on a phone unfolds into the rack */
       const railY = lerp(midY, upY, ease(seg(P, 0.56, 0.64)));
-      /* the first roll lands in the order the keys stand in the grid, left to right, so no two paths cross */
-      const back = CHAINS[0].slice().sort((a, b) => gridAt(a)[0] - gridAt(b)[0] || gridAt(a)[1] - gridAt(b)[1]);
+      const restAt = i => phone ? rackAt(i, rackY) : rowAt(i, upY);
+      const firstAt = i => phone ? mix(rowAt(i, midY), rackAt(i, rackY), ease(seg(P, 0.53 + i * 0.004, 0.61 + i * 0.004))) : rowAt(i, railY);
+      /* the first roll lands in the order the keys stand in the grid (left to right, or reading order on a phone), so paths barely cross */
+      const back = CHAINS[0].slice().sort((a, b) => { const A = gridAt(a), B = gridAt(b); return phone ? A[1] - B[1] || A[0] - B[0] : A[0] - B[0] || A[1] - B[1]; });
       if (back.join() !== CHAINS[0].join()) { CHAINS[0] = back; if (shown === 0) { shown = -1; roll(0); } }
       keys.forEach(el => {
         const id = el.dataset.id, f = FIRST.indexOf(id), c = back.indexOf(id), g = gridAt(id), n = order.indexOf(id);
         let pos, o;
         if (P < 0.64) {                                   /* sitting in the rail */
-          pos = f >= 0 ? slotAt(f, railY) : g;
+          pos = f >= 0 ? firstAt(f) : g;
           o = f >= 0 ? seg(P, 0.49, 0.53) : 0;
         } else if (P < 0.98) {                            /* the rail opens into the nineteen */
           if (f >= 0) {
             const t = ease(seg(P, 0.64 + f * 0.005, 0.74 + f * 0.005));
-            pos = mix(slotAt(f, upY), g, t); o = 1;
+            pos = mix(restAt(f), g, t); o = 1;
           } else {
             const t = ease(seg(P, 0.69 + (n - 8) * 0.006, 0.77 + (n - 8) * 0.006));
             pos = [g[0], g[1] + (1 - t) * G * 0.6, g[2] * (0.92 + 0.08 * t)]; o = t;
@@ -201,16 +237,18 @@
         place(el, pos, o);
       });
       /* the tray: with the rail in, gone while the keys are out, back for the dice */
-      const trayY = P < 1.0 ? railY : endY;
       const trayO = P < 1.0 ? Math.min(seg(P, 0.49, 0.53), 1 - seg(P, 0.66, 0.72)) : seg(P, 1.04, 1.10);
-      const [tx0, ty0] = slotAt(0, trayY), [tx7] = slotAt(7, trayY), pad = kw * 0.08;
-      Object.assign(tray.style, { opacity: trayO.toFixed(3), width: `${(tx7 + kw - tx0 + 2 * pad).toFixed(1)}px`, height: `${(kh + 2 * pad).toFixed(1)}px`,
+      const wellAt = wells.map((_, i) => P < 0.64 ? firstAt(i) : P < 1.0 ? restAt(i) : slotAt(i, endY));
+      const tx0 = Math.min(...wellAt.map(w => w[0])), ty0 = Math.min(...wellAt.map(w => w[1]));
+      const tx1 = Math.max(...wellAt.map(w => w[0] + w[2])), ty1 = Math.max(...wellAt.map(w => w[1] + w[2] * kr)), pad = wellAt[0][2] * 0.08;
+      Object.assign(tray.style, { opacity: trayO.toFixed(3), width: `${(tx1 - tx0 + 2 * pad).toFixed(1)}px`, height: `${(ty1 - ty0 + 2 * pad).toFixed(1)}px`,
         transform: `translate(${(tx0 - pad).toFixed(1)}px, ${(ty0 - pad).toFixed(1)}px)` });
-      wells.forEach((w, i) => Object.assign(w.style, { left: `${(pad + (slotAt(i, trayY)[0] - tx0)).toFixed(1)}px`, top: `${pad.toFixed(1)}px`, width: `${kw.toFixed(1)}px`, height: `${kh.toFixed(1)}px` }));
-      /* the rolling rail */
-      const live = P >= 1.16;
+      wells.forEach((w, i) => { const [x, y, k] = wellAt[i];
+        Object.assign(w.style, { left: `${(pad + x - tx0).toFixed(1)}px`, top: `${(pad + y - ty0).toFixed(1)}px`, width: `${k.toFixed(1)}px`, height: `${(k * kr).toFixed(1)}px` }); });
+      /* the rolling rail: the rolls share out whatever track is left, so a shorter phone track still shows them all */
+      const live = P >= 1.16, every = Math.min(0.085, (Pend - 1.18) / CHAINS.length);
       slots.forEach((el, i) => place(el, slotAt(i, endY), live ? 1 : 0));
-      roll(live ? Math.min(CHAINS.length - 1, Math.floor((P - 1.16) / 0.085)) : 0);
+      roll(live ? Math.min(CHAINS.length - 1, Math.floor((P - 1.16) / every)) : 0);
     });
   }
 
@@ -268,7 +306,7 @@
     onScroll.push(() => {
       if (!wide.matches) { items.forEach(li => li.style.left = ''); return; }
       layout();
-      const p = progress(track);
+      const p = progress(track, $('.perform__pin', perf));
       const i = p < 0.08 ? -1 : p > 0.9 ? items.length : Math.min(items.length - 1, Math.floor((p - 0.08) / 0.82 * items.length));
       if (i === cur) return;
       cur = i;
