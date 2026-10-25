@@ -219,6 +219,8 @@ main + .footer { margin-top: 0; }
 .store img { width: 44px; height: 44px; border-radius: 11px; }
 .store b { display: block; font-size: var(--t-l); font-weight: 600; line-height: 1.1; }
 .store small { display: block; font-size: var(--t-s); color: var(--ink-3); }
+a.store { cursor: pointer; text-decoration: none; transition: border-color 0.3s var(--ease); }
+a.store:hover { border-color: var(--ink-2); }
 
 .story__ipad { --iw: min(1080px, 92vw, calc((100vh - var(--nav-h) - 300px) * 1.4)); position: absolute; z-index: 2; left: 50%; top: calc(50% + 90px); width: var(--iw); margin: calc(var(--iw) * -0.356) 0 0 calc(var(--iw) * -0.5); transform-origin: 0 0; will-change: transform, opacity; }
 .story__ipad .device__frame { background: rgba(5, 5, 5, var(--frame, 1)); box-shadow: 0 0 0 1.5px rgba(58, 58, 63, var(--frame, 1)), inset 0 0 0 1px rgba(28, 28, 31, var(--frame, 1)); }
