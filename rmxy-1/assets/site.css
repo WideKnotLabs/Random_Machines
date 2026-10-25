@@ -541,3 +541,48 @@ main + .footer { margin-top: 0; }
   figure, tr { break-inside: avoid; }
   a { text-decoration: none; }
 }
+
+/* ---------- Home (randommachines.app/): one full-width section per app ----------
+   Each app on its own ground, the grid idea in both: INK on the blueprint of its Blue theme, RMXY-1 on the dot grid
+   of its XY pad. Same order in each: kicker, wordmark, one line, buttons, the iPad rising out of the section's bottom. */
+
+.home .nav { position: absolute; inset: 0 0 auto; background: none; border: 0; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.home .nav__inner { display: grid; grid-template-columns: 1fr auto 1fr; }
+.home .nav__links { justify-self: end; }
+.home-title { margin: 0; font-size: var(--t-s); font-weight: 500; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.74); white-space: nowrap; }
+.home .nav__links a { color: rgba(255, 255, 255, 0.74); }
+.home .nav__links a:hover { color: #fff; }
+@media (max-width: 760px) {
+  .home .nav { height: auto; }
+  .home .nav__inner { grid-template-columns: 1fr auto; row-gap: 0; padding-top: 8px; }
+  .home-title { grid-row: 2; grid-column: 1 / -1; padding: 2px 0 10px; }
+}
+
+.app { position: relative; display: flex; flex-direction: column; align-items: center; overflow: hidden; padding: clamp(88px, 9vw, 120px) var(--gutter) 0; text-align: center; }
+.app:first-of-type { padding-top: clamp(150px, 15vw, 190px); }
+.app .label { color: inherit; opacity: 0.72; }
+.app__mark { display: block; width: auto; margin: 28px 0 0; }
+.app__line { margin: 24px 0 0; font-size: clamp(1.375rem, 2vw, 1.875rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance; }
+.app__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
+.app .btn { border-color: currentColor; color: inherit; }
+.app .btn--primary { background: currentColor; }
+.app .btn--primary span { color: var(--app-bg); }
+.app__media { width: min(100%, 1120px); margin-top: clamp(48px, 6vw, 80px); aspect-ratio: 100 / 50; overflow: hidden; }
+.app__media .device { width: 100%; }
+
+.app--ink {
+  --app-bg: #1449b2;
+  background-color: var(--app-bg); color: #f2f7ff;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+  background-size: 26px 26px; background-position: center top;
+}
+.app--ink .app__mark { height: clamp(120px, 15vw, 200px); filter: brightness(0) invert(1); }
+.app--ink :focus-visible { outline-color: #fff; }
+
+.app--rmxy {
+  --app-bg: #0b0e10;
+  background-color: var(--app-bg); color: var(--ink);
+  background-image: radial-gradient(rgba(245, 245, 247, 0.18) 1px, transparent 1.4px);
+  background-size: 28px 28px; background-position: center top;
+}
+.app--rmxy .app__mark { height: clamp(72px, 8.6vw, 116px); margin: 40px 0 12px; }
