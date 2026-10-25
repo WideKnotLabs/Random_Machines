@@ -586,3 +586,4 @@ main + .footer { margin-top: 0; }
   background-size: 28px 28px; background-position: center top;
 }
 .app--rmxy .app__mark { height: clamp(72px, 8.6vw, 116px); margin: 40px 0 12px; }
+@media (max-width: 480px) { .app .btn--lg { min-height: 44px; padding: 0 18px; font-size: var(--t-m); } }
