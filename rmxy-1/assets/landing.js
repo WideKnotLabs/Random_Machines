@@ -19,10 +19,13 @@
   const loadVideo = v => {
     if (v.dataset.loaded) return;
     v.dataset.loaded = '1';
+    /* a phone screen is about 1200 device pixels across: it gets the 1180-wide encode, a quarter of the pixels to decode */
+    const small = window.innerWidth * (window.devicePixelRatio || 1) <= 1300 ? 'Small' : '';
     [['srcWebm', 'video/webm'], ['srcMp4', 'video/mp4']].forEach(([key, type]) => {
-      if (!v.dataset[key]) return;
+      const src = v.dataset[key + small] || v.dataset[key];
+      if (!src) return;
       const s = document.createElement('source');
-      s.src = v.dataset[key];
+      s.src = src;
       s.type = type;
       v.append(s);
     });
@@ -30,10 +33,14 @@
   };
   const play = new IntersectionObserver(entries => {
     entries.forEach(({ target: v, isIntersecting }) => {
-      if (isIntersecting) { loadVideo(v); if (!still) v.play().catch(() => {}); } else v.pause();
+      if (isIntersecting) { loadVideo(v); if (!still && !v.dataset.hold) v.play().catch(() => {}); } else v.pause();
     });
   }, { rootMargin: '200px 0px' });
   $$('video[data-src-mp4]').forEach(v => play.observe(v));
+
+  /* The MIDI wires pulse only while they are on screen */
+  const live = new IntersectionObserver(entries => entries.forEach(e => e.target.classList.toggle('is-live', e.isIntersecting)));
+  $$('.io').forEach(el => live.observe(el));
 
   /* Scroll-driven pieces share one frame callback */
   const onScroll = [];
@@ -47,6 +54,13 @@
   const seg = (p, a, b) => clamp((p - a) / (b - a));            /* 0→1 across [a, b] */
   const band = (p, a, b, c, d) => Math.min(seg(p, a, b), 1 - seg(p, c, d)); /* in a→b, out c→d */
   const lerp = (a, b, t) => a + (b - a) * t;
+  /* write a style only when it changed: most pieces sit still through most of the scroll, and every write costs a style pass */
+  const put = (el, k, v) => {
+    const c = el.__css || (el.__css = {});
+    if (c[k] === v) return;
+    c[k] = v;
+    if (k.startsWith('--')) el.style.setProperty(k, v); else el.style[k] = v;
+  };
   /* a pinned stage plus the bar above it is 100svh: unlike innerHeight it holds still while a phone's toolbars slide */
   const viewH = pin => pin.offsetHeight + (parseFloat(getComputedStyle(pin).top) || 0);
   const progress = (track, pin) => { const r = track.getBoundingClientRect(); return clamp(-r.top / Math.max(1, r.height - viewH(pin))); };
@@ -95,9 +109,9 @@
     };
     roll(0);
     const setBeat = (el, v, dy = 0) => {
-      el.style.opacity = v.toFixed(3);
+      put(el, 'opacity', v.toFixed(3));
       el.classList.toggle('is-vis', v > 0.01);
-      el.style.translate = `0 ${((1 - v) * dy).toFixed(1)}px`;
+      put(el, 'translate', `0 ${((1 - v) * dy).toFixed(1)}px`);
     };
     const copyTop = $('.story__copy--top', story);
     const below = (box, b) => box.offsetTop + b.offsetTop + b.offsetHeight;   /* bottom of a beat's copy in the stage, ignoring its slide */
@@ -105,17 +119,27 @@
     const short = window.matchMedia('(orientation: landscape) and (max-height: 500px)');
     const staged = [ipad, rail, scrim, padShade, side, tray, ...Object.values(beats), ...keys, ...slots, ...wells];
     let flat = false;
+    const heroVideo = $('video', ipad);
+    let heroOn = true, Ps = -1, lastT = 0;
     if (still) story.classList.add('story--static');
     else onScroll.push(() => {
       if (story.classList.toggle('story--static', short.matches)) {
-        if (!flat) { flat = true; staged.forEach(el => el.removeAttribute('style')); }
+        if (!flat) { flat = true; staged.forEach(el => { el.removeAttribute('style'); el.__css = null; }); }
         return;
       }
       flat = false;
       const U = viewH(pin);
       const phone = narrow.matches;
       const r0 = track.getBoundingClientRect();
-      const P = clamp(-r0.top, 0, r0.height - U) / (5.2 * U), p = P;   /* one scroll scale for every beat */
+      /* the story follows the scroll through a short glide (about 80 ms), so wheel notches and uneven touch updates
+         play as one smooth move instead of steps; a jump (a link, a reload part-way down) lands at once */
+      const Pt = clamp(-r0.top, 0, r0.height - U) / (5.2 * U), now = performance.now();
+      if (Ps < 0 || Math.abs(Pt - Ps) > 0.5) Ps = Pt;
+      else Ps += (Pt - Ps) * (1 - Math.exp(-Math.min(now - lastT, 50) / 80));
+      lastT = now;
+      if (Math.abs(Pt - Ps) > 0.0002) queue(); else Ps = Pt;
+      if (Ps === Pt && r0.bottom < -200) return;   /* scrolled well past the story: it holds its last frame */
+      const P = Ps, p = P;   /* one scroll scale for every beat */
       const Pend = (r0.height - U) / (5.2 * U);
       /* copy */
       setBeat(beats.hero, 1 - seg(p, 0.012, 0.042), -24);
@@ -125,8 +149,8 @@
       setBeat(beats.endless, seg(P, 1.10, 1.14), 20);
       /* the hero is the app itself, edge to edge; scrolling sets it into the iPad */
       const h = ease(seg(p, 0.035, 0.15));
-      scrim.style.opacity = (1 - h).toFixed(3);   /* the darkening lifts as the screen settles into the iPad */
-      ipad.style.setProperty('--frame', seg(p, 0.06, 0.14).toFixed(3));
+      put(scrim, 'opacity', (1 - h).toFixed(3));   /* the darkening lifts as the screen settles into the iPad */
+      put(ipad, '--frame', seg(p, 0.06, 0.14).toFixed(3));
       const pr = pin.getBoundingClientRect();
       const W = ipad.offsetWidth, bz = W * 0.022, sw = W - 2 * bz, sh = sw * 820 / 1180;
       const ox = bz + (14.5 + 575) / 1180 * sw, oy = bz + (27.5 + 61.25) / 820 * sh;  /* rail centre in the iPad capture */
@@ -158,29 +182,35 @@
         X = lerp(X0, 0, h);
         Y = lerp(Y0, Yf, h);
       }
-      ipad.style.transformOrigin = '0 0';
       /* hero copy sits inside the XY pad (28–778 × 160–743 pt of the capture), fitted to what is on screen */
       if (!phone && p < 0.06) {
         const px = v => L + X + s * (bz + v / 1180 * sw), py = v => T0 + Y + s * (bz + v / 820 * sh);
         const left = px(28), right = px(778), top = Math.max(py(160), 0), bottom = Math.min(py(743), pr.height);
         const padW = right - left;
-        side.style.left = `${(left + padW * 0.06).toFixed(1)}px`;
-        side.style.width = `${(padW * 0.88).toFixed(1)}px`;
-        side.style.top = `${((top + bottom) / 2).toFixed(1)}px`;
-        side.style.setProperty('--fit-h', `${(bottom - top).toFixed(0)}px`);
-        padShade.style.left = `${left}px`; padShade.style.top = `${top}px`;
-        padShade.style.width = `${padW}px`; padShade.style.height = `${bottom - top}px`;
-      } else if (phone && side.style.top) side.removeAttribute('style');   /* back to the stylesheet after a rotation */
-      padShade.style.opacity = (1 - h).toFixed(3);
-      ipad.style.transform = `translate(${X.toFixed(1)}px, ${Y.toFixed(1)}px) scale(${s.toFixed(4)})`;
-      ipad.style.opacity = (1 - seg(p, 0.42, 0.46)).toFixed(3);
+        put(side, 'left', `${(left + padW * 0.06).toFixed(1)}px`);
+        put(side, 'width', `${(padW * 0.88).toFixed(1)}px`);
+        put(side, 'top', `${((top + bottom) / 2).toFixed(1)}px`);
+        put(side, '--fit-h', `${(bottom - top).toFixed(0)}px`);
+        put(padShade, 'left', `${left.toFixed(1)}px`); put(padShade, 'top', `${top.toFixed(1)}px`);
+        put(padShade, 'width', `${padW.toFixed(1)}px`); put(padShade, 'height', `${(bottom - top).toFixed(1)}px`);
+      } else if (phone && side.style.top) { side.removeAttribute('style'); side.__css = null; }   /* back to the stylesheet after a rotation */
+      put(padShade, 'opacity', (1 - h).toFixed(3));
+      put(ipad, 'transform', `translate(${X.toFixed(1)}px, ${Y.toFixed(1)}px) scale(${s.toFixed(4)})`);
+      const seen = 1 - seg(p, 0.42, 0.46);
+      put(ipad, 'opacity', seen.toFixed(3));
+      /* the hero video only decodes while the iPad is in sight */
+      if ((seen > 0) !== heroOn) {
+        heroOn = seen > 0;
+        if (!heroOn) { heroVideo.dataset.hold = '1'; heroVideo.pause(); }
+        else { delete heroVideo.dataset.hold; if (heroVideo.dataset.loaded) heroVideo.play().catch(() => {}); }
+      }
       /* rail strip from the capture: in for "8 slots.", then it hands over to clean keys in a tray */
-      rail.style.opacity = Math.min(seg(P, 0.42, 0.45), 1 - seg(P, 0.49, 0.53)).toFixed(3);
+      put(rail, 'opacity', Math.min(seg(P, 0.42, 0.45), 1 - seg(P, 0.49, 0.53)).toFixed(3));
       const pw = pr.width, ph = pr.height, kr = 299 / 288;
       const railH = railW * 122.67 / 1150, kw = 96 / 1150 * railW;
       /* the eight keys as they sit in the rail strip */
       const rowAt = (i, cy) => [pw / 2 - railW / 2 + (99 + 113.33 * i) / 1150 * railW, cy - railH / 2 + 11.67 / 122.67 * railH, kw];
-      rail.style.transform = `translate(-50%, -50%) translateY(${(midY - ph / 2).toFixed(1)}px)`;
+      put(rail, 'transform', `translate(-50%, -50%) translateY(${(midY - ph / 2).toFixed(1)}px)`);
       /* grid: the rail's eight drop straight down as the first row (on a phone, the first two rows of four);
          the other eleven rise into the rows below */
       const ROWS = phone ? [4, 4, 4, 4, 3] : [8, 6, 5];
@@ -202,8 +232,8 @@
       const upY = Math.max(ph * 0.11, 30) + railH / 2;
       const endY = phone ? Math.max((below(copyTop, beats.endless) + ph) / 2, below(copyTop, beats.endless) + 32 + rackH / 2) : ph * 0.58;
       const place = (el, [x, y, w], o) => {
-        el.style.opacity = o.toFixed(3);
-        el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${(w / 120).toFixed(4)})`;
+        put(el, 'opacity', o.toFixed(3));
+        put(el, 'transform', `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${(w / 120).toFixed(4)})`);
       };
       const mix = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
       /* the eight before the grid opens: the rail rises to the top, or on a phone unfolds into the rack */
@@ -241,10 +271,14 @@
       const wellAt = wells.map((_, i) => P < 0.64 ? firstAt(i) : P < 1.0 ? restAt(i) : slotAt(i, endY));
       const tx0 = Math.min(...wellAt.map(w => w[0])), ty0 = Math.min(...wellAt.map(w => w[1]));
       const tx1 = Math.max(...wellAt.map(w => w[0] + w[2])), ty1 = Math.max(...wellAt.map(w => w[1] + w[2] * kr)), pad = wellAt[0][2] * 0.08;
-      Object.assign(tray.style, { opacity: trayO.toFixed(3), width: `${(tx1 - tx0 + 2 * pad).toFixed(1)}px`, height: `${(ty1 - ty0 + 2 * pad).toFixed(1)}px`,
-        transform: `translate(${(tx0 - pad).toFixed(1)}px, ${(ty0 - pad).toFixed(1)}px)` });
-      wells.forEach((w, i) => { const [x, y, k] = wellAt[i];
-        Object.assign(w.style, { left: `${(pad + x - tx0).toFixed(1)}px`, top: `${(pad + y - ty0).toFixed(1)}px`, width: `${k.toFixed(1)}px`, height: `${(k * kr).toFixed(1)}px` }); });
+      put(tray, 'opacity', trayO.toFixed(3));
+      if (trayO > 0) {   /* the tray and its wells are laid out, not transformed: only while it shows */
+        put(tray, 'width', `${(tx1 - tx0 + 2 * pad).toFixed(1)}px`); put(tray, 'height', `${(ty1 - ty0 + 2 * pad).toFixed(1)}px`);
+        put(tray, 'transform', `translate(${(tx0 - pad).toFixed(1)}px, ${(ty0 - pad).toFixed(1)}px)`);
+        wells.forEach((w, i) => { const [x, y, k] = wellAt[i];
+          put(w, 'left', `${(pad + x - tx0).toFixed(1)}px`); put(w, 'top', `${(pad + y - ty0).toFixed(1)}px`);
+          put(w, 'width', `${k.toFixed(1)}px`); put(w, 'height', `${(k * kr).toFixed(1)}px`); });
+      }
       /* the rolling rail: the rolls share out whatever track is left, so a shorter phone track still shows them all */
       const live = P >= 1.16, every = Math.min(0.085, (Pend - 1.18) / CHAINS.length);
       slots.forEach((el, i) => place(el, slotAt(i, endY), live ? 1 : 0));
@@ -302,10 +336,15 @@
       Object.assign(spot.style, { opacity: 1, left: `${(x - pad) * k}px`, top: `${(y - pad) * k}px`, width: `${(w + 2 * pad) * k}px`, height: `${(h + 2 * pad) * k}px` });
     };
     const wide = window.matchMedia('(min-width: 901px)');
-    let cur = -2;
+    let cur = -2, laid = '';
+    document.fonts?.ready.then(() => { laid = ''; queue(); });   /* callout heights move once the font is in */
     onScroll.push(() => {
-      if (!wide.matches) { items.forEach(li => li.style.left = ''); return; }
-      layout();
+      if (!wide.matches) { if (laid) { laid = ''; items.forEach(li => li.style.left = ''); } return; }
+      const r = track.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > window.innerHeight + 200) return;   /* nothing to do while it is out of sight */
+      /* the leader lines depend on sizes, not on the scroll: lay them out only when the stage changes size */
+      const size = `${stage.offsetWidth}x${stage.offsetHeight}`;
+      if (size !== laid) { laid = size; layout(); cur = -2; }
       const p = progress(track, $('.perform__pin', perf));
       const i = p < 0.08 ? -1 : p > 0.9 ? items.length : Math.min(items.length - 1, Math.floor((p - 0.08) / 0.82 * items.length));
       if (i === cur) return;
