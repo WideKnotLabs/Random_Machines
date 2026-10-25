@@ -25,7 +25,7 @@ REPO = Path(sys.argv[1] if len(sys.argv) > 1 else os.environ.get('RMXY_REPO', Pa
 SOURCE = REPO / 'documentation/product/user-manual.md'
 SOURCE_ASSETS = REPO / 'documentation/product/manual/assets'
 OUT = Path(__file__).resolve().parents[1] / 'rmxy-1/manual'
-SITE_URL = 'https://wideknotlabs.github.io/Random_Machines/rmxy-1/'
+SITE_URL = 'https://randommachines.app/rmxy-1/'
 
 
 def slug(title):

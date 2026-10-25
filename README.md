@@ -10,11 +10,11 @@ Static public site for Random Machines and its first app, RMXY-1. Plain HTML, on
 - Privacy Policy: `/rmxy-1/privacy/`
 - Terms of Use: `/rmxy-1/terms/`
 
-App Store Connect URLs (GitHub Pages):
+App Store Connect URLs (GitHub Pages, custom domain randommachines.app):
 
-- Marketing URL: `https://wideknotlabs.github.io/Random_Machines/rmxy-1/`
-- Support URL: `https://wideknotlabs.github.io/Random_Machines/rmxy-1/support/`
-- Privacy Policy URL: `https://wideknotlabs.github.io/Random_Machines/rmxy-1/privacy/`
+- Marketing URL: `https://randommachines.app/rmxy-1/`
+- Support URL: `https://randommachines.app/rmxy-1/support/`
+- Privacy Policy URL: `https://randommachines.app/rmxy-1/privacy/`
 
 ## Design system
 
