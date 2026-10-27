@@ -36,8 +36,8 @@ PACKS = [
         ],
     },
     {
-        'slug': 'dub',
-        'name': 'Dub',
+        'slug': 'dub-echoes',
+        'name': 'Dub Echoes',
         'soon': True,
     },
 ]
