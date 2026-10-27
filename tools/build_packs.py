@@ -93,6 +93,7 @@ def shell(*, title, description, canonical, up, body, script=''):
   <link rel="apple-touch-icon" href="{up}rmxy-1/assets/apple-touch-icon.png">
   <link rel="preload" href="{up}rmxy-1/assets/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{up}rmxy-1/assets/site.css">
+  <link rel="stylesheet" href="{up}ink/manual/assets/fonts.css">
   <link rel="stylesheet" href="{up}ink/packs/packs.css">
 </head>
 <body class="ink-page">
@@ -150,11 +151,11 @@ def list_page():
             <span class="entry__no">{n:02d}</span>
             <div class="entry__text"><h2>{escape(p['name'])}</h2><p class="entry__line">{escape(p['line'])}</p></div>
             <svg class="entry__wave" viewBox="0 0 256 40" preserveAspectRatio="none" aria-hidden="true"><path d="{strip}"/></svg>
-            <span class="entry__go">Listen<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+            <span class="ink-btn">Listen<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
           </a>
         </li>''')
     body = f'''    <div class="packs__in">
-      <a class="ink-mark" href="../../#ink"><img src="../../ink/assets/ink-wordmark.svg" alt="INK Synth" width="800" height="562"></a>
+      <p class="kick">INK Synth</p>
       <h1 class="packs__title">Preset Packs</h1>
       <p class="packs__lede">Sound packs for INK Synth. Listen to every sound, then download the pack.</p>
       <ol class="entries">{''.join(rows)}
@@ -181,12 +182,11 @@ def pack_page(p):
           </div>
         </li>''')
     body = f'''    <div class="packs__in">
-      <a class="ink-mark" href="../../../#ink"><img src="../../../ink/assets/ink-wordmark.svg" alt="INK Synth" width="800" height="562"></a>
       <a class="crumb" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M11 6l-6 6 6 6"/></svg>Preset Packs</a>
       <h1 class="packs__title">{escape(p['name'])}</h1>
       <p class="packs__lede">{escape(p['line'])}</p>
       <div class="pack__actions">
-        <a class="btn btn--lg btn--primary" href="../files/{p['file']}" download="{escape(p['save_as'])}"><span>Download</span></a>
+        <a class="ink-btn ink-btn--fill" href="../files/{p['file']}" download="{escape(p['save_as'])}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Download</a>
         <span class="pack__file">{size(file)} · Free</span>
       </div>
       <p class="pack__how">In INK Synth, tap Import in the Library and choose the file, or open it in INK from Files or AirDrop. <a href="../../manual/save-and-share-sounds.html">Save and share sounds</a></p>
