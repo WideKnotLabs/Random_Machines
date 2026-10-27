@@ -37,8 +37,9 @@
       <h1 class="packs__title">Pluck Studies</h1>
       <p class="packs__lede">Eight granular plucks for the Strings keyboard, on recorded zither, mbira, balafon, psaltery and chime.</p>
       <div class="pack__actions">
-        <a class="ink-btn ink-btn--fill" href="../files/pluck-studies.zip" download="Pluck Studies.inksounds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Download</a>
-        <span class="pack__file">8.2 MB · Free</span>
+        <a class="ink-btn ink-btn--fill pack__get" href="../files/pluck-studies.zip" download="Pluck Studies.inksounds"
+           data-bytes="8174612" data-sha256="37bf1f5e8ccc86bb5e0494a56d8096dc56396b6d107e35fe89d9f3e9cc2b16b7"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Download</a>
+        <span class="pack__file" role="status">8.2 MB · Free</span>
       </div>
       <p class="pack__how">In INK Synth, tap Import in the Library and choose the file, or open it in INK from Files or AirDrop. <a href="../../manual/save-and-share-sounds.html">Save and share sounds</a></p>
       <ol class="sounds" aria-label="Sounds">
@@ -159,6 +160,38 @@
         play(r);
         audio.addEventListener('loadedmetadata', () => { audio.currentTime = at * audio.duration; }, { once: true });
       });
+    });
+  })();
+  </script>
+  <script>
+  // Download saves one .inksounds file. The pack is stored as .zip (see PACKS), and Safari would unzip a .zip it downloads into
+  // a folder INK cannot import, so the page fetches the bytes, checks them against the pack's size and SHA-256, and saves them
+  // under the .inksounds name. A download cut short is not saved; the line beside the button says so.
+  (() => {
+    const get = document.querySelector('.pack__get'), note = document.querySelector('.pack__file');
+    if (!get || !window.fetch || !window.crypto || !crypto.subtle) return;
+    const said = note.textContent;
+    let busy = false;
+    get.addEventListener('click', async e => {
+      e.preventDefault();
+      if (busy) return;
+      busy = true; note.textContent = 'Downloading…';
+      try {
+        const reply = await fetch(get.href, { cache: 'no-store' });
+        if (!reply.ok) throw new Error('reply');
+        const bytes = await reply.arrayBuffer();
+        const sum = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
+        if (bytes.byteLength !== +get.dataset.bytes || sum !== get.dataset.sha256) throw new Error('bytes');
+        const url = URL.createObjectURL(new Blob([bytes], { type: 'application/octet-stream' }));
+        const a = document.createElement('a');
+        a.href = url; a.download = get.getAttribute('download'); a.style.display = 'none';
+        document.body.append(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+        note.textContent = said;
+      } catch (err) {
+        note.textContent = 'The download did not finish. Try again.';
+      }
+      busy = false;
     });
   })();
   </script>

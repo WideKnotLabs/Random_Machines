@@ -8,6 +8,7 @@ and the waveforms drawn here from those previews (ffmpeg decodes them). A pack w
 Usage: python3 tools/build_packs.py"""
 from html import escape
 from pathlib import Path
+import hashlib
 import struct
 import subprocess
 
@@ -19,7 +20,9 @@ PACKS = [
     {
         'slug': 'pluck-studies',
         'name': 'Pluck Studies',
-        'file': 'pluck-studies.zip',  # the .inksounds served as .zip: GitHub Pages gzips unknown types, and Safari saved that download cut short
+        # The .inksounds stored as .zip: GitHub Pages gzips unknown types, and Safari saved that download cut short. The page's
+        # Download (DOWNLOAD below) fetches it and saves it as save_as, since Safari unzips a .zip into a folder (27 Oct 2026).
+        'file': 'pluck-studies.zip',
         'save_as': 'Pluck Studies.inksounds',
         'line': 'Eight granular plucks for the Strings keyboard, on recorded zither, mbira, balafon, psaltery and chime.',
         'credits': 'Recordings from the Versilian Community Sample Library (VCSL) by Versilian Studios, CC0 1.0. '
@@ -186,8 +189,9 @@ def pack_page(p):
       <h1 class="packs__title">{escape(p['name'])}</h1>
       <p class="packs__lede">{escape(p['line'])}</p>
       <div class="pack__actions">
-        <a class="ink-btn ink-btn--fill" href="../files/{p['file']}" download="{escape(p['save_as'])}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Download</a>
-        <span class="pack__file">{size(file)} · Free</span>
+        <a class="ink-btn ink-btn--fill pack__get" href="../files/{p['file']}" download="{escape(p['save_as'])}"
+           data-bytes="{file.stat().st_size}" data-sha256="{hashlib.sha256(file.read_bytes()).hexdigest()}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Download</a>
+        <span class="pack__file" role="status">{size(file)} · Free</span>
       </div>
       <p class="pack__how">In INK Synth, tap Import in the Library and choose the file, or open it in INK from Files or AirDrop. <a href="../../manual/save-and-share-sounds.html">Save and share sounds</a></p>
       <ol class="sounds" aria-label="Sounds">{''.join(rows)}
@@ -196,7 +200,7 @@ def pack_page(p):
     </div>'''
     return shell(title=f"{p['name']} — INK Synth Preset Packs | Random Machines",
                  description=f"{p['name']}: {p['line']}",
-                 canonical=f"ink/packs/{p['slug']}/", up='../../../', body=body, script=PLAYER)
+                 canonical=f"ink/packs/{p['slug']}/", up='../../../', body=body, script=PLAYER + DOWNLOAD)
 
 
 PLAYER = '''  <script>
@@ -230,6 +234,40 @@ PLAYER = '''  <script>
         play(r);
         audio.addEventListener('loadedmetadata', () => { audio.currentTime = at * audio.duration; }, { once: true });
       });
+    });
+  })();
+  </script>
+'''
+
+DOWNLOAD = '''  <script>
+  // Download saves one .inksounds file. The pack is stored as .zip (see PACKS), and Safari would unzip a .zip it downloads into
+  // a folder INK cannot import, so the page fetches the bytes, checks them against the pack's size and SHA-256, and saves them
+  // under the .inksounds name. A download cut short is not saved; the line beside the button says so.
+  (() => {
+    const get = document.querySelector('.pack__get'), note = document.querySelector('.pack__file');
+    if (!get || !window.fetch || !window.crypto || !crypto.subtle) return;
+    const said = note.textContent;
+    let busy = false;
+    get.addEventListener('click', async e => {
+      e.preventDefault();
+      if (busy) return;
+      busy = true; note.textContent = 'Downloading…';
+      try {
+        const reply = await fetch(get.href, { cache: 'no-store' });
+        if (!reply.ok) throw new Error('reply');
+        const bytes = await reply.arrayBuffer();
+        const sum = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
+        if (bytes.byteLength !== +get.dataset.bytes || sum !== get.dataset.sha256) throw new Error('bytes');
+        const url = URL.createObjectURL(new Blob([bytes], { type: 'application/octet-stream' }));
+        const a = document.createElement('a');
+        a.href = url; a.download = get.getAttribute('download'); a.style.display = 'none';
+        document.body.append(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+        note.textContent = said;
+      } catch (err) {
+        note.textContent = 'The download did not finish. Try again.';
+      }
+      busy = false;
     });
   })();
   </script>
