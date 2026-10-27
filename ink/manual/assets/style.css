@@ -288,15 +288,15 @@ picture.loop{display:contents}
 .hero .ink-wordmark{width:156px}
 .hero .lede{margin:0 0 20px}
 /* Quick moves strip: the gestures' loops in a row that scrolls sideways */
-.qstrip{margin:0 0 34px}
-.qstrip h2{font-family:var(--hand);font-size:30px;margin:0 0 10px;display:flex;align-items:baseline;gap:12px}
+.qstrip{margin:40px 0 0}
+.qstrip h2{font-family:var(--hand);font-size:27px;margin:0 0 10px;display:flex;align-items:baseline;gap:12px}
 .qstrip h2 a{text-decoration:none}
 .qstrip h2 small{font-family:inherit;font-size:19px;color:var(--pencil);font-weight:400}
 .qstrip ol{list-style:none;margin:0;padding:0 0 10px;display:grid;grid-auto-flow:column;grid-auto-columns:256px;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
 .qstrip li{scroll-snap-align:start}
 .qstrip li a{display:flex;flex-direction:column;gap:7px;height:100%;text-decoration:none;border:var(--line) solid var(--ink);border-radius:var(--r2);padding:8px;background:var(--paper)}
 .qstrip li a:hover{background:var(--wash)}
-.qstrip .q-img{display:flex;align-items:center;justify-content:center;height:320px;overflow:hidden;border-radius:var(--r1);background:var(--paper)}
+.qstrip .q-img{display:flex;align-items:center;justify-content:center;height:320px;overflow:hidden;border-radius:var(--r1);background:var(--paper);margin-top:auto}
 .qstrip .q-pic{display:block;max-width:100%;max-height:320px;width:auto;height:auto}
 .qstrip b{font-family:var(--hand);font-size:20px;line-height:1.05;font-weight:700}
 .go{display:inline-block;font-family:var(--hand);font-size:26px;font-weight:700;text-decoration:none;background:var(--ink);color:var(--paper);border:var(--line) solid var(--ink);border-radius:var(--r1);padding:6px 20px 5px;margin:0 10px 8px 0}
@@ -312,6 +312,7 @@ picture.loop{display:contents}
 .th-img.fit img{object-fit:contain;object-position:50% 50%}
 .cards a:hover .th-img,.cards a:focus-visible .th-img{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
 .cards a:focus-visible{outline:none}
+.cards .th-img{margin-top:auto}
 .cards .ct{display:flex;align-items:baseline;gap:8px;padding:0 2px}
 .cards i{font-style:normal;font-family:var(--hand);font-size:18px;color:var(--pencil);flex:none;min-width:1.2em}
 .cards b{font-family:var(--hand);font-size:23px;line-height:1.05}
