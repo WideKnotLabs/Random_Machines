@@ -19,7 +19,7 @@ PACKS = [
     {
         'slug': 'pluck-studies',
         'name': 'Pluck Studies',
-        'file': 'pluck-studies.inksounds',
+        'file': 'pluck-studies.zip',  # the .inksounds served as .zip: GitHub Pages gzips unknown types, and Safari saved that download cut short
         'save_as': 'Pluck Studies.inksounds',
         'line': 'Eight granular plucks for the Strings keyboard, on recorded zither, mbira, balafon, psaltery and chime.',
         'credits': 'Recordings from the Versilian Community Sample Library (VCSL) by Versilian Studios, CC0 1.0. '
