@@ -21,21 +21,18 @@ PACKS = [
         'name': 'Pluck Studies',
         'file': 'pluck-studies.inksounds',
         'save_as': 'Pluck Studies.inksounds',
-        'tags': ['Pluck', 'Granular', 'Strings'],
-        'line': 'Granular plucks on recorded zither, mbira, balafon, psaltery and chime.',
-        'about': 'Eight granular plucks voiced for the Strings keyboard. Six are built on recorded instruments, two on '
-                 'synthesized sources. The strike shapes the contact and how long the body rings, not only the level.',
+        'line': 'Eight granular plucks for the Strings keyboard, on recorded zither, mbira, balafon, psaltery and chime.',
         'credits': 'Recordings from the Versilian Community Sample Library (VCSL) by Versilian Studios, CC0 1.0. '
                    'Prism Drive and Elastic Circuit use original synthesized sources.',
         'sounds': [
-            ('silk-bridge', 'Silk Bridge', 'Đàn tranh finger-pick. Wiry metal strings, a long uneven ring.'),
-            ('rattle-tines', 'Rattle Tines', 'Mbira tines: nail contact, buzzing tongue, woody resonator.'),
-            ('gourd-flick', 'Gourd Flick', 'Balafon bar under a fingertip. Dry wood, short and earthy.'),
-            ('ghost-psaltery', 'Ghost Psaltery', 'Plucked psaltery. Hard wire pick, thin beating ring, a reversed answer.'),
-            ('prism-drive', 'Prism Drive', 'Three-saw pluck. Firmer strikes open the upper harmonics.'),
-            ('elastic-circuit', 'Elastic Circuit', 'Hollow pulse with a resonant nip. Firm strikes lengthen the snap.'),
-            ('clay-knock', 'Clay Knock', 'Knuckle on a closed cavity. A hard rim, then a round pitched pocket.'),
-            ('chime-stitch', 'Chime Stitch', 'Damped hand chime with octave echoes from the delay.'),
+            ('silk-bridge', 'Silk Bridge'),
+            ('rattle-tines', 'Rattle Tines'),
+            ('gourd-flick', 'Gourd Flick'),
+            ('ghost-psaltery', 'Ghost Psaltery'),
+            ('prism-drive', 'Prism Drive'),
+            ('elastic-circuit', 'Elastic Circuit'),
+            ('clay-knock', 'Clay Knock'),
+            ('chime-stitch', 'Chime Stitch'),
         ],
     },
     {
@@ -76,10 +73,6 @@ def size(path: Path):
     return f'{path.stat().st_size / 1e6:.1f} MB'
 
 
-def meta(pack):
-    return ' · '.join([f"{len(pack['sounds'])} sounds"] + pack['tags'])
-
-
 def shell(*, title, description, canonical, up, body, script=''):
     """The page around `body`; `up` is the path back to the site root."""
     return f'''<!doctype html>
@@ -89,7 +82,7 @@ def shell(*, title, description, canonical, up, body, script=''):
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{escape(title)}</title>
   <meta name="description" content="{escape(description)}">
-  <meta name="theme-color" content="#1449b2">
+  <meta name="theme-color" content="#f1ede4">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Random Machines">
   <meta property="og:title" content="{escape(title)}">
@@ -107,8 +100,8 @@ def shell(*, title, description, canonical, up, body, script=''):
   <header class="nav">
     <div class="nav__inner">
       <a class="nav__brand" href="{up}" aria-label="Random Machines home">
-        <img class="nav__logo nav__logo--full" src="{up}rmxy-1/assets/logo/rm-lockup-stacked-on-dark.svg" alt="" width="157" height="40">
-        <img class="nav__logo nav__logo--symbol" src="{up}rmxy-1/assets/logo/rm-symbol-on-dark.svg" alt="" width="40" height="40">
+        <img class="nav__logo nav__logo--full" src="{up}ink/packs/assets/rm-lockup-stacked-on-light.svg" alt="" width="157" height="40">
+        <img class="nav__logo nav__logo--symbol" src="{up}ink/packs/assets/rm-symbol-on-light.svg" alt="" width="40" height="40">
       </a>
       <nav class="nav__links" aria-label="Main"><a href="{up}#ink">INK Synth</a><a href="{up}ink/packs/" aria-current="page">Preset Packs</a><a href="{up}ink/manual/">Manual</a></nav>
     </div>
@@ -121,7 +114,7 @@ def shell(*, title, description, canonical, up, body, script=''):
   <footer class="footer">
     <div class="footer__inner">
       <a class="footer__brand" href="{up}" aria-label="Random Machines home">
-        <img src="{up}rmxy-1/assets/logo/rm-lockup-stacked-on-dark.svg" alt="" width="204" height="52" loading="lazy">
+        <img src="{up}ink/packs/assets/rm-lockup-stacked-on-light.svg" alt="" width="204" height="52" loading="lazy">
       </a>
       <ul class="footer__links">
         <li><a href="{TESTFLIGHT}" rel="noopener">INK Synth beta</a></li>
@@ -155,7 +148,7 @@ def list_page():
         <li class="entry">
           <a href="{p['slug']}/">
             <span class="entry__no">{n:02d}</span>
-            <div class="entry__text"><h2>{escape(p['name'])}</h2><p class="entry__meta">{escape(meta(p))} · Free</p><p class="entry__line">{escape(p['line'])}</p></div>
+            <div class="entry__text"><h2>{escape(p['name'])}</h2><p class="entry__line">{escape(p['line'])}</p></div>
             <svg class="entry__wave" viewBox="0 0 256 40" preserveAspectRatio="none" aria-hidden="true"><path d="{strip}"/></svg>
             <span class="entry__go">Listen<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
           </a>
@@ -176,12 +169,12 @@ def list_page():
 def pack_page(p):
     file = PACKS_DIR / 'files' / p['file']
     rows = []
-    for slug, name, line in p['sounds']:
+    for slug, name in p['sounds']:
         path = wave(peaks(audio_of(p, slug)))
         rows.append(f'''
         <li class="snd" data-src="../audio/{p['slug']}/{slug}.m4a">
           <button class="snd__play" type="button" aria-label="Play {escape(name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M8 5.5v13l11-6.5z"/><path class="i-stop" d="M7 7h10v10H7z"/></svg></button>
-          <div class="snd__text"><h3>{escape(name)}</h3><p>{escape(line)}</p></div>
+          <div class="snd__text"><h3>{escape(name)}</h3></div>
           <div class="snd__wave" aria-hidden="true">
             <svg viewBox="0 0 256 40" preserveAspectRatio="none"><path d="{path}"/></svg>
             <svg class="snd__on" viewBox="0 0 256 40" preserveAspectRatio="none"><path d="{path}"/></svg>
@@ -190,11 +183,10 @@ def pack_page(p):
     body = f'''    <div class="packs__in">
       <a class="crumb" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M11 6l-6 6 6 6"/></svg>Preset Packs</a>
       <h1 class="packs__title">{escape(p['name'])}</h1>
-      <p class="pack__meta">{escape(meta(p))}</p>
-      <p class="packs__lede">{escape(p['about'])}</p>
+      <p class="packs__lede">{escape(p['line'])}</p>
       <div class="pack__actions">
         <a class="btn btn--lg btn--primary" href="../files/{p['file']}" download="{escape(p['save_as'])}"><span>Download</span></a>
-        <span class="pack__file">.inksounds · {size(file)} · Free</span>
+        <span class="pack__file">{size(file)} · Free</span>
       </div>
       <p class="pack__how">In INK Synth, tap Import in the Library and choose the file, or open it in INK from Files or AirDrop. <a href="../../manual/save-and-share-sounds.html">Save and share sounds</a></p>
       <ol class="sounds" aria-label="Sounds">{''.join(rows)}
@@ -202,7 +194,7 @@ def pack_page(p):
       <p class="pack__credits">{escape(p['credits'])}</p>
     </div>'''
     return shell(title=f"{p['name']} — INK Synth Preset Packs | Random Machines",
-                 description=f"{p['name']}: {p['about']}",
+                 description=f"{p['name']}: {p['line']}",
                  canonical=f"ink/packs/{p['slug']}/", up='../../../', body=body, script=PLAYER)
 
 

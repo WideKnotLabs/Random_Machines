@@ -1,27 +1,25 @@
-/* INK Preset Packs (tools/build_packs.py): the whole page on the blueprint of INK's Blue theme, as INK's section on the
-   home page. The site's tokens are redefined here, so the nav, buttons and footer from site.css take the blue too. */
+/* INK Preset Packs (tools/build_packs.py): plain paper and ink, the colours of the app's Paper theme. The site's tokens are
+   redefined here, so the nav, buttons and footer from site.css take them too. */
 
 .ink-page {
-  --bg: #1449b2;
-  --ink: #f2f7ff;
-  --ink-2: rgba(242, 247, 255, 0.8);
-  --ink-3: rgba(242, 247, 255, 0.6);
-  --line: rgba(242, 247, 255, 0.22);
-  --line-2: rgba(242, 247, 255, 0.42);
-  background-color: var(--bg);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
-  background-size: 26px 26px; background-position: center top;
+  --bg: #f1ede4;
+  --ink: #161513;
+  --ink-2: #3d3a35;
+  --ink-3: #6e6a62;
+  --line: rgba(22, 21, 19, 0.14);
+  --line-2: rgba(22, 21, 19, 0.32);
+  background: var(--bg); color: var(--ink);
 }
-.ink-page :focus-visible { outline-color: #fff; }
-.ink-page .nav { background: rgba(20, 73, 178, 0.84); border-bottom-color: var(--line); }
-.ink-page .btn--primary { background: #fff; border-color: #fff; color: var(--bg); }
-.ink-page .btn--primary:hover { background: var(--ink); }
+.ink-page :focus-visible { outline-color: var(--ink); }
+.ink-page .nav { background: rgba(241, 237, 228, 0.86); border-bottom-color: var(--line); }
+.ink-page .btn--primary { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.ink-page .btn--primary:hover { background: #000; border-color: #000; }
 .ink-page .footer { border-top-color: var(--line); }
 
-.packs { padding: clamp(64px, 9vw, 120px) var(--gutter) clamp(72px, 9vw, 120px); }
+.packs { padding: clamp(28px, 4vw, 48px) var(--gutter) clamp(72px, 9vw, 120px); }
 .packs__in { width: min(100%, 1040px); margin-inline: auto; }
 .packs .label { color: var(--ink-3); }
-.packs__title { margin-top: 18px; font-size: clamp(3rem, 7.4vw, 6rem); line-height: 0.95; letter-spacing: -0.045em; }
+.packs__title { margin-top: 12px; font-size: clamp(3rem, 7.4vw, 6rem); line-height: 0.95; letter-spacing: -0.045em; }
 .packs__lede { margin: 22px 0 0; max-width: 54ch; font-size: clamp(1.0625rem, 1.5vw, 1.25rem); line-height: 1.5; color: var(--ink-2); }
 
 /* The list: one row per pack, the name the only large type */
@@ -31,14 +29,14 @@
 .entry > a { color: inherit; text-decoration: none; }
 .entry__no { align-self: start; padding-top: 0.55em; font-size: var(--t-s); letter-spacing: 0.06em; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .entry h2 { font-size: clamp(1.75rem, 3.4vw, 2.5rem); line-height: 1.05; letter-spacing: -0.03em; }
-.entry__meta { margin: 10px 0 0; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
-.entry__line { margin: 8px 0 0; font-size: var(--t-m); line-height: 1.5; color: var(--ink-2); }
+.entry__meta { margin: 6px 0 0; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+.entry__line { margin: 6px 0 0; font-size: var(--t-m); line-height: 1.5; color: var(--ink-2); }
 .entry__wave { width: 100%; height: 40px; }
 .entry__wave path { fill: none; stroke: var(--line-2); stroke-width: 2.2; stroke-linecap: round; transition: stroke 0.3s; }
 .entry__go { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 20px; border: 1px solid var(--line-2); border-radius: 999px; font-size: var(--t-m); font-weight: 500; transition: background 0.3s, color 0.3s, border-color 0.3s; }
 .entry__go svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.entry > a:hover .entry__go { background: #fff; border-color: #fff; color: var(--bg); }
-.entry > a:hover .entry__wave path { stroke: #fff; }
+.entry > a:hover .entry__go { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.entry > a:hover .entry__wave path { stroke: var(--ink); }
 .entry--soon { opacity: 0.55; }
 .entry--soon .entry__text { grid-column: 2 / -1; }
 
@@ -47,8 +45,6 @@
 .crumb:hover { color: var(--ink); }
 .crumb svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .packs .crumb + .packs__title { margin-top: 8px; }
-.pack__meta { margin: 18px 0 0; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
-.pack__meta + .packs__lede { margin-top: 14px; }
 .pack__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 32px; }
 .pack__file { font-size: var(--t-s); letter-spacing: 0.02em; color: var(--ink-3); }
 .pack__how { margin: 18px 0 0; max-width: 64ch; font-size: var(--t-s); line-height: 1.6; color: var(--ink-3); }
@@ -56,25 +52,24 @@
 .pack__credits { margin: 32px 0 0; max-width: 72ch; font-size: var(--t-s); line-height: 1.6; color: var(--ink-3); }
 
 .sounds { margin: clamp(44px, 5vw, 64px) 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
-.snd { --p: 0%; display: grid; grid-template-columns: 44px minmax(0, 1fr) minmax(160px, 38%); align-items: center; gap: 0 20px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.snd { --p: 0%; display: grid; grid-template-columns: 44px minmax(120px, 30%) minmax(0, 1fr); align-items: center; gap: 0 20px; padding: 12px 0; border-bottom: 1px solid var(--line); }
 .snd__play { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid var(--line-2); border-radius: 50%; background: none; color: var(--ink); cursor: pointer; transition: border-color 0.2s, background 0.2s, color 0.2s; }
 .snd__play:hover { border-color: var(--ink); }
 .snd__play svg { width: 18px; height: 18px; fill: currentColor; }
 .snd__play .i-stop, .snd.is-playing .i-play { display: none; }
 .snd.is-playing .i-stop { display: inline; }
-.snd.is-playing .snd__play { background: #fff; border-color: #fff; color: var(--bg); }
+.snd.is-playing .snd__play { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 .snd__text h3 { font-size: var(--t-l); font-weight: 600; letter-spacing: -0.01em; }
-.snd__text p { margin: 3px 0 0; font-size: var(--t-m); line-height: 1.45; color: var(--ink-3); }
 .snd__wave { position: relative; height: 40px; cursor: pointer; }
 .snd__wave svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .snd__wave path { fill: none; stroke: var(--line-2); stroke-width: 2.2; stroke-linecap: round; }
 .snd__on { clip-path: inset(0 calc(100% - var(--p)) 0 0); }
-.snd__on path { stroke: #fff; }
+.snd__on path { stroke: var(--ink); }
 
 @media (max-width: 640px) {
   .entry > a, .entry--soon { grid-template-columns: 2.25rem minmax(0, 1fr); gap: 14px 12px; }
   .entry__wave { grid-column: 2; grid-row: 2; height: 32px; }
   .entry__go { grid-column: 2; grid-row: 3; justify-self: start; }
-  .snd { grid-template-columns: 44px minmax(0, 1fr); gap: 10px 14px; }
-  .snd__wave { grid-column: 2 / -1; grid-row: 2; height: 32px; }
+  .snd { grid-template-columns: 44px minmax(0, 1fr); gap: 6px 14px; }
+  .snd__wave { grid-column: 2; grid-row: 2; height: 28px; }
 }
