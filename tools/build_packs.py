@@ -60,7 +60,7 @@ def wave(heights):
     """One path of rounded bars in a 256 x 40 box, centred on the middle line."""
     d = []
     for i, h in enumerate(heights):
-        half = max(1.0, h * 19)
+        half = max(0.4, h * 19)
         d.append(f'M{i * 4 + 1.5:g} {20 - half:.1f}V{20 + half:.1f}')
     return ''.join(d)
 
@@ -154,7 +154,7 @@ def list_page():
           </a>
         </li>''')
     body = f'''    <div class="packs__in">
-      <p class="label">INK Synth</p>
+      <a class="ink-mark" href="../../#ink"><img src="../../ink/assets/ink-wordmark.svg" alt="INK Synth" width="800" height="562"></a>
       <h1 class="packs__title">Preset Packs</h1>
       <p class="packs__lede">Sound packs for INK Synth. Listen to every sound, then download the pack.</p>
       <ol class="entries">{''.join(rows)}
@@ -181,6 +181,7 @@ def pack_page(p):
           </div>
         </li>''')
     body = f'''    <div class="packs__in">
+      <a class="ink-mark" href="../../../#ink"><img src="../../../ink/assets/ink-wordmark.svg" alt="INK Synth" width="800" height="562"></a>
       <a class="crumb" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M11 6l-6 6 6 6"/></svg>Preset Packs</a>
       <h1 class="packs__title">{escape(p['name'])}</h1>
       <p class="packs__lede">{escape(p['line'])}</p>
