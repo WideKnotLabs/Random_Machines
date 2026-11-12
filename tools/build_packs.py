@@ -42,6 +42,9 @@ PACKS = [
         'slug': 'dub-echoes',
         'name': 'Dub Echoes',
         'soon': True,
+        # A free demo before the pack: 12 of its sounds (4 keys, 3 pads, 2 basses, 2 leads, 1 FX), downloaded from the list
+        # row with the same checked fetch-and-save as a released pack (12 November 2026).
+        'demo': {'file': 'dub-echoes-demo.zip', 'save_as': 'Dub Echoes Demo.inksounds'},
     },
 ]
 
@@ -137,14 +140,26 @@ def shell(*, title, description, canonical, up, body, script=''):
 '''
 
 
+def get_button(item, label, up=''):
+    """The Download button for a pack file (item: 'file', 'save_as') and the line beside it, which DOWNLOAD uses."""
+    file = PACKS_DIR / 'files' / item['file']
+    return (f'<a class="ink-btn ink-btn--fill pack__get" href="{up}files/{item["file"]}" download="{escape(item["save_as"])}" '
+            f'data-bytes="{file.stat().st_size}" data-sha256="{hashlib.sha256(file.read_bytes()).hexdigest()}">'
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>'
+            f'{escape(label)}</a>\n        <span class="pack__file" role="status">{size(file)} · Free</span>')
+
+
 def list_page():
     rows = []
     for n, p in enumerate(PACKS, 1):
         if p.get('soon'):
+            demo = ''
+            if p.get('demo'):
+                demo = '\n          <div class="entry__demo">' + get_button(p['demo'], 'Download demo') + '</div>'
             rows.append(f'''
-        <li class="entry entry--soon">
+        <li class="entry entry--soon{' entry--demo' if demo else ''}">
           <span class="entry__no">{n:02d}</span>
-          <div class="entry__text"><h2>{escape(p['name'])}</h2><p class="entry__meta">Coming soon</p></div>
+          <div class="entry__text"><h2>{escape(p['name'])}</h2><p class="entry__meta">Coming soon</p></div>{demo}
         </li>''')
             continue
         strip = wave(peaks(audio_of(p, p['sounds'][0][0])))
@@ -167,11 +182,11 @@ def list_page():
     return shell(title='Preset Packs — INK Synth | Random Machines',
                  description='Sound packs for INK Synth, the three-engine touch synthesizer for iPhone and iPad. '
                              'Listen to every sound, then download the .inksounds file.',
-                 canonical='ink/packs/', up='../../', body=body)
+                 canonical='ink/packs/', up='../../', body=body,
+                 script=DOWNLOAD if any(p.get('demo') for p in PACKS) else '')
 
 
 def pack_page(p):
-    file = PACKS_DIR / 'files' / p['file']
     rows = []
     for slug, name in p['sounds']:
         path = wave(peaks(audio_of(p, slug)))
@@ -189,9 +204,7 @@ def pack_page(p):
       <h1 class="packs__title">{escape(p['name'])}</h1>
       <p class="packs__lede">{escape(p['line'])}</p>
       <div class="pack__actions">
-        <a class="ink-btn ink-btn--fill pack__get" href="../files/{p['file']}" download="{escape(p['save_as'])}"
-           data-bytes="{file.stat().st_size}" data-sha256="{hashlib.sha256(file.read_bytes()).hexdigest()}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Download</a>
-        <span class="pack__file" role="status">{size(file)} · Free</span>
+        {get_button(p, 'Download', up='../')}
       </div>
       <p class="pack__how">In INK Synth, tap Import in the Library and choose the file, or open it in INK from Files or AirDrop. <a href="../../manual/save-and-share-sounds.html">Save and share sounds</a></p>
       <ol class="sounds" aria-label="Sounds">{''.join(rows)}
@@ -240,7 +253,7 @@ PLAYER = '''  <script>
 '''
 
 DOWNLOAD = '''  <script>
-  // Download saves one .inksounds file. The pack is stored as .zip (see PACKS), and Safari would unzip a .zip it downloads into
+  // Download saves one .inksounds file (one Download button per page: a pack's page, or a demo on the list). The pack is stored as .zip (see PACKS), and Safari would unzip a .zip it downloads into
   // a folder INK cannot import, so the page fetches the bytes, checks them against the pack's size and SHA-256, and saves them
   // under the .inksounds name. A download cut short is not saved; the line beside the button says so.
   (() => {

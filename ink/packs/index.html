@@ -45,9 +45,11 @@
             <span class="ink-btn">Listen<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
           </a>
         </li>
-        <li class="entry entry--soon">
+        <li class="entry entry--soon entry--demo">
           <span class="entry__no">02</span>
           <div class="entry__text"><h2>Dub Echoes</h2><p class="entry__meta">Coming soon</p></div>
+          <div class="entry__demo"><a class="ink-btn ink-btn--fill pack__get" href="files/dub-echoes-demo.zip" download="Dub Echoes Demo.inksounds" data-bytes="13422690" data-sha256="1b2d4355a37b386af3c68e3a9d593c12995981ad99f1d1b4098435daf99570f5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Download demo</a>
+        <span class="pack__file" role="status">13.4 MB · Free</span></div>
         </li>
       </ol>
     </div>
@@ -70,5 +72,37 @@
       <p>iPhone and iPad are trademarks of Apple Inc., registered in the U.S. and other countries.</p>
     </div>
   </footer>
+  <script>
+  // Download saves one .inksounds file (one Download button per page: a pack's page, or a demo on the list). The pack is stored as .zip (see PACKS), and Safari would unzip a .zip it downloads into
+  // a folder INK cannot import, so the page fetches the bytes, checks them against the pack's size and SHA-256, and saves them
+  // under the .inksounds name. A download cut short is not saved; the line beside the button says so.
+  (() => {
+    const get = document.querySelector('.pack__get'), note = document.querySelector('.pack__file');
+    if (!get || !window.fetch || !window.crypto || !crypto.subtle) return;
+    const said = note.textContent;
+    let busy = false;
+    get.addEventListener('click', async e => {
+      e.preventDefault();
+      if (busy) return;
+      busy = true; note.textContent = 'Downloading…';
+      try {
+        const reply = await fetch(get.href, { cache: 'no-store' });
+        if (!reply.ok) throw new Error('reply');
+        const bytes = await reply.arrayBuffer();
+        const sum = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
+        if (bytes.byteLength !== +get.dataset.bytes || sum !== get.dataset.sha256) throw new Error('bytes');
+        const url = URL.createObjectURL(new Blob([bytes], { type: 'application/octet-stream' }));
+        const a = document.createElement('a');
+        a.href = url; a.download = get.getAttribute('download'); a.style.display = 'none';
+        document.body.append(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+        note.textContent = said;
+      } catch (err) {
+        note.textContent = 'The download did not finish. Try again.';
+      }
+      busy = false;
+    });
+  })();
+  </script>
 </body>
 </html>
