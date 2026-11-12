@@ -42,7 +42,7 @@ PACKS = [
         'slug': 'dub-echoes',
         'name': 'Dub Echoes',
         'soon': True,
-        # A free demo before the pack: 12 of its sounds (4 keys, 3 pads, 2 basses, 2 leads, 1 FX), downloaded from the list
+        # A free demo before the pack: 14 of its sounds (6 keys, 3 pads, 2 basses, 2 leads, 1 FX; levelled by loudness.py), downloaded from the list
         # row with the same checked fetch-and-save as a released pack (12 November 2026).
         'demo': {'file': 'dub-echoes-demo.zip', 'save_as': 'Dub Echoes Demo.inksounds'},
     },
