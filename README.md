@@ -88,16 +88,16 @@ The public build retains search, themes, chapter navigation and figures, and sel
 
 `/ink/packs/` lists the packs and gives each released pack a listening page, all written by `python3 tools/build_packs.py` from `PACKS` in that file (styles: `ink/packs/packs.css`). A pack is stored as `.zip` and never linked directly: Download fetches it, checks its size and SHA-256, and saves it as `<Pack>.inksounds` (GitHub Pages gzips an unknown `.inksounds`, and iPhone Safari unzips a downloaded `.zip` into a folder INK cannot import).
 
-**Arp Magic** (a roster pack) also downloads sound by sound. Its sounds, families, lines and credits are in `tools/packs/arp-magic.json`; `split` writes its files from the pack RM INK's `pack.py` makes and the demo takes:
+**Arp Magic** (a roster pack) downloads whole, like the others; each sound has its demo and a line. Its sounds, families, lines and credits are in `tools/packs/arp-magic.json`; `prepare` writes its files from the pack RM INK's `pack.py` makes and the demo takes:
 
 ```sh
-python3 tools/build_packs.py split arp-magic "<Arp Magic>.inksounds" --clips "<folder of takes>"
+python3 tools/build_packs.py prepare arp-magic "<Arp Magic>.inksounds" --clips "<folder of takes>"
 python3 tools/check_site.py
 ```
 
-- `ink/packs/files/arp-magic.zip`: the whole pack, its manifest set to "Arp Magic" by Random Machines (INK's folder and pack credit).
-- `ink/packs/files/arp-magic/<sound>.zip`: a pack of one sound with the whole kit it plays (a kit is its eight recordings, so a sound and the whole pack meet on one kit in INK, stored once). A sound's size is honest: it includes every recording it carries; a synth sound is about 1 KB.
+- `ink/packs/files/arp-magic.zip`: the pack in the roster's order, its manifest set to "Arp Magic" by Random Machines (INK's folder and pack credit). Byte-identical when nothing changed.
 - `ink/packs/audio/arp-magic/<sound>.m4a`: the demo, AAC 112 kb/s from `<sound>.wav` or `<n>-<sound>-take.wav` (a row's `"clip"` names another stem).
-- It refuses a pack whose sound names and the roster's differ, and one carrying a recording no credit covers. Files come out byte-identical when nothing changed.
+- It refuses a pack whose sound names and the roster's differ, and one carrying a recording no credit covers.
+- No per-sound downloads (owner, 23 November 2026): a sound's own file carries its whole kit, so the 34 came to 341 MB against the whole pack's 61 MB.
 
 Preview: `python3 -m http.server 8817` in the repository, then `http://localhost:8817/ink/packs/arp-magic/`.

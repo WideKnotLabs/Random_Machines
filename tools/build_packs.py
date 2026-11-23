@@ -6,16 +6,14 @@ A released pack: its .inksounds file in ink/packs/files/, one AAC preview per so
 (a phrase rendered by INK's own engine: RM INK's `ink_render <library> <out> --pack <file> --scenes phrase --all`),
 and the waveforms drawn here from those previews (ffmpeg decodes them). A pack with 'soon' is listed, not linked.
 
-A pack with a 'roster' (Arp Magic) also downloads sound by sound. Its data (each sound's name, family and line, the credits) is in
-tools/packs/<slug>.json, and `split` writes its files from the pack INK's tools made:
-  files/<slug>.zip              the whole pack, its manifest naming the pack and its author (the folder and credit INK shows)
-  files/<slug>/<sound>.zip      a pack of one: the sound, the kit it plays with all that kit's recordings, its wavetable if it has one.
-                                A kit travels whole: its fingerprint is its eight slots, so a sound and the whole pack land on one kit
-                                in INK, stored once, and the sound is skipped as already there (sound library plan 4.2)
+A pack with a 'roster' (Arp Magic) takes its line, each sound's name, family and line, and the credits from tools/packs/<slug>.json,
+and `prepare` writes its files from the pack INK's tools made and the demo takes:
+  files/<slug>.zip              the pack in the roster's order, its manifest naming the pack and its author (the folder and credit INK shows)
   audio/<slug>/<sound>.m4a      the demo, AAC at 112 kb/s from the take each sound's row names in --clips (<sound>.wav, or <n>-<sound>-take.wav)
-It refuses a pack whose sounds and the roster's differ, and one with a recording no credit in the roster covers.
-Usage: python3 tools/build_packs.py                                                   the pages
-       python3 tools/build_packs.py split <slug> <pack.inksounds> [--clips <folder>]  a roster pack's files, then the pages"""
+It refuses a pack whose sounds and the roster's differ, and one with a recording no credit in the roster covers. The pack downloads
+whole only: one sound's own file would carry its whole kit, and the 34 of them came to 341 MB against the pack's 61 (owner, 23 November 2026).
+Usage: python3 tools/build_packs.py                                                     the pages
+       python3 tools/build_packs.py prepare <slug> <pack.inksounds> [--clips <folder>]  a roster pack's files, then the pages"""
 from html import escape
 from pathlib import Path
 import hashlib
@@ -59,8 +57,8 @@ PACKS = [
         'file': 'arp-magic.zip',
         'save_as': 'Arp Magic.inksounds',
         'price': 'Free while the INK Synth beta is open',
-        # Free while the beta opens, every sound with its demo, the whole pack or any one sound to download, each with its size
-        # (owner, 23 November 2026). Line, families, sounds and credits: the roster. Files: `split` (see the top).
+        # Free while the beta opens, every sound with its demo, the pack's size shown (owner, 23 November 2026). Line, families,
+        # sounds and credits: the roster. Files: `prepare` (see the top).
         'roster': 'tools/packs/arp-magic.json',
     },
     {
@@ -89,15 +87,9 @@ for _p in PACKS:
 
 
 def missing_files(p):
-    """What a released pack's page needs and does not have yet (a roster pack before `split`)."""
+    """What a released pack's page needs and does not have yet (a roster pack before `prepare`)."""
     need = [PACKS_DIR / 'files' / p['file']] + [audio_of(p, slug) for slug, _ in p['sounds']]
-    if p.get('roster'):
-        need += [sound_file(p, slug) for slug, _ in p['sounds']]
     return [f for f in need if not f.exists()]
-
-
-def sound_file(p, slug):
-    return PACKS_DIR / 'files' / p['slug'] / f'{slug}.zip'
 
 
 def peaks(audio: Path):
@@ -191,19 +183,12 @@ def shell(*, title, description, canonical, up, body, script='', draft=False):
 '''
 
 
-GET_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>'
-
-
-def checked(file: Path, href, save_as):
-    """What DOWNLOAD needs on a button: where the bytes are, the name to save them under, their size and SHA-256."""
-    return (f'href="{href}" download="{escape(save_as)}" data-bytes="{file.stat().st_size}" '
-            f'data-sha256="{hashlib.sha256(file.read_bytes()).hexdigest()}"')
-
-
 def get_button(item, label, up='', price='Free'):
     """The Download button for a pack file (item: 'file', 'save_as') and the line beside it, which DOWNLOAD uses."""
     file = PACKS_DIR / 'files' / item['file']
-    return (f'<a class="ink-btn ink-btn--fill pack__get" {checked(file, up + "files/" + item["file"], item["save_as"])}>{GET_ICON}'
+    return (f'<a class="ink-btn ink-btn--fill pack__get" href="{up}files/{item["file"]}" download="{escape(item["save_as"])}" '
+            f'data-bytes="{file.stat().st_size}" data-sha256="{hashlib.sha256(file.read_bytes()).hexdigest()}">'
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>'
             f'{escape(label)}</a>\n        <span class="pack__file" role="status">{size(file)} · {escape(price)}</span>')
 
 
@@ -221,7 +206,7 @@ def list_page():
         </li>''')
             continue
         if missing_files(p):
-            print(f"{p['slug']}: left off the list, its files are not here yet (build_packs.py split)")
+            print(f"{p['slug']}: left off the list, its files are not here yet (build_packs.py prepare)")
             continue
         strip = wave(peaks(audio_of(p, p['sounds'][0][0])))
         rows.append(f'''
@@ -280,7 +265,7 @@ def pack_page(p):
 
 
 def roster_page(p):
-    """A pack that downloads whole or sound by sound: each row plays its demo and has its own Download with its size."""
+    """A roster pack: each row plays its demo and says what the sound is; the family buttons show one family."""
     count = {g['id']: sum(row['group'] == g['id'] for row in p['rows']) for g in p['groups']}
     fams = ''.join(f'<button type="button" aria-pressed="false" data-group="{g["id"]}">{escape(g["name"])} <span>{count[g["id"]]}</span></button>'
                    for g in p['groups'] if count[g['id']])
@@ -288,18 +273,13 @@ def roster_page(p):
     for row in p['rows']:
         slug, name = row['slug'], row['name']
         path = wave(peaks(audio_of(p, slug)))
-        file = sound_file(p, slug)
         rows.append(f'''
-        <li class="snd snd--get" data-src="../audio/{p['slug']}/{slug}.m4a" data-group="{row['group']}">
+        <li class="snd snd--line" data-src="../audio/{p['slug']}/{slug}.m4a" data-group="{row['group']}">
           <button class="snd__play" type="button" aria-label="Play {escape(name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M8 5.5v13l11-6.5z"/><path class="i-stop" d="M7 7h10v10H7z"/></svg></button>
           <div class="snd__text"><h3>{escape(name)}</h3><p>{escape(row['line'])}</p></div>
           <div class="snd__wave" aria-hidden="true">
             <svg viewBox="0 0 256 40" preserveAspectRatio="none"><path d="{path}"/></svg>
             <svg class="snd__on" viewBox="0 0 256 40" preserveAspectRatio="none"><path d="{path}"/></svg>
-          </div>
-          <div class="snd__get">
-            <a class="ink-btn pack__get" {checked(file, f"../files/{p['slug']}/{slug}.zip", name + '.inksounds')} aria-label="Download {escape(name)}, {size(file)}">{GET_ICON}{size(file)}</a>
-            <span class="pack__file" role="status"></span>
           </div>
         </li>''')
     c = p['credits']
@@ -320,9 +300,9 @@ def roster_page(p):
       <h1 class="packs__title">{escape(p['name'])}</h1>
       <p class="packs__lede">{escape(lede)}</p>
       <div class="pack__actions">
-        {get_button(p, 'Download all ' + str(len(p['rows'])), up='../', price=p.get('price', 'Free'))}
+        {get_button(p, 'Download', up='../', price=p.get('price', 'Free'))}
       </div>
-      <p class="pack__how">Or download any one sound: it comes with the kit of recordings it plays, and INK keeps a kit once, however many of its sounds you add. In INK Synth, tap Import in the Library and choose the file, or open it in INK from Files or AirDrop. <a href="../../manual/save-and-share-sounds.html">Save and share sounds</a></p>
+      <p class="pack__how">In INK Synth, tap Import in the Library and choose the file, or open it in INK from Files or AirDrop. <a href="../../manual/save-and-share-sounds.html">Save and share sounds</a></p>
       <div class="fams" role="group" aria-label="Show" hidden><button type="button" aria-pressed="true" data-group="">All <span>{len(p['rows'])}</span></button>{fams}</div>
       <ol class="sounds" aria-label="Sounds">{''.join(rows)}
       </ol>{credits}
@@ -391,10 +371,10 @@ PLAYER = '''  <script>
 '''
 
 DOWNLOAD = '''  <script>
-  // Download saves one .inksounds file, for every Download on the page (a pack's, a demo's on the list, each sound's on a roster pack).
-  // The files are stored as .zip (see PACKS), and Safari would unzip a .zip it downloads into a folder INK cannot import, so the page
-  // fetches the bytes, checks them against the file's size and SHA-256, and saves them under the .inksounds name. A download cut
-  // short is not saved; the line by the button says so. A big file counts its progress there.
+  // Download saves one .inksounds file (a pack's page, or a demo on the list). The pack is stored as .zip (see PACKS), and Safari would
+  // unzip a .zip it downloads into a folder INK cannot import, so the page fetches the bytes, checks them against the pack's size and
+  // SHA-256, and saves them under the .inksounds name. A download cut short is not saved; the line beside the button says so. A big
+  // pack counts its progress there.
   (() => {
     if (!window.fetch || !window.crypto || !crypto.subtle) return;
     document.querySelectorAll('.pack__get').forEach(get => {
@@ -442,9 +422,9 @@ DOWNLOAD = '''  <script>
 '''
 
 
-def split(slug, source: Path, clips: Path = None):
-    """A roster pack's files from the pack INK's tools made (see the top). Every file is written the same way each time
-    (fixed order, dates and compression), so a sound that did not change keeps its bytes, its SHA-256 and its place in git."""
+def prepare(slug, source: Path, clips: Path = None):
+    """A roster pack's files from the pack INK's tools made (see the top). The pack is written the same way each time (fixed
+    order, dates and compression), so the same sounds give the same bytes and SHA-256."""
     p = next((x for x in PACKS if x['slug'] == slug and x.get('roster')), None)
     if not p:
         sys.exit(f'{slug}: no pack with a roster')
@@ -517,18 +497,10 @@ def split(slug, source: Path, clips: Path = None):
 
     order = [by_name[row['name'].casefold()] for row in p['rows']]
     write(PACKS_DIR / 'files' / p['file'], order)
-    for row, snd in zip(p['rows'], order):
-        write(sound_file(p, row['slug']), [snd])
-    keep = {f"{row['slug']}.zip" for row in p['rows']}
-    for old in (PACKS_DIR / 'files' / p['slug']).glob('*.zip'):
-        if old.name not in keep:
-            old.unlink()
     authors = {snd.get('by') for snd in order} - {p['author'], None}
     if authors:
         print(f"note: the sounds say they are by {', '.join(sorted(authors))}, the pack by {p['author']}")
     print(f"{p['file']}: {size(PACKS_DIR / 'files' / p['file'])}, {len(order)} sounds, {len(kits_doc['kits'])} kits, {len(recordings)} recordings")
-    for row in p['rows']:
-        print(f"  {row['name']}: {size(sound_file(p, row['slug']))}")
 
     if clips:
         out_dir = PACKS_DIR / 'audio' / p['slug']
@@ -548,7 +520,7 @@ def split(slug, source: Path, clips: Path = None):
 
 
 if __name__ == '__main__':
-    if sys.argv[1:2] == ['split']:
+    if sys.argv[1:2] == ['prepare']:
         args = sys.argv[2:]
         clips = None
         if '--clips' in args:
@@ -557,13 +529,13 @@ if __name__ == '__main__':
             del args[i:i + 2]
         if len(args) != 2:
             sys.exit(__doc__)
-        split(args[0], Path(args[1]).expanduser(), clips)
+        prepare(args[0], Path(args[1]).expanduser(), clips)
     pages = {PACKS_DIR / 'index.html': list_page()}
     for p in PACKS:
         if p.get('soon'):
             continue
         if missing_files(p):
-            print(f"{p['slug']}: no page yet, {len(missing_files(p))} files missing (build_packs.py split)")
+            print(f"{p['slug']}: no page yet, {len(missing_files(p))} files missing (build_packs.py prepare)")
             continue
         pages[PACKS_DIR / p['slug'] / 'index.html'] = pack_page(p)
     for path, html in pages.items():

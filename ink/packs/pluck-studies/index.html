@@ -163,10 +163,10 @@
   })();
   </script>
   <script>
-  // Download saves one .inksounds file, for every Download on the page (a pack's, a demo's on the list, each sound's on a roster pack).
-  // The files are stored as .zip (see PACKS), and Safari would unzip a .zip it downloads into a folder INK cannot import, so the page
-  // fetches the bytes, checks them against the file's size and SHA-256, and saves them under the .inksounds name. A download cut
-  // short is not saved; the line by the button says so. A big file counts its progress there.
+  // Download saves one .inksounds file (a pack's page, or a demo on the list). The pack is stored as .zip (see PACKS), and Safari would
+  // unzip a .zip it downloads into a folder INK cannot import, so the page fetches the bytes, checks them against the pack's size and
+  // SHA-256, and saves them under the .inksounds name. A download cut short is not saved; the line beside the button says so. A big
+  // pack counts its progress there.
   (() => {
     if (!window.fetch || !window.crypto || !crypto.subtle) return;
     document.querySelectorAll('.pack__get').forEach(get => {
