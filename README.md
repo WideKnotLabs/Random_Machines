@@ -98,6 +98,7 @@ python3 tools/check_site.py
 - `ink/packs/files/arp-magic.zip`: the pack in the roster's order, its manifest set to "Arp Magic" by Random Machines (INK's folder and pack credit). Byte-identical when nothing changed.
 - `ink/packs/audio/arp-magic/<sound>.m4a`: the demo, AAC 112 kb/s from `<sound>.wav` or `<n>-<sound>-take.wav` (a row's `"clip"` names another stem).
 - It refuses a pack whose sound names and the roster's differ, and one carrying a recording no credit covers.
+- The score view: while a sound plays, a piano roll in ink unfolds under its row: each bar's chord and the settings the matrix moves, the held chord as pale lanes and on a little keyboard, the notes inking in as the arp plays them; when it stops, the whole 8-bar phrase. Its data, `tools/packs/arp-magic-scores.json`, comes from RM INK's listening desk (the takes' notes, chords, arp settings and arcs), made with `python3 tools/packs/scores_from_desk.py "<RM INK>/research/arp-demo-pack-2026-11-22" desk/<round>` before `build_packs.py`. The notes must come from the same render as the demo takes.
 - No per-sound downloads (owner, 23 November 2026): a sound's own file carries its whole kit, so the 34 came to 341 MB against the whole pack's 61 MB.
 
 Preview: `python3 -m http.server 8817` in the repository, then `http://localhost:8817/ink/packs/arp-magic/`.

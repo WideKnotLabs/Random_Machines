@@ -130,6 +130,7 @@
   </footer>
   <script>
   // One preview at a time: a row's button or waveform plays it, the lit part of the waveform follows the playhead.
+  // A row says when it starts and stops ('snd:play' with the audio, 'snd:stop'), for the score view (SCORE).
   (() => {
     const audio = new Audio();
     let row = null, frame = 0;
@@ -140,12 +141,12 @@
     };
     const stop = () => {
       cancelAnimationFrame(frame);
-      if (row) { row.classList.remove('is-playing'); row.style.setProperty('--p', '0%'); label(row, 'Play'); }
+      if (row) { row.classList.remove('is-playing'); row.style.setProperty('--p', '0%'); label(row, 'Play'); row.dispatchEvent(new CustomEvent('snd:stop', { bubbles: true })); }
       row = null;
     };
     const play = r => {
       if (r !== row) { audio.pause(); stop(); row = r; audio.src = r.dataset.src; }
-      audio.play().then(() => { r.classList.add('is-playing'); label(r, 'Stop'); cancelAnimationFrame(frame); draw(); }).catch(stop);
+      audio.play().then(() => { r.classList.add('is-playing'); label(r, 'Stop'); cancelAnimationFrame(frame); draw(); r.dispatchEvent(new CustomEvent('snd:play', { bubbles: true, detail: { audio } })); }).catch(stop);
     };
     audio.addEventListener('ended', stop);
     document.querySelectorAll('.snd').forEach(r => {
