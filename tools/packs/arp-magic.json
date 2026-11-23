@@ -1,0 +1,346 @@
+{
+ "about": "Arp Magic's page data for tools/build_packs.py: the pack's line, the families the page filters by, each sound (its file and clip name, family and one line), and the credits. PLACEHOLDER: the round 6 roster of 23 November 2026 (RM INK documentation/arp-demo-pack-plan.md, research/arp-demo-pack-2026-11-22/patches/order.json and kits/SOURCES.md), in the owner's order. Replace with the final roster when the pack lands.",
+ "draft": "Draft for review. The sounds, demos and sizes are round 6 placeholders (23 November 2026), not the final pack.",
+ "line": "Keys, plucks, bells, winds and voices, each sound playing an arpeggio idiom, from a Bach prelude to a gamelan interlock.",
+ "more": "Most are recorded instruments: pianos, mallets, harps, guitars, guzheng, flutes and choir.",
+ "groups": [
+  {
+   "id": "pianos",
+   "name": "Pianos"
+  },
+  {
+   "id": "bells",
+   "name": "Mallets and bells"
+  },
+  {
+   "id": "strings",
+   "name": "Plucked strings"
+  },
+  {
+   "id": "winds",
+   "name": "Winds and voices"
+  },
+  {
+   "id": "synths",
+   "name": "Synths"
+  }
+ ],
+ "sounds": [
+  {
+   "slug": "handpan-cycle",
+   "name": "Handpan Cycle",
+   "group": "bells",
+   "line": "A hang in D minor as a handpan groove: the ding, then the tone field, call and answer."
+  },
+  {
+   "slug": "ocarina-song",
+   "name": "Ocarina Song",
+   "group": "winds",
+   "line": "A breathy ocarina in a slow song figure: legato for three bars, detached in the fourth."
+  },
+  {
+   "slug": "romanza-guitar",
+   "name": "Romanza Guitar",
+   "group": "strings",
+   "line": "INK's nylon guitar on Giuliani's right-hand formulas: p-a-m-i, answered by p-i-m-a."
+  },
+  {
+   "slug": "orinoco-pizz",
+   "name": "Orinoco Pizz",
+   "group": "strings",
+   "line": "Cello pizzicato as an Enya ostinato, eighth-note echoes across a big hall."
+  },
+  {
+   "slug": "whisper-lyre",
+   "name": "Whisper Lyre",
+   "group": "strings",
+   "line": "A ten-string lyre in harp bisbigliando: the chord whispered between the hands at 32nds."
+  },
+  {
+   "slug": "bright-gliss",
+   "name": "Bright Gliss",
+   "group": "strings",
+   "line": "Concert harp glissandi: eight notes swept up the chord four times a bar, every string ringing."
+  },
+  {
+   "slug": "osiris-nocturne",
+   "name": "Osiris Nocturne",
+   "group": "pianos",
+   "line": "An upright piano nocturne: root and fifth below, the top ringing over a moving inner voice."
+  },
+  {
+   "slug": "pedal-waterfall",
+   "name": "Pedal Waterfall",
+   "group": "pianos",
+   "line": "A Steinway grand in the waterfall: the bass, then eight notes falling from the top, under the pedal."
+  },
+  {
+   "slug": "tenth-lullaby",
+   "name": "Tenth Lullaby",
+   "group": "pianos",
+   "line": "A soft upright in the Yiruma tenth: bass, fifth, tenth and back, one wave a bar, pedalled."
+  },
+  {
+   "slug": "gate-pluck",
+   "name": "Gate Pluck",
+   "group": "synths",
+   "line": "A supersaw trance arp: the chord in 16ths, an octave higher each beat, four octaves a bar."
+  },
+  {
+   "slug": "pixel-run",
+   "name": "Pixel Run",
+   "group": "synths",
+   "line": "A square chip voice flicking five notes up and back at 32nds."
+  },
+  {
+   "slug": "horn-call",
+   "name": "Horn Call",
+   "group": "winds",
+   "line": "A French horn calling the triad up and back, slurred, then tongued."
+  },
+  {
+   "slug": "tine-bloom",
+   "name": "Tine Bloom",
+   "group": "synths",
+   "line": "A tine electric piano in a ballad spread: bass and top, then out from the middle, all held."
+  },
+  {
+   "slug": "khim-tremolo",
+   "name": "Khim Tremolo",
+   "group": "bells",
+   "line": "A Thai khim's tremolo on the tune's note while the thumb climbs the chord beneath."
+  },
+  {
+   "slug": "starfall-glock",
+   "name": "Starfall Glock",
+   "group": "bells",
+   "line": "Orchestra bells under soft mallets: one Lydian cascade a bar, as in a film score."
+  },
+  {
+   "slug": "neo-soul-rhodes",
+   "name": "Neo-Soul Rhodes",
+   "group": "pianos",
+   "line": "A Mark I Rhodes ballad: the bass low, rolled chord tones wandering over it."
+  },
+  {
+   "slug": "kumbengo",
+   "name": "Kumbengo",
+   "group": "strings",
+   "line": "A bright harp in the kora's kumbengo: thumbs on the bass, fingers above."
+  },
+  {
+   "slug": "rootless-vibes",
+   "name": "Rootless Vibes",
+   "group": "bells",
+   "line": "Vibraphone in Bill Evans voicings, open and damped by turns."
+  },
+  {
+   "slug": "prelude-marimba",
+   "name": "Prelude Marimba",
+   "group": "bells",
+   "line": "A full marimba on the figure of Bach's Prelude in C, echoes bouncing left and right."
+  },
+  {
+   "slug": "glass-adagio",
+   "name": "Glass Adagio",
+   "group": "bells",
+   "line": "Tuned glasses after Mozart's Adagio for glass harmonica: one slow arch a bar, left ringing."
+  },
+  {
+   "slug": "dayvan-tape",
+   "name": "Dayvan Tape",
+   "group": "synths",
+   "line": "A warm synth on worn tape in a Boards of Canada arp, with long echoes."
+  },
+  {
+   "slug": "toccata-clav",
+   "name": "Toccata Clav",
+   "group": "synths",
+   "line": "A clavinet toccata: the bass struck between every note of a rising line."
+  },
+  {
+   "slug": "rokudan-shirabe",
+   "name": "Rokudan Shirabe",
+   "group": "strings",
+   "line": "A taishogoto in koto danmono figures: the top ringing, the inner voice walking."
+  },
+  {
+   "slug": "drumming-wood",
+   "name": "Drumming Wood",
+   "group": "bells",
+   "line": "Soft-mallet marimba in a Reich build-up: the rests of the grid fill in, bar by bar."
+  },
+  {
+   "slug": "delay-spires",
+   "name": "Delay Spires",
+   "group": "strings",
+   "line": "A clean Gretsch electric: straight 8ths into a dotted-eighth echo."
+  },
+  {
+   "slug": "fishing-boat-glissandi",
+   "name": "Fishing Boat Glissandi",
+   "group": "strings",
+   "line": "Guzheng cascades from Fishing Boat Song at Dusk, falling, then rising.",
+   "clip": "fishing-boat"
+  },
+  {
+   "slug": "choir-entries",
+   "name": "Choir Entries",
+   "group": "winds",
+   "line": "An SATB choir entering voice by voice from the bass up: four, then eight."
+  },
+  {
+   "slug": "additive-organ",
+   "name": "Additive Organ",
+   "group": "winds",
+   "line": "A Renaissance chamber organ in a toccata: a pedal point under a rising, then falling hand."
+  },
+  {
+   "slug": "sikuri-hocket",
+   "name": "Sikuri Hocket",
+   "group": "winds",
+   "line": "Two Andean pan flutes trading notes in hocket."
+  },
+  {
+   "slug": "kotekan",
+   "name": "Kotekan",
+   "group": "bells",
+   "line": "Balinese gamelan bronzes in kotekan interlock."
+  },
+  {
+   "slug": "sugar-plum-cascade",
+   "name": "Sugar Plum Cascade",
+   "group": "bells",
+   "line": "Celesta cascades after the Sugar Plum Fairy, doubling in speed into each cadence."
+  },
+  {
+   "slug": "silver-flute",
+   "name": "Silver Flute",
+   "group": "winds",
+   "line": "One flute in Ravel's daybreak murmurs, thinning and returning."
+  },
+  {
+   "slug": "harp-arabesque",
+   "name": "Harp Arabesque",
+   "group": "strings",
+   "line": "Pedal harp in Debussy's first Arabesque: groups of three over the 16ths."
+  },
+  {
+   "slug": "fox-night",
+   "name": "Fox Night",
+   "group": "synths",
+   "line": "Felt and glass cells after Elijah Fox, growing from six notes to eight."
+  }
+ ],
+ "credits": {
+  "required": [
+   {
+    "line": "Choir samples derived from VocalSet (Wilkins, Seetharaman, Wahl, Pardo 2018), CC BY 4.0, https://doi.org/10.5281/zenodo.1442513",
+    "recordings": [
+     "Choir SATB, ah"
+    ]
+   },
+   {
+    "line": "Casa da Música Gamelan Sample Library, Digitopia / Casa da Música (Porto); recordings by Pedro Augusto and Rui Penha; CC BY 3.0, https://creativecommons.org/licenses/by/3.0/",
+    "recordings": [
+     "Gamelan (gong ageng, gender barung and panerus, pelog)"
+    ]
+   },
+   {
+    "line": "Samples are from (or based on) jRhodes3d, https://github.com/sfzinstruments/jlearman.jRhodes3d, CC BY 4.0, https://creativecommons.org/licenses/by/4.0/",
+    "recordings": [
+     "Rhodes Mark I (jRhodes3d)"
+    ]
+   },
+   {
+    "line": "Wurlitzer EP200, Yamaha CP80 and Hohner Pianet T samples by Greg Sullivan, http://www.sullivang.net, CC BY 3.0, https://creativecommons.org/licenses/by/3.0/",
+    "recordings": [
+     "Wurlitzer EP200"
+    ]
+   }
+  ],
+  "changes": "The recordings were cut into slices, retuned and level-matched for INK.",
+  "courtesy": [
+   {
+    "line": "VCSL and VSCO 2: Community Edition, Versilian Studios",
+    "recordings": [
+     "Knight upright",
+     "Steinway B grand",
+     "Tubular glockenspiel",
+     "Vibraphone, hard mallets",
+     "Marimba",
+     "Concert harp, forte",
+     "Dan tranh (zither)",
+     "Strumstick",
+     "Flemish harpsichord",
+     "Renaissance organ",
+     "Violin section, vibrato",
+     "Cello section, vibrato",
+     "French horn",
+     "Oboe",
+     "Ocarina",
+     "Flute, no vibrato",
+     "Tenor recorder",
+     "Marimba, soft mallets"
+    ]
+   },
+   {
+    "line": "University of Iowa Musical Instrument Samples (Lawrence Fritts, Electronic Music Studios)",
+    "recordings": [
+     "Glockenspiel (orchestra bells, soft mallets)"
+    ]
+   },
+   {
+    "line": "sfzinstruments: Osiris Piano, Karoryfer's Emily and Black and Green guitars, Cithara barbarica",
+    "recordings": [
+     "Osiris upright",
+     "Emily electric (direct)",
+     "Gretsch Anniversary clean",
+     "Cithara barbarica"
+    ]
+   },
+   {
+    "line": "Karoryfer Samples x bigcat instruments cello, Kamila Borowiak",
+    "recordings": [
+     "Cello, solo sustain",
+     "Cello, pizzicato"
+    ]
+   },
+   {
+    "line": "FreePats: Kalimba; Hang, recorded by Gonzalo and Roberto, played by Mar; Glasses of water, Roberto; Button Accordion HN, Jeff Stauffer's recording, michael02022",
+    "recordings": [
+     "Kalimba",
+     "Hang, D minor",
+     "Glasses of water",
+     "Accordion (Hohner)"
+    ]
+   },
+   {
+    "line": "pattingthestar instruments, SF2 by Yingchun Soul",
+    "recordings": [
+     "Khim (Thai hammered dulcimer)",
+     "Taishogoto (koto cousin)",
+     "Pan flute"
+    ]
+   },
+   {
+    "line": "A Sampled Celesta, Neil Bickford",
+    "recordings": [
+     "Celesta"
+    ]
+   },
+   {
+    "line": "jSteelDrum, Jeff Learman",
+    "recordings": [
+     "Steel pan (jSteelDrum)"
+    ]
+   },
+   {
+    "line": "Guzheng from Pufermufin (Freesound 396868) via XSXB-Band-Samples, sparklecatta-lang",
+    "recordings": [
+     "Guzheng"
+    ]
+   }
+  ]
+ }
+}

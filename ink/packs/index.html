@@ -45,8 +45,16 @@
             <span class="ink-btn">Listen<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
           </a>
         </li>
+        <li class="entry">
+          <a href="arp-magic/">
+            <span class="entry__no">02</span>
+            <div class="entry__text"><h2>Arp Magic</h2><p class="entry__meta">Draft</p><p class="entry__line">Keys, plucks, bells, winds and voices, each sound playing an arpeggio idiom, from a Bach prelude to a gamelan interlock.</p></div>
+            <svg class="entry__wave" viewBox="0 0 256 40" preserveAspectRatio="none" aria-hidden="true"><path d="M1.5 8.6V31.4M5.5 10.3V29.7M9.5 7.4V32.6M13.5 5.9V34.1M17.5 7.4V32.6M21.5 7.3V32.7M25.5 8.2V31.8M29.5 8.6V31.4M33.5 8.5V31.5M37.5 7.7V32.3M41.5 5.4V34.6M45.5 7.4V32.6M49.5 6.4V33.6M53.5 7.5V32.5M57.5 8.6V31.4M61.5 10.4V29.6M65.5 8.6V31.4M69.5 8.0V32.0M73.5 6.5V33.5M77.5 7.1V32.9M81.5 6.4V33.6M85.5 8.1V31.9M89.5 6.8V33.2M93.5 10.6V29.4M97.5 4.9V35.1M101.5 4.0V36.0M105.5 2.9V37.1M109.5 6.0V34.0M113.5 4.3V35.7M117.5 1.7V38.3M121.5 1.7V38.3M125.5 4.5V35.5M129.5 6.4V33.6M133.5 1.7V38.3M137.5 6.2V33.8M141.5 2.6V37.4M145.5 5.7V34.3M149.5 3.8V36.2M153.5 7.0V33.0M157.5 7.8V32.2M161.5 9.5V30.5M165.5 7.1V32.9M169.5 2.8V37.2M173.5 5.7V34.3M177.5 5.5V34.5M181.5 3.7V36.3M185.5 7.4V32.6M189.5 8.9V31.1M193.5 9.1V30.9M197.5 8.2V31.8M201.5 6.1V33.9M205.5 6.2V33.8M209.5 6.3V33.7M213.5 7.4V32.6M217.5 6.8V33.2M221.5 9.8V30.2M225.5 3.4V36.6M229.5 3.8V36.2M233.5 1.0V39.0M237.5 7.6V32.4M241.5 4.6V35.4M245.5 2.1V37.9M249.5 2.5V37.5M253.5 6.6V33.4"/></svg>
+            <span class="ink-btn">Listen<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+          </a>
+        </li>
         <li class="entry entry--soon entry--demo">
-          <span class="entry__no">02</span>
+          <span class="entry__no">03</span>
           <div class="entry__text"><h2>Dub Echoes</h2><p class="entry__meta">Coming soon</p></div>
           <div class="entry__demo"><a class="ink-btn ink-btn--fill pack__get" href="files/dub-echoes-demo.zip" download="Dub Echoes Demo.inksounds" data-bytes="13423257" data-sha256="556aceecda41c7770f83a46cad46dd28da6f8aa6fb236e1ec06353e544643834"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Download demo</a>
         <span class="pack__file" role="status">13.4 MB · Free</span></div>
@@ -73,34 +81,51 @@
     </div>
   </footer>
   <script>
-  // Download saves one .inksounds file (one Download button per page: a pack's page, or a demo on the list). The pack is stored as .zip (see PACKS), and Safari would unzip a .zip it downloads into
-  // a folder INK cannot import, so the page fetches the bytes, checks them against the pack's size and SHA-256, and saves them
-  // under the .inksounds name. A download cut short is not saved; the line beside the button says so.
+  // Download saves one .inksounds file, for every Download on the page (a pack's, a demo's on the list, each sound's on a roster pack).
+  // The files are stored as .zip (see PACKS), and Safari would unzip a .zip it downloads into a folder INK cannot import, so the page
+  // fetches the bytes, checks them against the file's size and SHA-256, and saves them under the .inksounds name. A download cut
+  // short is not saved; the line by the button says so. A big file counts its progress there.
   (() => {
-    const get = document.querySelector('.pack__get'), note = document.querySelector('.pack__file');
-    if (!get || !window.fetch || !window.crypto || !crypto.subtle) return;
-    const said = note.textContent;
-    let busy = false;
-    get.addEventListener('click', async e => {
-      e.preventDefault();
-      if (busy) return;
-      busy = true; note.textContent = 'Downloading…';
-      try {
-        const reply = await fetch(get.href, { cache: 'no-store' });
-        if (!reply.ok) throw new Error('reply');
-        const bytes = await reply.arrayBuffer();
-        const sum = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
-        if (bytes.byteLength !== +get.dataset.bytes || sum !== get.dataset.sha256) throw new Error('bytes');
-        const url = URL.createObjectURL(new Blob([bytes], { type: 'application/octet-stream' }));
-        const a = document.createElement('a');
-        a.href = url; a.download = get.getAttribute('download'); a.style.display = 'none';
-        document.body.append(a); a.click(); a.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 60000);
-        note.textContent = said;
-      } catch (err) {
-        note.textContent = 'The download did not finish. Try again.';
-      }
-      busy = false;
+    if (!window.fetch || !window.crypto || !crypto.subtle) return;
+    document.querySelectorAll('.pack__get').forEach(get => {
+      const note = get.parentElement.querySelector('.pack__file'), said = note.textContent, want = +get.dataset.bytes;
+      let busy = false;
+      const read = async reply => {
+        if (!reply.body || !reply.body.getReader) return reply.arrayBuffer();
+        const reader = reply.body.getReader(), parts = [];
+        let got = 0;
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          parts.push(value); got += value.length;
+          if (want > 4e6) note.textContent = 'Downloading… ' + Math.min(99, Math.floor(100 * got / want)) + '%';
+        }
+        const all = new Uint8Array(got);
+        let at = 0;
+        for (const part of parts) { all.set(part, at); at += part.length; }
+        return all.buffer;
+      };
+      get.addEventListener('click', async e => {
+        e.preventDefault();
+        if (busy) return;
+        busy = true; note.textContent = 'Downloading…';
+        try {
+          const reply = await fetch(get.href, { cache: 'no-store' });
+          if (!reply.ok) throw new Error('reply');
+          const bytes = await read(reply);
+          const sum = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
+          if (bytes.byteLength !== want || sum !== get.dataset.sha256) throw new Error('bytes');
+          const url = URL.createObjectURL(new Blob([bytes], { type: 'application/octet-stream' }));
+          const a = document.createElement('a');
+          a.href = url; a.download = get.getAttribute('download'); a.style.display = 'none';
+          document.body.append(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 60000);
+          note.textContent = said;
+        } catch (err) {
+          note.textContent = 'The download did not finish. Try again.';
+        }
+        busy = false;
+      });
     });
   })();
   </script>

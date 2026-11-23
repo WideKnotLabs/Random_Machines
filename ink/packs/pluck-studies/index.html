@@ -163,34 +163,51 @@
   })();
   </script>
   <script>
-  // Download saves one .inksounds file (one Download button per page: a pack's page, or a demo on the list). The pack is stored as .zip (see PACKS), and Safari would unzip a .zip it downloads into
-  // a folder INK cannot import, so the page fetches the bytes, checks them against the pack's size and SHA-256, and saves them
-  // under the .inksounds name. A download cut short is not saved; the line beside the button says so.
+  // Download saves one .inksounds file, for every Download on the page (a pack's, a demo's on the list, each sound's on a roster pack).
+  // The files are stored as .zip (see PACKS), and Safari would unzip a .zip it downloads into a folder INK cannot import, so the page
+  // fetches the bytes, checks them against the file's size and SHA-256, and saves them under the .inksounds name. A download cut
+  // short is not saved; the line by the button says so. A big file counts its progress there.
   (() => {
-    const get = document.querySelector('.pack__get'), note = document.querySelector('.pack__file');
-    if (!get || !window.fetch || !window.crypto || !crypto.subtle) return;
-    const said = note.textContent;
-    let busy = false;
-    get.addEventListener('click', async e => {
-      e.preventDefault();
-      if (busy) return;
-      busy = true; note.textContent = 'Downloading…';
-      try {
-        const reply = await fetch(get.href, { cache: 'no-store' });
-        if (!reply.ok) throw new Error('reply');
-        const bytes = await reply.arrayBuffer();
-        const sum = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
-        if (bytes.byteLength !== +get.dataset.bytes || sum !== get.dataset.sha256) throw new Error('bytes');
-        const url = URL.createObjectURL(new Blob([bytes], { type: 'application/octet-stream' }));
-        const a = document.createElement('a');
-        a.href = url; a.download = get.getAttribute('download'); a.style.display = 'none';
-        document.body.append(a); a.click(); a.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 60000);
-        note.textContent = said;
-      } catch (err) {
-        note.textContent = 'The download did not finish. Try again.';
-      }
-      busy = false;
+    if (!window.fetch || !window.crypto || !crypto.subtle) return;
+    document.querySelectorAll('.pack__get').forEach(get => {
+      const note = get.parentElement.querySelector('.pack__file'), said = note.textContent, want = +get.dataset.bytes;
+      let busy = false;
+      const read = async reply => {
+        if (!reply.body || !reply.body.getReader) return reply.arrayBuffer();
+        const reader = reply.body.getReader(), parts = [];
+        let got = 0;
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          parts.push(value); got += value.length;
+          if (want > 4e6) note.textContent = 'Downloading… ' + Math.min(99, Math.floor(100 * got / want)) + '%';
+        }
+        const all = new Uint8Array(got);
+        let at = 0;
+        for (const part of parts) { all.set(part, at); at += part.length; }
+        return all.buffer;
+      };
+      get.addEventListener('click', async e => {
+        e.preventDefault();
+        if (busy) return;
+        busy = true; note.textContent = 'Downloading…';
+        try {
+          const reply = await fetch(get.href, { cache: 'no-store' });
+          if (!reply.ok) throw new Error('reply');
+          const bytes = await read(reply);
+          const sum = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
+          if (bytes.byteLength !== want || sum !== get.dataset.sha256) throw new Error('bytes');
+          const url = URL.createObjectURL(new Blob([bytes], { type: 'application/octet-stream' }));
+          const a = document.createElement('a');
+          a.href = url; a.download = get.getAttribute('download'); a.style.display = 'none';
+          document.body.append(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 60000);
+          note.textContent = said;
+        } catch (err) {
+          note.textContent = 'The download did not finish. Try again.';
+        }
+        busy = false;
+      });
     });
   })();
   </script>
