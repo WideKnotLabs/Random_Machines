@@ -46,11 +46,7 @@
   transition: transform 0.15s, box-shadow 0.15s; }
 .card:not(.card--soon):hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--ink); }
 .card__cover { position: relative; margin: 10px 10px 0; padding: 34px 12px 10px; border: 1.3px solid var(--ink); border-radius: 10px 7px 11px 8px / 8px 11px 7px 10px;
-  background-color: var(--paper);
-  background-image: linear-gradient(color-mix(in srgb, var(--graph) 14%, transparent) 1px, transparent 1px),
-                    linear-gradient(90deg, color-mix(in srgb, var(--graph) 14%, transparent) 1px, transparent 1px);
-  background-size: 11px 11px; background-position: -1px -1px; }
-.card__no { position: absolute; top: 8px; left: 12px; font-family: var(--hand); font-size: 20px; line-height: 1; color: var(--pencil); }
+  background: var(--paper); }
 .card__badge { position: absolute; top: 7px; right: 10px; padding: 2px 10px 3px; border: 1.3px solid var(--ink); border-radius: 999px; background: var(--ink); color: var(--paper);
   font-family: var(--hand); font-size: 16px; font-weight: 700; line-height: 1.1; }
 .card--soon .card__badge { background: var(--paper); color: var(--ink); }
@@ -59,6 +55,15 @@
 .card__art .a-thin { stroke-width: 1; stroke-dasharray: 2 4; opacity: 0.6; }
 .card__art .a-ink { fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .card__art .a-dot { fill: var(--ink); }
+.card__art .a-ring { fill: var(--paper); stroke: var(--ink); stroke-width: 1.6; }
+.card__art .a-faint { opacity: 0.2; }
+.card__art .a-tail { fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; }
+.card__art .a-head { stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; }
+.card__art .a-lab { font-family: var(--hand); font-size: 13px; fill: var(--ink); }
+.card__art .a-pad { fill: var(--paper); stroke: var(--ink); stroke-width: 1.3; }
+.card__art .a-pad.a-down { fill: var(--ink); }
+.card__art .a-name { font-family: var(--hand); font-size: 16px; font-weight: 700; fill: var(--ink); }
+.card__art .a-name.a-down { fill: var(--paper); }
 .card--soon .card__art { opacity: 0.45; }
 .card--soon .card__cover { padding-bottom: 70px; }
 .snd.card__play { position: relative; z-index: 1; grid-template-columns: 36px minmax(0, 1fr); grid-template-rows: auto auto; gap: 0 10px; margin-top: 8px; padding: 8px 0 0;

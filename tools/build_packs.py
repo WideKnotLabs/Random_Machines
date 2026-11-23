@@ -39,6 +39,7 @@ PACKS = [
         'save_as': 'Pluck Studies.inksounds',
         'line': 'Eight plucks built from recordings of zither, mbira, balafon, psaltery and chimes. Play them on the Strings keyboard.',
         'tags': ['Strings keyboard', 'Granular'],
+        'preview': 'chime-stitch',                 # the sound on the list's card
         'credits': 'Recordings from the Versilian Community Sample Library (VCSL) by Versilian Studios, CC0 1.0. '
                    'Prism Drive and Elastic Circuit use original synthesized sources.',
         'sounds': [
@@ -215,19 +216,31 @@ def art(kind):
             out.append(f'<path class="{"a-ink" if i == 2 else "a-pen"}" d="{" ".join(pts)}" stroke-width="{1.1 + i * 0.25:.2f}"/>'
                        f'<circle class="a-dot" cx="{px}" cy="{y}" r="3"/>')
     elif kind == 'arp-magic':
-        scores = PACKS_BY['arp-magic'].get('scores') or {}
-        sc = scores.get('harp-arabesque') or next(iter(scores.values()), None)
-        if sc:
-            bar = 60 / sc['bpm'] * sc['bar']
-            ns = [n for n in sc['notes'] if n[0] < 2 * bar - 0.02]
-            lo, hi = min(n[1] for n in ns) - 1, max(n[1] for n in ns) + 1
-            X = lambda t: 14 + t / (2 * bar) * 292
-            Y = lambda m: 140 - (m - lo) / (hi - lo) * 128
-            out += [f'<path class="a-pen a-thin" d="M{X(b * bar):.1f} 6V144"/>' for b in range(3)]
-            for t, m, d, v in ns:
-                x, y = X(t), Y(m)
-                out.append(f'<path class="a-ink" d="M{x + 3:.1f} {y:.1f}H{max(x + 6, X(t + min(d, bar / 16 * 0.85))):.1f}"/>'
-                           f'<circle class="a-dot" cx="{x:.1f}" cy="{y:.1f}" r="2.8"/>')
+        # Three chord pads, the middle one held; over each, the arp's arch up and back through that chord (a dot and gate
+        # tail a step, as INK's Arp tab draws them; the octave passes hollow, marked +1). The bar played is in ink, the one
+        # playing is drawn to the line, the next is faint: the arp at work as INK shows it.
+        chords = [[0, 4, 7, 11], [-3, 0, 4, 7], [-7, -3, 0, 5]]                         # Cmaj7, Am7, Fmaj7: semitones
+        names = ['Cmaj7', 'Am7', 'Fmaj7']
+        lo, hi = -8, 17
+        Y = lambda m: 98 - (m - lo) / (hi - lo) * 88
+        step, now = 9.4, 5
+        for c, tones in enumerate(chords):
+            x0 = 12 + c * 100
+            up = tones + [t + 12 for t in tones[:2]]
+            line = up + up[-2:0:-1]                                                        # 6 up, 4 back down: one arch
+            for k, m in enumerate(line):
+                x, y, octave = x0 + 6 + k * step, Y(m), m >= tones[0] + 12
+                lit = c == 0 or (c == 1 and k <= now)
+                faint = '' if lit else ' a-faint'
+                out.append(f'<path class="a-tail{faint}" d="M{x + 4:.1f} {y:.1f}H{x + step - 2:.1f}"/>'
+                           f'<circle class="{"a-ring" if octave else "a-dot"}{faint}" cx="{x:.1f}" cy="{y:.1f}" r="3.9"/>')
+                if octave and m == max(line):
+                    out.append(f'<text class="a-lab{faint}" x="{x + 4:.1f}" y="{y - 7:.1f}">+1</text>')
+            held = c == 1
+            out.append(f'<rect class="a-pad{" a-down" if held else ""}" x="{x0 + 4}" y="112" width="92" height="31" rx="7"/>'
+                       f'<text class="a-name{" a-down" if held else ""}" x="{x0 + 50}" y="133" text-anchor="middle">{names[c]}</text>')
+        x = 12 + 100 + 6 + now * step + 4.5
+        out.append(f'<path class="a-head" d="M{x:.1f} 4V104"/>')
     else:
         out.append('<path class="a-pen a-thin" d="M10 75H310"/>')
         out += [f'<circle class="a-pen" cx="40" cy="75" r="{k * 15}" fill="none" opacity="{0.8 - k * 0.13:.2f}"/>' for k in range(1, 6)]
@@ -241,10 +254,10 @@ PLAY_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d
 
 
 def list_page():
-    """The packs as cards: an ink cover with the pack's first sound to play on it (its waveform lights as it plays and seeks
+    """The packs as cards: an ink cover with one of the pack's sounds to play on it ('preview', or its first) (its waveform lights as it plays and seeks
     where it is tapped), the pack in a line, its sound count and size, and the way in: Open pack, or a coming pack's demo."""
     cards = []
-    for n, p in enumerate(PACKS, 1):
+    for p in PACKS:
         tags = ''.join(f'<li>{escape(t)}</li>' for t in p.get('tags', []))
         if p.get('soon'):
             demo = specs = ''
@@ -256,7 +269,7 @@ def list_page():
             cards.append(f'''
         <li class="card card--soon">
           <div class="card__cover">
-            <span class="card__no">{n:02d}</span><span class="card__badge">Coming soon</span>
+            <span class="card__badge">Coming soon</span>
             {art(p['slug'])}
           </div>
           <div class="card__body">
@@ -270,12 +283,13 @@ def list_page():
         if missing_files(p):
             print(f"{p['slug']}: left off the list, its files are not here yet (build_packs.py prepare)")
             continue
-        first, first_name = p['sounds'][0]
+        first = p.get('preview', p['sounds'][0][0])
+        first_name = dict(p['sounds'])[first]
         path = wave(peaks(audio_of(p, first)))
         cards.append(f'''
         <li class="card">
           <div class="card__cover">
-            <span class="card__no">{n:02d}</span><span class="card__badge">{escape(p.get('badge', 'Free'))}</span>
+            <span class="card__badge">{escape(p.get('badge', 'Free'))}</span>
             {art(p['slug'])}
             <div class="snd card__play" data-src="audio/{p['slug']}/{first}.m4a">
               <button class="snd__play" type="button" aria-label="Play {escape(first_name)}">{PLAY_ICON}</button>
