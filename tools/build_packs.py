@@ -343,7 +343,7 @@ def pack_page(p):
       <div class="pack__actions">
         {get_button(p, 'Download', up='../')}
       </div>
-      <p class="pack__how">In INK Synth, tap Import in the Library and choose the file, or open it in INK from Files or AirDrop. <a href="../../manual/save-and-share-sounds.html">Save and share sounds</a></p>
+      <p class="pack__how"><a href="../../manual/save-and-share-sounds.html">How to import</a></p>
       <ol class="sounds" aria-label="Sounds">{''.join(rows)}
       </ol>
       <p class="pack__credits">{escape(p['credits'])}</p>
@@ -383,17 +383,15 @@ def roster_page(p):
         <ul>{''.join(f"<li>{escape(x['line'])}</li>" for x in c['courtesy'])}</ul>
       </section>'''
     draft = f'\n      <p class="draft">{escape(p["draft"])}</p>' if p.get('draft') else ''
-    lede = p['line'] + (' ' + p['more'] if p.get('more') else '')
     body = f'''    <div class="packs__in">{draft}
       <a class="crumb" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M11 6l-6 6 6 6"/></svg>Preset Packs</a>
       <h1 class="packs__title">{escape(p['name'])}</h1>
-      <p class="packs__lede">{escape(lede)}</p>
+      <p class="packs__lede">{escape(p['line'])}</p>
       <div class="pack__actions">
         {get_button(p, 'Download', up='../', price=p.get('price', 'Free'))}
       </div>
-      <p class="pack__how">In INK Synth, tap Import in the Library and choose the file, or open it in INK from Files or AirDrop. <a href="../../manual/save-and-share-sounds.html">Save and share sounds</a></p>
+      <p class="pack__how"><a href="../../manual/save-and-share-sounds.html">How to import</a></p>
       <div class="fams" role="group" aria-label="Show" hidden><button type="button" aria-pressed="true" data-group="">All <span>{len(p['rows'])}</span></button>{fams}</div>
-      {'<p class="pack__hint">Play a sound to see it on INK: the chord pad held in each bar, and every note the arp plays from it. Then tap a chord to keep the arp on it.</p>' if p['scores'] else ''}
       <ol class="sounds" aria-label="Sounds">{''.join(rows)}
       </ol>{credits}
     </div>'''
@@ -410,7 +408,7 @@ def roster_page(p):
 
 def score_panel(sc):
     """Under a row with a score, opened by Play: its 8 chords as INK's chord pads (one a bar, with the scale degree as the app
-    numbers its columns), the arp's shape for the bar (KEYS draws it and plays the pads), and the arp in words."""
+    numbers its columns), the arp's shape for the bar (KEYS draws it and lights the bar's pad), and the arp in words."""
     if not sc:
         return ''
     kb = sc['kb']
@@ -418,16 +416,16 @@ def score_panel(sc):
     pc = lambda n: ('C D EF G A B'.index(n[0]) + {'#': 1, 'b': -1}.get(n[1:2], 0)) % 12   # a chord name's root, as a pitch class
     # The degree of the pad's column, when the chord is named from that column's root (E6 is the vi pad's notes, but not vi).
     num = lambda c, at: escape(kb['numerals'][at[0]]) if at and pc(c) == pc(kb['top'][at[0]]) else '&nbsp;'
-    pads = ''.join(f'<button class="ink__pad" type="button" aria-pressed="false" aria-label="Bar {b + 1}: {escape(c)}">'
-                   f'<span class="ink__num">{num(c, at)}</span><span class="ink__name">{name(c)}</span></button>'
+    pads = ''.join(f'<div class="ink__pad" role="listitem" aria-label="Bar {b + 1}: {escape(c)}">'
+                   f'<span class="ink__num">{num(c, at)}</span><span class="ink__name">{name(c)}</span></div>'
                    for b, ((c, _), at) in enumerate(zip(sc['chords'], kb['press'])))
     moves = ', '.join(m['what'] for m in sc['moves'])
-    moving = f' <span class="ink__moves">Moving bar by bar: {escape(moves)}</span>' if moves else ''
+    moving = f' <span class="ink__moves">Mod Matrix: {escape(moves)}</span>' if moves else ''
     return f'''
           <div class="ink" hidden>
             <div class="ink__kb">
-              <p class="ink__key"><span>{escape(kb['key'])}</span><span class="ink__tip">Tap a chord to hold it</span></p>
-              <div class="ink__pads" role="group" aria-label="Chords">{pads}</div>
+              <p class="ink__key">{escape(kb['key'])}</p>
+              <div class="ink__pads" role="list" aria-label="Chords">{pads}</div>
             </div>
             <div class="ink__arp"><canvas aria-hidden="true"></canvas><span class="ink__say"></span></div>
             <p class="ink__words"><span class="ink__mode">{escape(sc['arp'])}</span>{moving}</p>
@@ -498,11 +496,10 @@ PLAYER = '''  <script>
 
 KEYS = r'''  <script>
   // INK at work (a roster pack's page). Each take is 8 bars, one chord a bar, so its row plays it as INK's chord pads: 8 pads, a
-  // bar's chord on each. Play loops the take, the pad of each bar going down as its bar plays. Tap a pad and the
-  // arp keeps playing that chord: the page loops that bar of the same recording (Web Audio, cut on the beat), so one file plays
-  // every pad. Tap it again, or Stop, to stop. Beside the pads, the bar's arp as INK's Arp tab draws it, larger: a dot for each
+  // bar's chord on each. Play loops the take, the pad of each bar going down as its bar plays. Beside the pads, the bar's arp
+  // as INK's Arp tab draws it, larger: a dot for each
   // note with its gate as a tail, an octave pass hollow and marked +1, the notes played in ink and the rest of the bar faint, a
-  // line where the sound is. The panel opens with Play and stays open, so the pads can be played after the take stops.
+  // line where the sound is. The panel opens with Play and stays open after Stop.
   // Rows it plays carry data-keys, and PLAYER leaves them alone; 'snd:solo' keeps one sound at a time between the two.
   (() => {
     const el = document.getElementById('scores'), AC = window.AudioContext || window.webkitAudioContext;
@@ -512,8 +509,7 @@ KEYS = r'''  <script>
     const INK = tok('--ink') || '#161513', PENCIL = tok('--pencil') || '#6e6a62';
     const HAND = "'Gaegu', 'Comic Sans MS', 'Chalkboard SE', cursive";
     const still = matchMedia('(prefers-reduced-motion: reduce)');
-    const AHEAD = 1.5;                         // seconds scheduled ahead (a hidden tab wakes its timers once a second)
-    let ac = null, live = null, run = null, timer = 0, frame = 0;
+    let ac = null, live = null, run = null, frame = 0;
     const bufs = new Map();
 
     const prepare = s => {
@@ -594,32 +590,18 @@ KEYS = r'''  <script>
       return bufs.get(slug);
     };
 
-    // One recording, cut on the bar. The take is a seamless 8-bar loop (its ringing tail folded onto its start), so Play loops
-    // exactly its 8 bars, sample for sample; a pad is its bar, start to end, again and again, with a few milliseconds of fade at
-    // each cut.
-    const voice = (when, from, len, loop) => {
+    // The take is a seamless 8-bar loop (its ringing tail folded onto its start), so Play loops exactly its 8 bars, sample for
+    // sample, from at seconds in (a few milliseconds of fade in when that is not the start).
+    const voice = (when, from) => {
       const src = ac.createBufferSource(), g = ac.createGain();
       src.buffer = run.buf; src.connect(g); g.connect(run.out);
       if (from > 0) { g.gain.setValueAtTime(0, when); g.gain.linearRampToValueAtTime(1, when + 0.003); }
-      if (loop) { src.loop = true; src.loopStart = 0; src.loopEnd = loop; src.start(when, from); }
-      else { g.gain.setValueAtTime(1, when + len - 0.008); g.gain.linearRampToValueAtTime(0, when + len); src.start(when, from, len); }
-      run.srcs.push({ src, end: loop ? Infinity : when + len });
-    };
-    const pump = () => {
-      if (!run || !run.buf) return;
-      const s = run.s, until = ac.currentTime + AHEAD;
-      if (run.pad < 0) { if (!run.k++) voice(run.start, run.start - run.t0, 0, s.L); }
-      else for (;;) {
-        const when = run.t0 + run.k * s.barS;
-        if (when >= until) break;
-        voice(when, run.pad * s.barS, s.barS);
-        run.k++;
-      }
-      run.srcs = run.srcs.filter(x => x.end > ac.currentTime);
+      src.loop = true; src.loopStart = 0; src.loopEnd = run.s.L; src.start(when, from);
+      run.srcs.push({ src });
     };
     const hush = () => {                         // fade what sounds and let it go
       if (!run) return;
-      const r = run; run = null; clearInterval(timer);
+      const r = run; run = null;
       if (r.out) {
         const t = ac.currentTime;
         r.out.gain.setValueAtTime(1, t); r.out.gain.linearRampToValueAtTime(0, t + 0.02);
@@ -628,21 +610,16 @@ KEYS = r'''  <script>
       return r;
     };
     const label = (row, verb) => row.querySelector('.snd__play').setAttribute('aria-label', verb + ' ' + row.querySelector('h3').textContent);
-    const quiet = row => {
-      row.classList.remove('is-playing', 'is-loading'); row.style.setProperty('--p', '0%'); label(row, 'Play');
-      if (live && live.row === row) live.pads.forEach(p => p.setAttribute('aria-pressed', 'false'));
-    };
+    const quiet = row => { row.classList.remove('is-playing', 'is-loading'); row.style.setProperty('--p', '0%'); label(row, 'Play'); };
     const halt = () => { const r = hush(); cancelAnimationFrame(frame); if (r) quiet(r.row); rest(); };
 
-    // pad -1: the whole take from at seconds in; otherwise that pad's bar, looped.
-    const begin = async (row, pad, at) => {
+    const begin = async (row, at) => {
       wake();
       const r0 = hush();
       if (r0 && r0.row !== row) quiet(r0.row);
       document.dispatchEvent(new CustomEvent('snd:solo', { detail: row }));
       const v = open(row);
-      const me = run = { row, s: v.s, pad, at, srcs: [], k: 0 };
-      v.pads.forEach((p, i) => p.setAttribute('aria-pressed', String(i === pad)));
+      const me = run = { row, s: v.s, srcs: [] };
       row.classList.add('is-playing'); label(row, 'Stop');
       if (!bufs.has(row.dataset.slug)) row.classList.add('is-loading');
       let buf;
@@ -651,16 +628,13 @@ KEYS = r'''  <script>
       row.classList.remove('is-loading');
       me.buf = buf; me.out = ac.createGain(); me.out.connect(ac.destination);
       const t = ac.currentTime + 0.04;
-      if (pad < 0) { me.t0 = t - at; me.start = t; } else me.t0 = t;
-      pump(); clearInterval(timer); timer = setInterval(pump, 250);
+      me.t0 = t - at; voice(t, at);
       cancelAnimationFrame(frame); frame = requestAnimationFrame(tick);
     };
     const tick = () => {
       if (!run || !run.buf || !live) return;
       const s = run.s, t = ac.currentTime - (ac.outputLatency || ac.baseLatency || 0);
-      let now, b;
-      if (run.pad < 0) { now = ((t - run.t0) % s.L + s.L) % s.L; b = Math.min(s.bars - 1, Math.floor(now / s.barS)); }
-      else { b = run.pad; now = b * s.barS + Math.max(0, t - run.t0) % s.barS; }
+      const now = ((t - run.t0) % s.L + s.L) % s.L, b = Math.min(s.bars - 1, Math.floor(now / s.barS));
       draw(live, b, now, true); down(live, b);
       run.row.style.setProperty('--p', (100 * now / run.buf.duration).toFixed(2) + '%');
       frame = requestAnimationFrame(tick);
@@ -670,14 +644,11 @@ KEYS = r'''  <script>
     document.querySelectorAll('.snd[data-slug]').forEach(row => {
       if (!scores[row.dataset.slug] || !row.querySelector('.ink')) return;
       row.dataset.keys = '1';
-      row.querySelector('.snd__play').addEventListener('click', () => { if (run && run.row === row) halt(); else begin(row, -1, 0); });
+      row.querySelector('.snd__play').addEventListener('click', () => { if (run && run.row === row) halt(); else begin(row, 0); });
       row.querySelector('.snd__wave').addEventListener('click', e => {
         const box = e.currentTarget.getBoundingClientRect(), s = prepare(scores[row.dataset.slug]);
-        begin(row, -1, Math.min(Math.max((e.clientX - box.left) / box.width, 0), 0.999) * s.L);
+        begin(row, Math.min(Math.max((e.clientX - box.left) / box.width, 0), 0.999) * s.L);
       });
-      row.querySelectorAll('.ink__pad').forEach((p, i) => p.addEventListener('click', () => {
-        if (run && run.row === row && run.pad === i) halt(); else begin(row, i, 0);
-      }));
     });
     addEventListener('resize', () => { if (!run) rest(); });
   })();

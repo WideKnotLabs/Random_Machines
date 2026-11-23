@@ -1,7 +1,6 @@
 {
  "about": "Arp Magic's page data for tools/build_packs.py: the pack's line, the families the page filters by, each sound (its file and clip name, family and one line), and the credits. The final pack of 23 November 2026 (RM INK research/arp-demo-pack-2026-11-22/FINAL.md, commit 9e8a2bd5a): 33 sounds in the pack's order (patches/order.json), 4 kits.",
- "line": "33 sounds with the arp already set up. Hold a chord and it plays.",
- "more": "Pianos, harps, guitars, mallets, flutes and choir, most of them recorded instruments, and a few synths.",
+ "line": "33 arp sounds: pianos, harps, guitars, mallets, flutes, choir and a few synths.",
  "groups": [
   {
    "id": "pianos",
@@ -29,200 +28,200 @@
    "slug": "handpan-cycle",
    "name": "Handpan Cycle",
    "group": "bells",
-   "line": "A hang in D minor as a handpan groove: the ding, then the tone field, call and answer."
+   "line": "Handpan in D minor, a slow call and answer."
   },
   {
    "slug": "starfall-glock",
    "name": "Starfall Glock",
    "group": "bells",
-   "line": "Orchestra bells under soft mallets: one Lydian cascade a bar, as in a film score."
+   "line": "Glockenspiel with soft mallets, falling down the chord."
   },
   {
    "slug": "drumming-wood",
    "name": "Drumming Wood",
    "group": "bells",
-   "line": "Soft-mallet marimba in a Reich build-up: the rests of the grid fill in, bar by bar."
+   "line": "Marimba pattern that fills in a little more each bar."
   },
   {
    "slug": "ocarina-song",
    "name": "Ocarina Song",
    "group": "winds",
-   "line": "A breathy ocarina in a slow song figure: legato for three bars, detached in the fourth."
+   "line": "Breathy ocarina playing a slow tune."
   },
   {
    "slug": "prelude-marimba",
    "name": "Prelude Marimba",
    "group": "bells",
-   "line": "A full marimba on the figure of Bach's Prelude in C, echoes bouncing left and right."
+   "line": "Marimba on the Bach Prelude in C pattern, with ping-pong echo."
   },
   {
    "slug": "glass-adagio",
    "name": "Glass Adagio",
    "group": "bells",
-   "line": "Tuned glasses after Mozart's Adagio for glass harmonica: one slow arch a bar, left ringing."
+   "line": "Tuned glasses, slow and ringing."
   },
   {
    "slug": "additive-organ",
    "name": "Additive Organ",
    "group": "winds",
-   "line": "A Renaissance chamber organ in a toccata: a pedal point under a rising, then falling hand."
+   "line": "Small pipe organ over a held bass note."
   },
   {
    "slug": "romanza-guitar",
    "name": "Romanza Guitar",
    "group": "strings",
-   "line": "INK's nylon guitar on Giuliani's right-hand formulas: p-a-m-i, answered by p-i-m-a."
+   "line": "Nylon guitar fingerpicking."
   },
   {
    "slug": "orinoco-pizz",
    "name": "Orinoco Pizz",
    "group": "strings",
-   "line": "Cello pizzicato as an Enya ostinato, eighth-note echoes across a big hall."
+   "line": "Cello pizzicato in a big hall, with echoes."
   },
   {
    "slug": "whisper-lyre",
    "name": "Whisper Lyre",
    "group": "strings",
-   "line": "A ten-string lyre in harp bisbigliando: the chord whispered between the hands at 32nds."
+   "line": "Lyre with a fast, quiet tremolo."
   },
   {
    "slug": "bright-gliss",
    "name": "Bright Gliss",
    "group": "strings",
-   "line": "Concert harp glissandi: eight notes swept up the chord four times a bar, every string ringing."
+   "line": "Concert harp sweeping up the chord."
   },
   {
    "slug": "osiris-nocturne",
    "name": "Osiris Nocturne",
    "group": "pianos",
-   "line": "An upright piano nocturne: root and fifth below, the top ringing over a moving inner voice."
+   "line": "Upright piano, slow and quiet."
   },
   {
    "slug": "pedal-waterfall",
    "name": "Pedal Waterfall",
    "group": "pianos",
-   "line": "A Steinway grand in the waterfall: the bass, then eight notes falling from the top, under the pedal."
+   "line": "Grand piano falling down the chord, pedal down."
   },
   {
    "slug": "tenth-lullaby",
    "name": "Tenth Lullaby",
    "group": "pianos",
-   "line": "A soft upright in the Yiruma tenth: bass, fifth, tenth and back, one wave a bar, pedalled."
+   "line": "Soft upright piano, wide rolling chords."
   },
   {
    "slug": "gate-pluck",
    "name": "Gate Pluck",
    "group": "synths",
-   "line": "A supersaw trance arp: a pedal on the top note over a climbing line, then a break into the drop."
+   "line": "Trance supersaw arp."
   },
   {
    "slug": "pixel-run",
    "name": "Pixel Run",
    "group": "synths",
-   "line": "A square chip voice running staircases up and down at 32nds, a trill on each cadence."
+   "line": "Square-wave chip sound, fast runs up and down."
   },
   {
    "slug": "horn-call",
    "name": "Horn Call",
    "group": "winds",
-   "line": "A French horn calling the triad up and back, slurred, then tongued."
+   "line": "French horn going up and down the chord."
   },
   {
    "slug": "tine-bloom",
    "name": "Tine Bloom",
    "group": "synths",
-   "line": "A tine electric piano blooming once a bar: bass and top, then out from the middle."
+   "line": "Tine electric piano, one spread chord a bar."
   },
   {
    "slug": "neo-soul-rhodes",
    "name": "Neo-Soul Rhodes",
    "group": "pianos",
-   "line": "A Mark I Rhodes ballad: the bass on 1, rolled syncopated voicings, the top singing a falling line."
+   "line": "Rhodes with syncopated neo-soul chords."
   },
   {
    "slug": "kumbengo",
    "name": "Kumbengo",
    "group": "strings",
-   "line": "A bright harp in the kora's kumbengo: thumbs on the bass, fingers above."
+   "line": "Bright harp playing a kora pattern."
   },
   {
    "slug": "rootless-vibes",
    "name": "Rootless Vibes",
    "group": "bells",
-   "line": "Vibraphone in Bill Evans voicings, twice a bar, with a falling fill into each cadence."
+   "line": "Vibraphone with jazz chords."
   },
   {
    "slug": "dayvan-tape",
    "name": "Dayvan Tape",
    "group": "synths",
-   "line": "A warm synth on worn tape in a Boards of Canada arp, with long echoes."
+   "line": "Warm synth on worn tape, long echoes."
   },
   {
    "slug": "toccata-clav",
    "name": "Toccata Clav",
    "group": "synths",
-   "line": "A clavinet toccata: the bass struck between every note of a rising line."
+   "line": "Clavinet bouncing off the bass note."
   },
   {
    "slug": "rokudan-shirabe",
    "name": "Rokudan Shirabe",
    "group": "strings",
-   "line": "A taishogoto in koto danmono figures: the top ringing, the inner voice walking."
+   "line": "Japanese zither, koto-style picking."
   },
   {
    "slug": "delay-spires",
    "name": "Delay Spires",
    "group": "strings",
-   "line": "A clean Gretsch electric: a ringing top string over the thumb, cascading through a dotted-eighth echo."
+   "line": "Clean electric guitar through a dotted-eighth delay."
   },
   {
    "slug": "fishing-boat-glissandi",
    "name": "Fishing Boat Glissandi",
    "group": "strings",
-   "line": "Guzheng cascades from Fishing Boat Song at Dusk, falling, then rising.",
+   "line": "Guzheng sweeps, down then up.",
    "clip": "fishing-boat"
   },
   {
    "slug": "choir-entries",
    "name": "Choir Entries",
    "group": "winds",
-   "line": "An SATB choir entering voice by voice from the bass up and holding: four, then eight."
+   "line": "Choir coming in one voice at a time."
   },
   {
    "slug": "sikuri-hocket",
    "name": "Sikuri Hocket",
    "group": "winds",
-   "line": "Two Andean pan flutes, low and high, trading notes from the outside in."
+   "line": "Two pan flutes trading notes."
   },
   {
    "slug": "kotekan",
    "name": "Kotekan",
    "group": "bells",
-   "line": "Balinese gamelan bronzes in kotekan interlock."
+   "line": "Gamelan bronzes playing interlocking parts."
   },
   {
    "slug": "sugar-plum-cascade",
    "name": "Sugar Plum Cascade",
    "group": "bells",
-   "line": "Celesta cascades after the Sugar Plum Fairy: the bass, then a fall from the top, twice a bar."
+   "line": "Celesta falling from the top, twice a bar."
   },
   {
    "slug": "silver-flute",
    "name": "Silver Flute",
    "group": "winds",
-   "line": "A breathy flute song: one arch a bar, the top note held as the tune."
+   "line": "Breathy flute, one phrase a bar."
   },
   {
    "slug": "harp-arabesque",
    "name": "Harp Arabesque",
    "group": "strings",
-   "line": "Pedal harp in Debussy's first Arabesque: two arches a bar, turned over at the cadences."
+   "line": "Concert harp rolling up and down the chord."
   },
   {
    "slug": "fox-night",
    "name": "Fox Night",
    "group": "pianos",
-   "line": "A CP80 electric grand in Elijah Fox's rippling cells, one arch a bar."
+   "line": "CP80 electric grand, rippling chords."
   }
  ],
  "credits": {
