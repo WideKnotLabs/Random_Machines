@@ -89,6 +89,25 @@
 /* A pack's page */
 .crumb { display: flex; width: fit-content; align-items: center; gap: 6px; min-height: 40px; margin-bottom: 4px; font-family: var(--hand); font-size: 19px; color: var(--pencil); text-decoration: none; }
 .crumb:hover { color: var(--ink); }
+/* A pack page's hero: name, line, tags and Download on the left, the pack's cover drawing on the right; stacked on a phone, the
+   drawing first. Its paper hides the page's grid, as a card's does. */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: center; gap: 24px clamp(24px, 4vw, 48px); margin-top: 6px;
+  padding: clamp(22px, 3.5vw, 40px); border: var(--stroke) solid var(--ink); border-radius: var(--r1); background: var(--paper); box-shadow: 6px 6px 0 var(--ink); }
+.hero__title { font-size: clamp(50px, 7.4vw, 76px); }
+.hero__line { margin: 12px 0 0; max-width: 24em; font-family: var(--hand); font-size: clamp(21px, 2.2vw, 25px); line-height: 1.2; color: var(--pencil); }
+.hero .card__tags { margin-top: 16px; }
+.hero .pack__actions { flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 26px; }
+.hero .pack__file { font-size: 19px; }
+.hero .pack__get { min-height: 56px; padding: 0 30px; font-size: 27px; }
+.hero .pack__get svg { width: 22px; height: 22px; }
+.hero__cover { padding: clamp(14px, 2.4vw, 26px) clamp(10px, 2vw, 20px); border: 1.3px solid var(--ink); border-radius: 10px 7px 11px 8px / 8px 11px 7px 10px; }
+.hero__cover .card__art { width: 100%; }
+@media (max-width: 760px) {
+  .hero { grid-template-columns: minmax(0, 1fr); box-shadow: 4px 4px 0 var(--ink); }
+  .hero__cover { order: -1; }
+  .hero .pack__actions { align-items: stretch; }
+  .hero .pack__get { justify-content: center; }
+}
 .pack__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 26px; }
 .pack__file { font-family: var(--hand); font-size: 20px; color: var(--pencil); }
 .pack__how { margin: 10px 0 0; max-width: 62ch; font-size: 15px; line-height: 1.6; color: var(--pencil); }

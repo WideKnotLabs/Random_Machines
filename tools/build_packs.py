@@ -59,7 +59,7 @@ PACKS = [
         'author': 'Random Machines',
         'file': 'arp-magic.zip',
         'save_as': 'Arp Magic.inksounds',
-        'price': 'Free while the INK Synth beta is open',
+        'price': 'Free during the beta',
         # Free while the beta opens, every sound with its demo, the pack's size shown (owner, 23 November 2026). Line, families,
         # sounds and credits: the roster. Files: `prepare` (see the top).
         'roster': 'tools/packs/arp-magic.json',
@@ -321,6 +321,25 @@ def list_page():
                  script=PLAYER + (DOWNLOAD if any(p.get('demo') for p in PACKS) else ''))
 
 
+def hero(p, price='Free'):
+    """A pack page's hero: the pack's name, its line, what it is, and Download, beside the pack's cover drawing (the one on its card)."""
+    tags = ''.join(f'<li>{escape(t)}</li>' for t in [f"{len(p['sounds'])} sounds", *p.get('tags', [])])
+    return f'''
+      <a class="crumb" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M11 6l-6 6 6 6"/></svg>Preset Packs</a>
+      <header class="hero">
+        <div class="hero__text">
+          <h1 class="packs__title hero__title">{escape(p['name'])}</h1>
+          <p class="hero__line">{escape(p['line'])}</p>
+          <ul class="card__tags">{tags}</ul>
+          <div class="pack__actions">
+            {get_button(p, 'Download', up='../', price=price)}
+          </div>
+          <p class="pack__how"><a href="../../manual/save-and-share-sounds.html">How to import</a></p>
+        </div>
+        <div class="hero__cover">{art(p['slug'])}</div>
+      </header>'''
+
+
 def pack_page(p):
     if p.get('roster'):
         return roster_page(p)
@@ -336,14 +355,7 @@ def pack_page(p):
             <svg class="snd__on" viewBox="0 0 256 40" preserveAspectRatio="none"><path d="{path}"/></svg>
           </div>
         </li>''')
-    body = f'''    <div class="packs__in">
-      <a class="crumb" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M11 6l-6 6 6 6"/></svg>Preset Packs</a>
-      <h1 class="packs__title">{escape(p['name'])}</h1>
-      <p class="packs__lede">{escape(p['line'])}</p>
-      <div class="pack__actions">
-        {get_button(p, 'Download', up='../')}
-      </div>
-      <p class="pack__how"><a href="../../manual/save-and-share-sounds.html">How to import</a></p>
+    body = f'''    <div class="packs__in">{hero(p)}
       <ol class="sounds" aria-label="Sounds">{''.join(rows)}
       </ol>
       <p class="pack__credits">{escape(p['credits'])}</p>
@@ -383,14 +395,7 @@ def roster_page(p):
         <ul>{''.join(f"<li>{escape(x['line'])}</li>" for x in c['courtesy'])}</ul>
       </section>'''
     draft = f'\n      <p class="draft">{escape(p["draft"])}</p>' if p.get('draft') else ''
-    body = f'''    <div class="packs__in">{draft}
-      <a class="crumb" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M11 6l-6 6 6 6"/></svg>Preset Packs</a>
-      <h1 class="packs__title">{escape(p['name'])}</h1>
-      <p class="packs__lede">{escape(p['line'])}</p>
-      <div class="pack__actions">
-        {get_button(p, 'Download', up='../', price=p.get('price', 'Free'))}
-      </div>
-      <p class="pack__how"><a href="../../manual/save-and-share-sounds.html">How to import</a></p>
+    body = f'''    <div class="packs__in">{draft}{hero(p, p.get('price', 'Free'))}
       <div class="fams" role="group" aria-label="Show" hidden><button type="button" aria-pressed="true" data-group="">All <span>{len(p['rows'])}</span></button>{fams}</div>
       <ol class="sounds" aria-label="Sounds">{''.join(rows)}
       </ol>{credits}
