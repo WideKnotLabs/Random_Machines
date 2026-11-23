@@ -117,29 +117,37 @@
 .credits p { margin: 0; }
 .credits ul { margin: 0 0 8px; padding-left: 1.1em; }
 .credits li { margin: 4px 0; overflow-wrap: anywhere; }
-/* INK at work (SCORE in build_packs.py), under the playing row: the chord keyboard in the sound's key, the held pad inked as the
-   app draws a pressed pad; the arp's shape for the bar, as the app's Arp tab draws it, larger; the arp in words. */
+/* INK at work (KEYS in build_packs.py), under the row Play opened: the take's 8 chords as INK's chord pads, 2 rows of 4, the
+   sounding one inked as the app draws a pressed pad; the arp's shape for the bar, as the app's Arp tab draws it, larger; the arp
+   in words. */
 .pack__hint { margin: 14px 0 0; font-family: var(--hand); font-size: 20px; line-height: 1.2; color: var(--pencil); }
-.ink { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 10px 14px; margin: 10px 0 2px;
+.ink { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 10px 14px; margin: 10px 0 2px;
   padding: 10px 12px 8px; border: var(--stroke) solid var(--ink); border-radius: var(--r1); background: var(--paper); animation: ink-in 0.25s ease-out; }
 .ink[hidden] { display: none; }
-.ink__key { display: flex; align-items: center; justify-content: space-between; margin: 0 0 4px; font-family: var(--hand); font-size: 19px; line-height: 1; }
-.ink__spice { padding: 2px 10px 3px; border: 1.4px solid var(--ink); border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 15px; }
-.ink__pads { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); grid-template-rows: auto 40px 40px; gap: 4px; }
-.ink__num { text-align: center; font-family: var(--hand); font-size: 14px; line-height: 1; color: var(--pencil); }
-.ink__pad { display: grid; place-items: center; min-width: 0; padding: 0 2px; border: 1.3px solid var(--ink); border-radius: 7px 5px 7px 6px / 6px 7px 5px 7px;
-  font-family: var(--hand); font-size: 15px; line-height: 0.95; text-align: center; overflow: hidden;
-  transition: background-color 0.08s, color 0.08s; }
-.ink__pad.is-down { color: var(--paper); background-color: var(--ink);
+.ink__key { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 0 6px; font-family: var(--hand); font-size: 19px; line-height: 1; }
+.ink__tip { font-size: 16px; color: var(--pencil); }
+.ink__pads { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 50px; gap: 6px; }
+.ink__pad { display: grid; grid-template-rows: auto 1fr; justify-items: center; align-items: center; min-width: 0; padding: 4px 3px 3px; margin: 0;
+  border: 1.4px solid var(--ink); border-radius: 7px 5px 7px 6px / 6px 7px 5px 7px; background: var(--paper); color: var(--ink);
+  font-family: var(--hand); font-weight: 700; text-align: center; cursor: pointer; overflow: hidden; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color 0.06s, color 0.06s, transform 0.06s, box-shadow 0.12s; }
+.ink__num { font-size: 14px; font-weight: 400; line-height: 1; color: var(--pencil); }
+.ink__name { font-size: 18px; line-height: 0.95; }
+.ink__pad:hover { box-shadow: 2px 2px 0 var(--ink); transform: translate(-1px, -1px); }
+.ink__pad[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px var(--ink); }
+.ink__pad.is-down { color: var(--paper); background-color: var(--ink); box-shadow: none; transform: translate(1px, 1px);
   background-image: repeating-linear-gradient(-55deg, transparent 0 3px, color-mix(in srgb, var(--paper) 16%, transparent) 3px 4px); }
-.ink__arp { position: relative; min-height: 118px; border: 1.3px solid var(--ink); border-radius: 9px 7px 9px 8px / 8px 9px 7px 9px; }
+.ink__pad.is-down .ink__num { color: color-mix(in srgb, var(--paper) 72%, transparent); }
+.ink__arp { position: relative; min-height: 112px; border: 1.3px solid var(--ink); border-radius: 9px 7px 9px 8px / 8px 9px 7px 9px; }
 .ink__arp canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .ink__say { position: absolute; top: 5px; left: 10px; font-family: var(--hand); font-size: 16px; color: var(--pencil); pointer-events: none; }
 .ink__words { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 16px; margin: 0; font-family: var(--hand); font-size: 18px; line-height: 1.15; }
 .ink__mode { font-weight: 700; }
 .ink__moves { color: var(--pencil); }
+.snd.is-loading .snd__play { animation: ink-wait 0.9s ease-in-out infinite alternate; }
+@keyframes ink-wait { to { opacity: 0.45; } }
 @keyframes ink-in { from { opacity: 0; transform: translateY(-6px); } }
-@media (prefers-reduced-motion: reduce) { .ink { animation: none; } .ink__pad { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .ink, .snd.is-loading .snd__play { animation: none; } .ink__pad { transition: none; } }
 
 @media (max-width: 640px) {
   /* The name beside the play button, the line and the waveform under them */
@@ -148,12 +156,12 @@
   .snd--line .snd__wave { grid-column: 2; grid-row: 2; }
   .fams button { min-height: 36px; padding: 0 11px; font-size: 18px; }
   .ink { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 7px 7px 6px; }
-  .ink__key { font-size: 17px; }
-  .ink__spice { font-size: 13px; padding: 1px 8px 2px; }
+  .ink__key { font-size: 17px; margin-bottom: 5px; }
+  .ink__tip { font-size: 14px; }
+  .ink__pads { grid-auto-rows: 46px; gap: 5px; }
   .ink__num { font-size: 12px; }
-  .ink__pads { grid-template-rows: auto 30px 30px; gap: 3px; }
-  .ink__pad { padding: 0 1px; font-size: 11.5px; letter-spacing: -0.02em; }
-  .ink__arp { min-height: 78px; }
+  .ink__name { font-size: 15px; letter-spacing: -0.01em; }
+  .ink__arp { min-height: 80px; }
   .ink__say { font-size: 14px; top: 3px; }
   .ink__words { font-size: 15px; }
   .ink__moves { display: none; }

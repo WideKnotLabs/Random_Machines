@@ -130,7 +130,7 @@
   </footer>
   <script>
   // One preview at a time: a row's button or waveform plays it, the lit part of the waveform follows the playhead.
-  // A row says when it starts and stops ('snd:play' with the audio, 'snd:stop'), for the score view (SCORE).
+  // A row KEYS plays (data-keys) is left to it; 'snd:solo' keeps one sound at a time between the two.
   (() => {
     const audio = new Audio();
     let row = null, frame = 0;
@@ -141,19 +141,23 @@
     };
     const stop = () => {
       cancelAnimationFrame(frame);
-      if (row) { row.classList.remove('is-playing'); row.style.setProperty('--p', '0%'); label(row, 'Play'); row.dispatchEvent(new CustomEvent('snd:stop', { bubbles: true })); }
+      if (row) { row.classList.remove('is-playing'); row.style.setProperty('--p', '0%'); label(row, 'Play'); }
       row = null;
     };
     const play = r => {
       if (r !== row) { audio.pause(); stop(); row = r; audio.src = r.dataset.src; }
-      audio.play().then(() => { r.classList.add('is-playing'); label(r, 'Stop'); cancelAnimationFrame(frame); draw(); r.dispatchEvent(new CustomEvent('snd:play', { bubbles: true, detail: { audio } })); }).catch(stop);
+      document.dispatchEvent(new CustomEvent('snd:solo', { detail: r }));
+      audio.play().then(() => { r.classList.add('is-playing'); label(r, 'Stop'); cancelAnimationFrame(frame); draw(); }).catch(stop);
     };
     audio.addEventListener('ended', stop);
+    document.addEventListener('snd:solo', e => { if (row && e.detail !== row) { audio.pause(); stop(); } });
     document.querySelectorAll('.snd').forEach(r => {
       r.querySelector('.snd__play').addEventListener('click', () => {
+        if (r.dataset.keys) return;
         if (r === row && !audio.paused) { audio.pause(); stop(); } else play(r);
       });
       r.querySelector('.snd__wave').addEventListener('click', e => {
+        if (r.dataset.keys) return;
         const box = e.currentTarget.getBoundingClientRect();
         const at = Math.min(Math.max((e.clientX - box.left) / box.width, 0), 1);
         if (r === row && audio.duration) { audio.currentTime = at * audio.duration; if (audio.paused) play(r); return; }

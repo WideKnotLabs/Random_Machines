@@ -305,7 +305,7 @@ def roster_page(p):
       </div>
       <p class="pack__how">In INK Synth, tap Import in the Library and choose the file, or open it in INK from Files or AirDrop. <a href="../../manual/save-and-share-sounds.html">Save and share sounds</a></p>
       <div class="fams" role="group" aria-label="Show" hidden><button type="button" aria-pressed="true" data-group="">All <span>{len(p['rows'])}</span></button>{fams}</div>
-      {'<p class="pack__hint">Play a sound to see it on INK: the chord held on the chord keyboard, and every note the arp plays from it.</p>' if p['scores'] else ''}
+      {'<p class="pack__hint">Play a sound to see it on INK: the chord pad held in each bar, and every note the arp plays from it. Then tap a chord to keep the arp on it.</p>' if p['scores'] else ''}
       <ol class="sounds" aria-label="Sounds">{''.join(rows)}
       </ol>{credits}
     </div>'''
@@ -313,7 +313,7 @@ def roster_page(p):
     if p['scores']:
         blob = json.dumps({row['slug']: p['scores'][row['slug']] for row in p['rows'] if row['slug'] in p['scores']}, separators=(',', ':'))
         blob = blob.replace('</', '<\\/')
-        scores = f'  <script type="application/json" id="scores">{blob}</script>\n' + SCORE
+        scores = f'  <script type="application/json" id="scores">{blob}</script>\n' + KEYS
     return shell(title=f"{p['name']} — INK Synth Preset Packs | Random Machines",
                  description=f"{p['name']}: {p['line']}",
                  canonical=f"ink/packs/{p['slug']}/", up='../../../', body=body, script=PLAYER + FAMILIES + scores + DOWNLOAD,
@@ -321,22 +321,22 @@ def roster_page(p):
 
 
 def score_panel(sc):
-    """Under a row with a score, shown while it plays: INK's chord keyboard in the sound's key, the arp's shape (SCORE draws
-    it), and the arp in words."""
+    """Under a row with a score, opened by Play: its 8 chords as INK's chord pads (one a bar, with the scale degree as the app
+    numbers its columns), the arp's shape for the bar (KEYS draws it and plays the pads), and the arp in words."""
     if not sc:
         return ''
     kb = sc['kb']
-    cells = ''.join(f'<span class="ink__num">{escape(n)}</span>' for n in kb['numerals'])
-    pad = lambda n: escape(n).replace('add', '<wbr>add').replace('+maj', '+<wbr>maj').replace('/', '<wbr>/')   # a long name breaks only there
-    cells += ''.join(f'<span class="ink__pad">{pad(n)}</span>' for n in kb['top'] + kb['bottom'])
+    name = lambda n: escape(n).replace('add', '<wbr>add').replace('+maj', '+<wbr>maj').replace('/', '<wbr>/')   # a long name breaks only there
+    pads = ''.join(f'<button class="ink__pad" type="button" aria-pressed="false" aria-label="Bar {b + 1}: {escape(c)}">'
+                   f'<span class="ink__num">{escape(kb["numerals"][at[0]]) if at else "&nbsp;"}</span><span class="ink__name">{name(c)}</span></button>'
+                   for b, ((c, _), at) in enumerate(zip(sc['chords'], kb['press'])))
     moves = ', '.join(m['what'] for m in sc['moves'])
     moving = f' <span class="ink__moves">Moving bar by bar: {escape(moves)}</span>' if moves else ''
-    spice = '<span class="ink__spice">Spice</span>' if kb['spice'] else ''
     return f'''
           <div class="ink" hidden>
-            <div class="ink__kb" style="--cols: {len(kb['top'])}">
-              <p class="ink__key"><span>{escape(kb['key'])}</span>{spice}</p>
-              <div class="ink__pads">{cells}</div>
+            <div class="ink__kb">
+              <p class="ink__key"><span>{escape(kb['key'])}</span><span class="ink__tip">Tap a chord to hold it</span></p>
+              <div class="ink__pads" role="group" aria-label="Chords">{pads}</div>
             </div>
             <div class="ink__arp"><canvas aria-hidden="true"></canvas><span class="ink__say"></span></div>
             <p class="ink__words"><span class="ink__mode">{escape(sc['arp'])}</span>{moving}</p>
@@ -366,7 +366,7 @@ FAMILIES = '''  <script>
 
 PLAYER = '''  <script>
   // One preview at a time: a row's button or waveform plays it, the lit part of the waveform follows the playhead.
-  // A row says when it starts and stops ('snd:play' with the audio, 'snd:stop'), for the score view (SCORE).
+  // A row KEYS plays (data-keys) is left to it; 'snd:solo' keeps one sound at a time between the two.
   (() => {
     const audio = new Audio();
     let row = null, frame = 0;
@@ -377,19 +377,23 @@ PLAYER = '''  <script>
     };
     const stop = () => {
       cancelAnimationFrame(frame);
-      if (row) { row.classList.remove('is-playing'); row.style.setProperty('--p', '0%'); label(row, 'Play'); row.dispatchEvent(new CustomEvent('snd:stop', { bubbles: true })); }
+      if (row) { row.classList.remove('is-playing'); row.style.setProperty('--p', '0%'); label(row, 'Play'); }
       row = null;
     };
     const play = r => {
       if (r !== row) { audio.pause(); stop(); row = r; audio.src = r.dataset.src; }
-      audio.play().then(() => { r.classList.add('is-playing'); label(r, 'Stop'); cancelAnimationFrame(frame); draw(); r.dispatchEvent(new CustomEvent('snd:play', { bubbles: true, detail: { audio } })); }).catch(stop);
+      document.dispatchEvent(new CustomEvent('snd:solo', { detail: r }));
+      audio.play().then(() => { r.classList.add('is-playing'); label(r, 'Stop'); cancelAnimationFrame(frame); draw(); }).catch(stop);
     };
     audio.addEventListener('ended', stop);
+    document.addEventListener('snd:solo', e => { if (row && e.detail !== row) { audio.pause(); stop(); } });
     document.querySelectorAll('.snd').forEach(r => {
       r.querySelector('.snd__play').addEventListener('click', () => {
+        if (r.dataset.keys) return;
         if (r === row && !audio.paused) { audio.pause(); stop(); } else play(r);
       });
       r.querySelector('.snd__wave').addEventListener('click', e => {
+        if (r.dataset.keys) return;
         const box = e.currentTarget.getBoundingClientRect();
         const at = Math.min(Math.max((e.clientX - box.left) / box.width, 0), 1);
         if (r === row && audio.duration) { audio.currentTime = at * audio.duration; if (audio.paused) play(r); return; }
@@ -401,25 +405,30 @@ PLAYER = '''  <script>
   </script>
 '''
 
-SCORE = r'''  <script>
-  // INK at work (a roster pack's page): while a sound plays, its row shows INK's chord keyboard in the sound's key, the pad held in
-  // each bar inked as a finger holds it, and beside it the arp's shape for that bar, drawn as INK's Arp tab draws it: a dot for each
-  // note with its gate as a tail, an octave pass as a hollow dot marked +1, the notes played in ink and the rest of the bar faint,
-  // a line where the sound is now. It closes when the sound stops. Scores: #scores (the takes' own notes and chords).
+KEYS = r'''  <script>
+  // INK at work (a roster pack's page). Each take is 8 bars, one chord a bar, so its row plays it as INK's chord pads: 8 pads, a
+  // bar's chord on each. Play runs the take round and round, the pad of each bar going down as its bar plays. Tap a pad and the
+  // arp keeps playing that chord: the page loops that bar of the same recording (Web Audio, cut on the beat), so one file plays
+  // every pad. Tap it again, or Stop, to stop. Beside the pads, the bar's arp as INK's Arp tab draws it, larger: a dot for each
+  // note with its gate as a tail, an octave pass hollow and marked +1, the notes played in ink and the rest of the bar faint, a
+  // line where the sound is. The panel opens with Play and stays open, so the pads can be played after the take stops.
+  // Rows it plays carry data-keys, and PLAYER leaves them alone; 'snd:solo' keeps one sound at a time between the two.
   (() => {
-    const el = document.getElementById('scores');
-    if (!el || !window.HTMLCanvasElement) return;
+    const el = document.getElementById('scores'), AC = window.AudioContext || window.webkitAudioContext;
+    if (!el || !AC || !window.HTMLCanvasElement) return;
     const scores = JSON.parse(el.textContent);
     const css = getComputedStyle(document.body), tok = k => css.getPropertyValue(k).trim();
     const INK = tok('--ink') || '#161513', PENCIL = tok('--pencil') || '#6e6a62';
     const HAND = "'Gaegu', 'Comic Sans MS', 'Chalkboard SE', cursive";
     const still = matchMedia('(prefers-reduced-motion: reduce)');
-    let live = null;
+    const AHEAD = 1.5;                         // seconds scheduled ahead (a hidden tab wakes its timers once a second)
+    let ac = null, live = null, run = null, timer = 0, frame = 0;
+    const bufs = new Map();
 
     const prepare = s => {
       if (s.barS) return s;
       const ps = s.notes.map(n => n[1]);
-      s.lo = Math.min(...ps) - 1; s.hi = Math.max(...ps) + 1; s.barS = 60 / s.bpm * s.bar;
+      s.lo = Math.min(...ps) - 1; s.hi = Math.max(...ps) + 1; s.barS = 60 / s.bpm * s.bar; s.L = s.barS * s.bars;
       const say = { Notes: v => v + ' notes', Range: v => 'Range ' + v, Gate: v => 'Gate ' + v };
       s.pages = Array.from({ length: s.bars }, (_, b) => {
         const a = b * s.barS, notes = s.notes.filter(n => n[0] >= a - 0.02 && n[0] < a + s.barS - 0.02);
@@ -427,15 +436,17 @@ SCORE = r'''  <script>
         for (const n of notes) base[n[1] % 12] = Math.min(base[n[1] % 12] ?? 1e9, n[1]);
         const gaps = notes.slice(1).map((n, i) => n[0] - notes[i][0]).filter(g => g > 0.02).sort((x, y) => x - y);
         const step = gaps.length ? gaps[Math.floor(gaps.length / 2)] : s.barS / 4;
-        const label = [s.kb.press[b] ? '' : s.chords[b][0], ...s.moves.map(m => (say[m.what] || (v => v))(m.bars[b]))].filter(Boolean).join(' · ');
+        const label = s.moves.map(m => (say[m.what] || (v => v))(m.bars[b])).filter(Boolean).join(' · ');
         return { a, step, label, notes: notes.map(n => ({ t: n[0], p: n[1], d: n[2], up: Math.round((n[1] - base[n[1] % 12]) / 12) })) };
       });
       return s;
     };
 
-    const draw = (v, now) => {
-      const { canvas, ctx, s } = v, b = Math.max(0, Math.min(s.bars - 1, Math.floor(now / s.barS))), pg = s.pages[b];
+    // The bar's arp; now is the time in the take (the notes before it are in ink), head draws the line at now.
+    const draw = (v, b, now, head) => {
+      const { canvas, ctx, s } = v, pg = s.pages[b];
       const dpr = window.devicePixelRatio || 1, W = canvas.clientWidth, H = canvas.clientHeight;
+      if (!W || !H) return;
       if (canvas.width !== Math.round(W * dpr) || canvas.height !== Math.round(H * dpr)) { canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
       const left = 12, right = W - 14, top = pg.label ? 30 : 16, bottom = H - 12, r = W < 420 ? 3.2 : 3.8;
@@ -452,34 +463,131 @@ SCORE = r'''  <script>
           ctx.lineWidth = 1.5; ctx.stroke();
           ctx.font = `${W < 420 ? 12 : 13}px ${HAND}`; ctx.fillText((n.up > 0 ? '+' : '') + n.up, x + r, y - r - 2);
         } else ctx.fill();
-        if (!still.matches && now - n.t >= 0 && now - n.t < 0.3) rings.push([x, y, (now - n.t) / 0.3]);
+        if (head && !still.matches && now - n.t >= 0 && now - n.t < 0.3) rings.push([x, y, (now - n.t) / 0.3]);
       });
       ctx.strokeStyle = INK; ctx.lineWidth = 1.4;
       for (const [x, y, k] of rings) { ctx.globalAlpha = 0.65 * (1 - k); ctx.beginPath(); ctx.arc(x, y, r + 2 + 10 * k, 0, 2 * Math.PI); ctx.stroke(); }
       ctx.globalAlpha = 1; ctx.lineWidth = 1.8;
-      const x = Math.round(X(now)) + 0.5; ctx.beginPath(); ctx.moveTo(x, 6); ctx.lineTo(x, H - 6); ctx.stroke();
-      if (b !== v.bar) {                       // the bar changed: the finger moves to the next pad
-        v.bar = b; v.say.textContent = pg.label;
-        v.pads.forEach(p => p.classList.remove('is-down'));
-        const at = s.kb.press[b]; if (at) v.pads[at[1] * s.kb.top.length + at[0]].classList.add('is-down');
-      }
+      if (head) { const x = Math.round(X(now)) + 0.5; ctx.beginPath(); ctx.moveTo(x, 6); ctx.lineTo(x, H - 6); ctx.stroke(); }
+      if (b !== v.bar) { v.bar = b; v.say.textContent = pg.label; }
+    };
+    const down = (v, b) => { if (v.down !== b) { v.down = b; v.pads.forEach((p, i) => p.classList.toggle('is-down', i === b)); } };
+    const rest = () => { if (!live) return; down(live, -1); const b = live.bar < 0 ? 0 : live.bar; draw(live, b, live.s.pages[b].a + live.s.barS, false); };
+
+    const open = row => {
+      if (live && live.row === row) return live;
+      if (live) live.panel.hidden = true;
+      const panel = row.querySelector('.ink'), canvas = panel.querySelector('canvas');
+      panel.hidden = false;
+      live = { row, panel, canvas, ctx: canvas.getContext('2d'), s: prepare(scores[row.dataset.slug]), say: panel.querySelector('.ink__say'),
+               pads: [...panel.querySelectorAll('.ink__pad')], bar: -1, down: -1 };
+      rest();
+      return live;
     };
 
-    const tick = () => { if (!live) return; draw(live, live.audio.currentTime); live.frame = requestAnimationFrame(tick); };
-    const close = () => { if (!live) return; cancelAnimationFrame(live.frame); live.panel.hidden = true; live = null; };
-    document.addEventListener('snd:play', e => {
-      const row = e.target, s = scores[row.dataset.slug], panel = row.querySelector('.ink');
-      if (!s || !panel) return;
-      if (live && live.row !== row) close();
-      if (!live) {
-        panel.hidden = false;
-        const canvas = panel.querySelector('canvas');
-        live = { row, panel, canvas, ctx: canvas.getContext('2d'), s: prepare(s), say: panel.querySelector('.ink__say'),
-                 pads: [...panel.querySelectorAll('.ink__pad')], bar: -1 };
+    const wake = () => {                        // in the tap itself, or iOS keeps the sound off
+      if (!ac) {
+        try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}   // play with the ring switch on silent
+        ac = new AC();
       }
-      live.audio = e.detail.audio; cancelAnimationFrame(live.frame); live.frame = requestAnimationFrame(tick);
+      if (ac.state !== 'running') ac.resume();
+    };
+    const load = row => {
+      const slug = row.dataset.slug;
+      if (!bufs.has(slug)) {
+        bufs.set(slug, fetch(row.dataset.src).then(r => { if (!r.ok) throw new Error('audio'); return r.arrayBuffer(); })
+          .then(b => new Promise((ok, no) => ac.decodeAudioData(b, ok, no))));
+        bufs.get(slug).catch(() => bufs.delete(slug));
+        while (bufs.size > 3) bufs.delete(bufs.keys().next().value);
+      }
+      return bufs.get(slug);
+    };
+
+    // One recording, cut on the bar: Play is the whole take from its start (each pass rings on into the next, as a held loop
+    // would); a pad is its bar, start to end, again and again, with a few milliseconds of fade at each cut.
+    const voice = (when, from, len) => {
+      const src = ac.createBufferSource(), g = ac.createGain();
+      src.buffer = run.buf; src.connect(g); g.connect(run.out);
+      if (from > 0) { g.gain.setValueAtTime(0, when); g.gain.linearRampToValueAtTime(1, when + 0.003); }
+      if (len) { g.gain.setValueAtTime(1, when + len - 0.008); g.gain.linearRampToValueAtTime(0, when + len); src.start(when, from, len); }
+      else src.start(when, from);
+      run.srcs.push({ src, end: when + (len || run.buf.duration - from) });
+    };
+    const pump = () => {
+      if (!run || !run.buf) return;
+      const s = run.s, until = ac.currentTime + AHEAD;
+      for (;;) {
+        const when = run.t0 + run.k * (run.pad < 0 ? s.L : s.barS);
+        if (when >= until) break;
+        if (run.pad < 0) voice(Math.max(when, run.start), Math.max(0, run.start - when), 0);
+        else voice(when, run.pad * s.barS, s.barS);
+        run.k++;
+      }
+      run.srcs = run.srcs.filter(x => x.end > ac.currentTime);
+    };
+    const hush = () => {                         // fade what sounds and let it go
+      if (!run) return;
+      const r = run; run = null; clearInterval(timer);
+      if (r.out) {
+        const t = ac.currentTime;
+        r.out.gain.setValueAtTime(1, t); r.out.gain.linearRampToValueAtTime(0, t + 0.02);
+        r.srcs.forEach(x => { try { x.src.stop(t + 0.03); } catch (e) {} });
+      }
+      return r;
+    };
+    const label = (row, verb) => row.querySelector('.snd__play').setAttribute('aria-label', verb + ' ' + row.querySelector('h3').textContent);
+    const quiet = row => {
+      row.classList.remove('is-playing', 'is-loading'); row.style.setProperty('--p', '0%'); label(row, 'Play');
+      if (live && live.row === row) live.pads.forEach(p => p.setAttribute('aria-pressed', 'false'));
+    };
+    const halt = () => { const r = hush(); cancelAnimationFrame(frame); if (r) quiet(r.row); rest(); };
+
+    // pad -1: the whole take from at seconds in; otherwise that pad's bar, looped.
+    const begin = async (row, pad, at) => {
+      wake();
+      const r0 = hush();
+      if (r0 && r0.row !== row) quiet(r0.row);
+      document.dispatchEvent(new CustomEvent('snd:solo', { detail: row }));
+      const v = open(row);
+      const me = run = { row, s: v.s, pad, at, srcs: [], k: 0 };
+      v.pads.forEach((p, i) => p.setAttribute('aria-pressed', String(i === pad)));
+      row.classList.add('is-playing'); label(row, 'Stop');
+      if (!bufs.has(row.dataset.slug)) row.classList.add('is-loading');
+      let buf;
+      try { buf = await load(row); } catch (e) { if (run === me) halt(); return; }
+      if (run !== me) return;
+      row.classList.remove('is-loading');
+      me.buf = buf; me.out = ac.createGain(); me.out.connect(ac.destination);
+      const t = ac.currentTime + 0.04;
+      if (pad < 0) { me.t0 = t - at; me.start = t; } else me.t0 = t;
+      pump(); clearInterval(timer); timer = setInterval(pump, 250);
+      cancelAnimationFrame(frame); frame = requestAnimationFrame(tick);
+    };
+    const tick = () => {
+      if (!run || !run.buf || !live) return;
+      const s = run.s, t = ac.currentTime - (ac.outputLatency || ac.baseLatency || 0);
+      let now, b;
+      if (run.pad < 0) { now = ((t - run.t0) % s.L + s.L) % s.L; b = Math.min(s.bars - 1, Math.floor(now / s.barS)); }
+      else { b = run.pad; now = b * s.barS + Math.max(0, t - run.t0) % s.barS; }
+      draw(live, b, now, true); down(live, b);
+      run.row.style.setProperty('--p', (100 * now / run.buf.duration).toFixed(2) + '%');
+      frame = requestAnimationFrame(tick);
+    };
+
+    document.addEventListener('snd:solo', e => { if (run && run.row !== e.detail) halt(); });
+    document.querySelectorAll('.snd[data-slug]').forEach(row => {
+      if (!scores[row.dataset.slug] || !row.querySelector('.ink')) return;
+      row.dataset.keys = '1';
+      row.querySelector('.snd__play').addEventListener('click', () => { if (run && run.row === row) halt(); else begin(row, -1, 0); });
+      row.querySelector('.snd__wave').addEventListener('click', e => {
+        const box = e.currentTarget.getBoundingClientRect(), s = prepare(scores[row.dataset.slug]);
+        begin(row, -1, Math.min(Math.max((e.clientX - box.left) / box.width, 0), 0.999) * s.L);
+      });
+      row.querySelectorAll('.ink__pad').forEach((p, i) => p.addEventListener('click', () => {
+        if (run && run.row === row && run.pad === i) halt(); else begin(row, i, 0);
+      }));
     });
-    document.addEventListener('snd:stop', e => { if (live && live.row === e.target) close(); });
+    addEventListener('resize', () => { if (!run) rest(); });
   })();
   </script>
 '''
