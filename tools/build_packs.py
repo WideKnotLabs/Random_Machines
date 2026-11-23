@@ -18,6 +18,7 @@ from html import escape
 from pathlib import Path
 import hashlib
 import json
+import math
 import re
 import struct
 import subprocess
@@ -36,7 +37,8 @@ PACKS = [
         # Download (DOWNLOAD below) fetches it and saves it as save_as, since Safari unzips a .zip into a folder (27 Oct 2026).
         'file': 'pluck-studies.zip',
         'save_as': 'Pluck Studies.inksounds',
-        'line': 'Eight granular plucks for the Strings keyboard, on recorded zither, mbira, balafon, psaltery and chime.',
+        'line': 'Eight plucks built from recordings of zither, mbira, balafon, psaltery and chimes. Play them on the Strings keyboard.',
+        'tags': ['Strings keyboard', 'Granular'],
         'credits': 'Recordings from the Versilian Community Sample Library (VCSL) by Versilian Studios, CC0 1.0. '
                    'Prism Drive and Elastic Circuit use original synthesized sources.',
         'sounds': [
@@ -60,11 +62,15 @@ PACKS = [
         # Free while the beta opens, every sound with its demo, the pack's size shown (owner, 23 November 2026). Line, families,
         # sounds and credits: the roster. Files: `prepare` (see the top).
         'roster': 'tools/packs/arp-magic.json',
+        'tags': ['Arpeggiator', 'Recorded instruments'],
+        'badge': 'Free in the beta',
     },
     {
         'slug': 'dub-echoes',
         'name': 'Dub Echoes',
         'soon': True,
+        'line': 'Dub techno chords, basses and long tape echoes. The full pack is on its way; the demo has 14 of its sounds.',
+        'tags': ['Dub techno'],
         # A free demo before the pack: 14 of its sounds (6 keys, 3 pads, 2 basses, 2 leads, 1 FX; levelled by loudness.py), downloaded from the list
         # row with the same checked fetch-and-save as a released pack (12 November 2026).
         'demo': {'file': 'dub-echoes-demo.zip', 'save_as': 'Dub Echoes Demo.inksounds'},
@@ -85,6 +91,7 @@ def load_roster(p):
 for _p in PACKS:
     if _p.get('roster'):
         load_roster(_p)
+PACKS_BY = {_p['slug']: _p for _p in PACKS}
 
 
 def missing_files(p):
@@ -193,44 +200,111 @@ def get_button(item, label, up='', price='Free'):
             f'{escape(label)}</a>\n        <span class="pack__file" role="status">{size(file)} · {escape(price)}</span>')
 
 
+def art(kind):
+    """A pack's cover, drawn in ink on a 320 x 150 sheet: plucked strings ringing out, an arp's dots and gates (two bars of one
+    of the pack's takes, as INK's Arp tab draws them), or a note and its echoes."""
+    out = []
+    if kind == 'pluck-studies':
+        for i in range(6):
+            y, px = 22 + i * 21, 40 + (i * 37) % 120
+            pts = [f'M10 {y}', f'L{px} {y}']
+            span = 300 - px
+            for k in range(1, 140):
+                pts.append(f'L{px + k * span / 140:.1f} {y + 9 * (1 - i / 9) * math.exp(-3.2 * k / 140) * math.sin(k * (0.55 + i * 0.07)):.1f}')
+            pts.append(f'L310 {y}')
+            out.append(f'<path class="{"a-ink" if i == 2 else "a-pen"}" d="{" ".join(pts)}" stroke-width="{1.1 + i * 0.25:.2f}"/>'
+                       f'<circle class="a-dot" cx="{px}" cy="{y}" r="3"/>')
+    elif kind == 'arp-magic':
+        scores = PACKS_BY['arp-magic'].get('scores') or {}
+        sc = scores.get('harp-arabesque') or next(iter(scores.values()), None)
+        if sc:
+            bar = 60 / sc['bpm'] * sc['bar']
+            ns = [n for n in sc['notes'] if n[0] < 2 * bar - 0.02]
+            lo, hi = min(n[1] for n in ns) - 1, max(n[1] for n in ns) + 1
+            X = lambda t: 14 + t / (2 * bar) * 292
+            Y = lambda m: 140 - (m - lo) / (hi - lo) * 128
+            out += [f'<path class="a-pen a-thin" d="M{X(b * bar):.1f} 6V144"/>' for b in range(3)]
+            for t, m, d, v in ns:
+                x, y = X(t), Y(m)
+                out.append(f'<path class="a-ink" d="M{x + 3:.1f} {y:.1f}H{max(x + 6, X(t + min(d, bar / 16 * 0.85))):.1f}"/>'
+                           f'<circle class="a-dot" cx="{x:.1f}" cy="{y:.1f}" r="2.8"/>')
+    else:
+        out.append('<path class="a-pen a-thin" d="M10 75H310"/>')
+        out += [f'<circle class="a-pen" cx="40" cy="75" r="{k * 15}" fill="none" opacity="{0.8 - k * 0.13:.2f}"/>' for k in range(1, 6)]
+        out += [f'<circle class="a-dot" cx="{40 + k * 42}" cy="75" r="{9 * 0.8 ** k:.1f}" opacity="{0.9 * 0.72 ** k:.2f}"/>' for k in range(7)]
+    return f'<svg class="card__art" viewBox="0 0 320 150" aria-hidden="true">{"".join(out)}</svg>'
+
+
+ARROW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>'
+PLAY_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M8 5.5v13l11-6.5z"/>'
+             '<path class="i-stop" d="M7 7h10v10H7z"/></svg>')
+
+
 def list_page():
-    rows = []
+    """The packs as cards: an ink cover with the pack's first sound to play on it (its waveform lights as it plays and seeks
+    where it is tapped), the pack in a line, its sound count and size, and the way in: Open pack, or a coming pack's demo."""
+    cards = []
     for n, p in enumerate(PACKS, 1):
+        tags = ''.join(f'<li>{escape(t)}</li>' for t in p.get('tags', []))
         if p.get('soon'):
-            demo = ''
+            demo = specs = ''
             if p.get('demo'):
-                demo = '\n          <div class="entry__demo">' + get_button(p['demo'], 'Download demo') + '</div>'
-            rows.append(f'''
-        <li class="entry entry--soon{' entry--demo' if demo else ''}">
-          <span class="entry__no">{n:02d}</span>
-          <div class="entry__text"><h2>{escape(p['name'])}</h2><p class="entry__meta">Coming soon</p></div>{demo}
+                with zipfile.ZipFile(PACKS_DIR / 'files' / p['demo']['file']) as z:
+                    count = len(json.loads(z.read('sounds.json'))['presets'])
+                specs = f'<li>Demo: {count} sounds</li>'
+                demo = '<div class="card__get">' + get_button(p['demo'], 'Download demo') + '</div>'
+            cards.append(f'''
+        <li class="card card--soon">
+          <div class="card__cover">
+            <span class="card__no">{n:02d}</span><span class="card__badge">Coming soon</span>
+            {art(p['slug'])}
+          </div>
+          <div class="card__body">
+            <h2 class="card__title">{escape(p['name'])}</h2>
+            <p class="card__line">{escape(p.get('line', ''))}</p>
+            <ul class="card__tags">{specs}{tags}</ul>
+            <div class="card__foot">{demo}</div>
+          </div>
         </li>''')
             continue
         if missing_files(p):
             print(f"{p['slug']}: left off the list, its files are not here yet (build_packs.py prepare)")
             continue
-        strip = wave(peaks(audio_of(p, p['sounds'][0][0])))
-        rows.append(f'''
-        <li class="entry">
-          <a href="{p['slug']}/">
-            <span class="entry__no">{n:02d}</span>
-            <div class="entry__text"><h2>{escape(p['name'])}</h2>{'<p class="entry__meta">Draft</p>' if p.get('draft') else ''}<p class="entry__line">{escape(p['line'])}</p></div>
-            <svg class="entry__wave" viewBox="0 0 256 40" preserveAspectRatio="none" aria-hidden="true"><path d="{strip}"/></svg>
-            <span class="ink-btn">Listen<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-          </a>
+        first, first_name = p['sounds'][0]
+        path = wave(peaks(audio_of(p, first)))
+        cards.append(f'''
+        <li class="card">
+          <div class="card__cover">
+            <span class="card__no">{n:02d}</span><span class="card__badge">{escape(p.get('badge', 'Free'))}</span>
+            {art(p['slug'])}
+            <div class="snd card__play" data-src="audio/{p['slug']}/{first}.m4a">
+              <button class="snd__play" type="button" aria-label="Play {escape(first_name)}">{PLAY_ICON}</button>
+              <div class="snd__text"><h3>{escape(first_name)}</h3></div>
+              <div class="snd__wave" aria-hidden="true">
+                <svg viewBox="0 0 256 40" preserveAspectRatio="none"><path d="{path}"/></svg>
+                <svg class="snd__on" viewBox="0 0 256 40" preserveAspectRatio="none"><path d="{path}"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="card__body">
+            <h2 class="card__title"><a href="{p['slug']}/">{escape(p['name'])}</a></h2>
+            <p class="card__line">{escape(p['line'])}</p>
+            <ul class="card__tags"><li>{len(p['sounds'])} sounds</li><li>{size(PACKS_DIR / 'files' / p['file'])}</li>{tags}</ul>
+            <div class="card__foot"><span class="ink-btn" aria-hidden="true">Open pack{ARROW}</span></div>
+          </div>
         </li>''')
     body = f'''    <div class="packs__in">
       <p class="kick">INK Synth</p>
       <h1 class="packs__title">Preset Packs</h1>
-      <p class="packs__lede">Sound packs for INK Synth. Listen to every sound, then download the pack.</p>
-      <ol class="entries">{''.join(rows)}
+      <p class="packs__lede">Sound packs for INK Synth. Play them here, then download and open them in the app.</p>
+      <ol class="cards">{''.join(cards)}
       </ol>
     </div>'''
     return shell(title='Preset Packs — INK Synth | Random Machines',
                  description='Sound packs for INK Synth, the three-engine touch synthesizer for iPhone and iPad. '
-                             'Listen to every sound, then download the .inksounds file.',
+                             'Play every sound, then download the .inksounds file.',
                  canonical='ink/packs/', up='../../', body=body,
-                 script=DOWNLOAD if any(p.get('demo') for p in PACKS) else '')
+                 script=PLAYER + (DOWNLOAD if any(p.get('demo') for p in PACKS) else ''))
 
 
 def pack_page(p):

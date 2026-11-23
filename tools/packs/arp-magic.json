@@ -1,7 +1,7 @@
 {
  "about": "Arp Magic's page data for tools/build_packs.py: the pack's line, the families the page filters by, each sound (its file and clip name, family and one line), and the credits. The final pack of 23 November 2026 (RM INK research/arp-demo-pack-2026-11-22/FINAL.md, commit 9e8a2bd5a): 33 sounds in the pack's order (patches/order.json), 4 kits.",
- "line": "Keys, plucks, bells, winds and voices, each sound playing an arpeggio idiom, from a Bach prelude to a gamelan interlock.",
- "more": "Most are recorded instruments: pianos, mallets, harps, guitars, guzheng, flutes and choir.",
+ "line": "33 sounds with the arp already set up. Hold a chord and it plays.",
+ "more": "Pianos, harps, guitars, mallets, flutes and choir, most of them recorded instruments, and a few synths.",
  "groups": [
   {
    "id": "pianos",
