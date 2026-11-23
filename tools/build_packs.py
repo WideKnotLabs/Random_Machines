@@ -305,7 +305,7 @@ def roster_page(p):
       </div>
       <p class="pack__how">In INK Synth, tap Import in the Library and choose the file, or open it in INK from Files or AirDrop. <a href="../../manual/save-and-share-sounds.html">Save and share sounds</a></p>
       <div class="fams" role="group" aria-label="Show" hidden><button type="button" aria-pressed="true" data-group="">All <span>{len(p['rows'])}</span></button>{fams}</div>
-      {'<p class="pack__hint">Play a sound to see its chords and every note its arp plays.</p>' if p['scores'] else ''}
+      {'<p class="pack__hint">Play a sound to see it on INK: the chord held on the chord keyboard, and every note the arp plays from it.</p>' if p['scores'] else ''}
       <ol class="sounds" aria-label="Sounds">{''.join(rows)}
       </ol>{credits}
     </div>'''
@@ -321,15 +321,25 @@ def roster_page(p):
 
 
 def score_panel(sc):
-    """Under a row with a score: the canvas SCORE draws while it plays, and the arp in words."""
+    """Under a row with a score, shown while it plays: INK's chord keyboard in the sound's key, the arp's shape (SCORE draws
+    it), and the arp in words."""
     if not sc:
         return ''
+    kb = sc['kb']
+    cells = ''.join(f'<span class="ink__num">{escape(n)}</span>' for n in kb['numerals'])
+    pad = lambda n: escape(n).replace('add', '<wbr>add').replace('+maj', '+<wbr>maj').replace('/', '<wbr>/')   # a long name breaks only there
+    cells += ''.join(f'<span class="ink__pad">{pad(n)}</span>' for n in kb['top'] + kb['bottom'])
     moves = ', '.join(m['what'] for m in sc['moves'])
-    moving = f'<span class="snd__moves">Moving bar by bar: {escape(moves)}</span>' if moves else ''
+    moving = f' <span class="ink__moves">Moving bar by bar: {escape(moves)}</span>' if moves else ''
+    spice = '<span class="ink__spice">Spice</span>' if kb['spice'] else ''
     return f'''
-          <div class="snd__score" hidden>
-            <canvas aria-hidden="true"></canvas>
-            <p class="snd__arp"><span class="snd__arpname">{escape(sc['arp'])}</span>{moving}</p>
+          <div class="ink" hidden>
+            <div class="ink__kb" style="--cols: {len(kb['top'])}">
+              <p class="ink__key"><span>{escape(kb['key'])}</span>{spice}</p>
+              <div class="ink__pads">{cells}</div>
+            </div>
+            <div class="ink__arp"><canvas aria-hidden="true"></canvas><span class="ink__say"></span></div>
+            <p class="ink__words"><span class="ink__mode">{escape(sc['arp'])}</span>{moving}</p>
           </div>'''
 
 
@@ -392,153 +402,88 @@ PLAYER = '''  <script>
 '''
 
 SCORE = r'''  <script>
-  // The score view (a roster pack's page): while a sound plays, a piano roll on graph paper unfolds under its row and scrolls under a
-  // fixed pen line. Above it, each bar's chord and the settings the matrix moves that bar; the held chord's notes are pale lanes
-  // across the roll and on the keyboard at the left; the notes still to come are pencil outlines, and each one inks in as the arp
-  // strikes it. When the sound stops, the roll draws back to the whole 8-bar phrase and stays. Scores: #scores, from the takes' notes.
+  // INK at work (a roster pack's page): while a sound plays, its row shows INK's chord keyboard in the sound's key, the pad held in
+  // each bar inked as a finger holds it, and beside it the arp's shape for that bar, drawn as INK's Arp tab draws it: a dot for each
+  // note with its gate as a tail, an octave pass as a hollow dot marked +1, the notes played in ink and the rest of the bar faint,
+  // a line where the sound is now. It closes when the sound stops. Scores: #scores (the takes' own notes and chords).
   (() => {
     const el = document.getElementById('scores');
     if (!el || !window.HTMLCanvasElement) return;
     const scores = JSON.parse(el.textContent);
     const css = getComputedStyle(document.body), tok = k => css.getPropertyValue(k).trim();
-    const INK = tok('--ink') || '#161513', PENCIL = tok('--pencil') || '#6e6a62', PAPER = tok('--paper') || '#f1ede4', GRAPH = tok('--graph') || '#5a7896';
+    const INK = tok('--ink') || '#161513', PENCIL = tok('--pencil') || '#6e6a62';
     const HAND = "'Gaegu', 'Comic Sans MS', 'Chalkboard SE', cursive";
     const still = matchMedia('(prefers-reduced-motion: reduce)');
-    const BLACK = new Set([1, 3, 6, 8, 10]);
     let live = null;
 
-    const prepare = (row, s) => {
-      if (!s.lo) {
-        const ps = s.notes.map(n => n[1]);
-        let lo = Math.min(...ps) - 1, hi = Math.max(...ps) + 1;
-        if (hi - lo < 24) { const m = Math.round((hi + lo) / 2); lo = m - 12; hi = m + 12; }
-        Object.assign(s, { lo, hi, barS: 60 / s.bpm * s.bar, pcs: s.chords.map(c => new Set(c[1].map(p => p % 12))) });
-        s.total = s.barS * s.bars;
-        const say = { Notes: v => v + ' notes', Range: v => 'Range ' + v, Gate: v => 'Gate ' + v };
-        s.label = Array.from({ length: s.bars }, (_, b) => s.moves.map(m => (say[m.what] || (v => v))(m.bars[b])).join(' · '));
-      }
+    const prepare = s => {
+      if (s.barS) return s;
+      const ps = s.notes.map(n => n[1]);
+      s.lo = Math.min(...ps) - 1; s.hi = Math.max(...ps) + 1; s.barS = 60 / s.bpm * s.bar;
+      const say = { Notes: v => v + ' notes', Range: v => 'Range ' + v, Gate: v => 'Gate ' + v };
+      s.pages = Array.from({ length: s.bars }, (_, b) => {
+        const a = b * s.barS, notes = s.notes.filter(n => n[0] >= a - 0.02 && n[0] < a + s.barS - 0.02);
+        const base = {};                       // each pitch class's lowest place this bar: higher ones are octave passes
+        for (const n of notes) base[n[1] % 12] = Math.min(base[n[1] % 12] ?? 1e9, n[1]);
+        const gaps = notes.slice(1).map((n, i) => n[0] - notes[i][0]).filter(g => g > 0.02).sort((x, y) => x - y);
+        const step = gaps.length ? gaps[Math.floor(gaps.length / 2)] : s.barS / 4;
+        const label = [s.kb.press[b] ? '' : s.chords[b][0], ...s.moves.map(m => (say[m.what] || (v => v))(m.bars[b]))].filter(Boolean).join(' · ');
+        return { a, step, label, notes: notes.map(n => ({ t: n[0], p: n[1], d: n[2], up: Math.round((n[1] - base[n[1] % 12]) / 12) })) };
+      });
       return s;
     };
-    const rnd = i => { const x = Math.sin(i * 12.9898) * 43758.5453; return x - Math.floor(x); };
 
-    const draw = v => {
-      const { canvas, ctx, s } = v;
+    const draw = (v, now) => {
+      const { canvas, ctx, s } = v, b = Math.max(0, Math.min(s.bars - 1, Math.floor(now / s.barS))), pg = s.pages[b];
       const dpr = window.devicePixelRatio || 1, W = canvas.clientWidth, H = canvas.clientHeight;
       if (canvas.width !== Math.round(W * dpr) || canvas.height !== Math.round(H * dpr)) { canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); }
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, W, H);
-      const narrow = W < 520, L = narrow ? 18 : 26, HEAD = s.moves.length ? 48 : 34, top = HEAD + 4, bottom = H - 6;
-      const rows = s.hi - s.lo + 1, rowH = (bottom - top) / rows;
-      const { t0, t1, now } = v.view, X = t => L + (t - t0) / (t1 - t0) * (W - L), Y = p => top + (s.hi - p) * rowH;
-      const bar = Math.max(0, Math.min(s.bars - 1, Math.floor(now / s.barS)));
-      const b0 = Math.max(0, Math.floor(t0 / s.barS)), b1 = Math.min(s.bars - 1, Math.floor(t1 / s.barS));
-
-      // Lanes of the held chord, beat and bar lines
-      ctx.save(); ctx.beginPath(); ctx.rect(L, 0, W - L, H); ctx.clip();
-      for (let b = b0; b <= b1; b++) {
-        const xa = X(b * s.barS), xb = X((b + 1) * s.barS);
-        ctx.fillStyle = GRAPH; ctx.globalAlpha = b === bar ? 0.26 : 0.13;
-        for (let p = s.lo; p <= s.hi; p++) if (s.pcs[b].has(p % 12)) ctx.fillRect(xa, Y(p), xb - xa, rowH);
-        ctx.globalAlpha = 0.28; ctx.strokeStyle = GRAPH; ctx.lineWidth = 1;
-        for (let k = 1; k < s.bar; k++) { const x = Math.round(X(b * s.barS + k * s.barS / s.bar)) + 0.5; ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke(); }
-        ctx.globalAlpha = 0.75; ctx.strokeStyle = INK; ctx.lineWidth = 1.2;
-        const x = Math.round(xa) + 0.5; ctx.beginPath(); ctx.moveTo(x, 4); ctx.lineTo(x, bottom); ctx.stroke();
-        // The bar's chord, and what the matrix sets that bar
-        // A bar scrolled half out keeps its chord at the left edge, as a lead sheet repeats it; a sliver shows none
-        ctx.globalAlpha = 1;
-        if (xb - Math.max(xa, L) < 44) continue;
-        ctx.save(); ctx.beginPath(); ctx.rect(Math.max(xa, L), 0, xb - Math.max(xa, L) - 4, HEAD); ctx.clip();
-        const xt = Math.max(xa, L) + 7;
-        ctx.fillStyle = b === bar ? INK : PENCIL; ctx.font = `700 ${narrow ? 19 : 22}px ${HAND}`; ctx.textBaseline = 'alphabetic';
-        ctx.fillText(s.chords[b][0], xt, 24);
-        if (b === bar) {               // a hand-drawn underline under the chord now held
-          const w = ctx.measureText(s.chords[b][0]).width; ctx.strokeStyle = INK; ctx.lineWidth = 1.6; ctx.beginPath();
-          for (let i = 0; i <= 8; i++) { const x2 = xt - 1 + w * i / 8, y2 = 29 + Math.sin(i * 1.7) * 1.1; i ? ctx.lineTo(x2, y2) : ctx.moveTo(x2, y2); }
-          ctx.stroke();
-        }
-        if (s.moves.length) { ctx.font = `${narrow ? 15 : 17}px ${HAND}`; ctx.fillText(s.label[b], xt, 45); }
-        ctx.restore();
-      }
-      ctx.globalAlpha = 1;
-      ctx.strokeStyle = INK; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(L, top - 0.5); ctx.lineTo(W, top - 0.5); ctx.stroke();
-
-      // The notes: pencil outlines ahead, ink once struck; the one sounding casts the ink shadow
-      const h = Math.max(3, Math.min(10, rowH * 0.8)), sounding = new Set(), rings = [];
-      s.notes.forEach((n, i) => {
-        const [t, p, d, vel] = n, xa = X(t), xb = Math.max(xa + 3, X(t + d));
-        if (xb < L || xa > W) return;
-        const y = Y(p) + rowH / 2 - h / 2 + (rnd(i) - 0.5) * 0.8, r = h / 2, w = xb - xa;
-        const struck = t <= now, on = struck && now < t + Math.max(d, 0.09);
-        if (on) sounding.add(p);
-        ctx.beginPath(); ctx.roundRect ? ctx.roundRect(xa, y, w, h, r) : ctx.rect(xa, y, w, h);
-        if (struck) {
-          if (on) { ctx.save(); ctx.translate(2, 2); ctx.fillStyle = PENCIL; ctx.globalAlpha = 0.55; ctx.fill(); ctx.restore(); }
-          ctx.fillStyle = INK; ctx.globalAlpha = 0.6 + 0.4 * Math.min(1, vel / 112); ctx.fill(); ctx.globalAlpha = 1;
-        } else { ctx.strokeStyle = PENCIL; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.1; ctx.stroke(); ctx.globalAlpha = 1; }
-        if (v.rings && now - t >= 0 && now - t < 0.4) rings.push([xa, y + r, (now - t) / 0.4]);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      const left = 12, right = W - 14, top = pg.label ? 30 : 16, bottom = H - 12, r = W < 420 ? 3.2 : 3.8;
+      const X = t => left + (t - pg.a) / s.barS * (right - left), Y = p => bottom - (p - s.lo) / (s.hi - s.lo) * (bottom - top);
+      ctx.strokeStyle = PENCIL; ctx.globalAlpha = 0.35; ctx.lineWidth = 1;          // the beats, as ticks along the foot
+      for (let k = 0; k <= s.bar; k++) { const x = Math.round(X(pg.a + k * s.barS / s.bar)) + 0.5; ctx.beginPath(); ctx.moveTo(x, H - 6); ctx.lineTo(x, H - (k % s.bar ? 9 : 13)); ctx.stroke(); }
+      const rings = [];
+      pg.notes.forEach(n => {
+        const x = X(n.t), y = Y(n.p), x2 = Math.max(x + r + 4, X(n.t + Math.min(n.d, pg.step * 0.85)));
+        ctx.globalAlpha = n.t <= now ? 1 : 0.2; ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineWidth = 1.7; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x2, y); ctx.stroke();
+        ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI);
+        if (n.up) {
+          ctx.lineWidth = 1.5; ctx.stroke();
+          ctx.font = `${W < 420 ? 12 : 13}px ${HAND}`; ctx.fillText((n.up > 0 ? '+' : '') + n.up, x + r, y - r - 2);
+        } else ctx.fill();
+        if (!still.matches && now - n.t >= 0 && now - n.t < 0.3) rings.push([x, y, (now - n.t) / 0.3]);
       });
-      ctx.strokeStyle = INK;
-      for (const [x, y, k] of rings) { ctx.globalAlpha = 0.7 * (1 - k); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, 3 + 13 * k, 0, 2 * Math.PI); ctx.stroke(); }
-      ctx.globalAlpha = 1;
-      // The pen: where the sound is now
-      if (v.pen) {
-        const x = Math.round(X(now)) + 0.5;
-        ctx.strokeStyle = INK; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke();
-        ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(x - 5, top - 7); ctx.lineTo(x + 5, top - 7); ctx.lineTo(x, top + 1); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = INK; ctx.lineWidth = 1.4;
+      for (const [x, y, k] of rings) { ctx.globalAlpha = 0.65 * (1 - k); ctx.beginPath(); ctx.arc(x, y, r + 2 + 10 * k, 0, 2 * Math.PI); ctx.stroke(); }
+      ctx.globalAlpha = 1; ctx.lineWidth = 1.8;
+      const x = Math.round(X(now)) + 0.5; ctx.beginPath(); ctx.moveTo(x, 6); ctx.lineTo(x, H - 6); ctx.stroke();
+      if (b !== v.bar) {                       // the bar changed: the finger moves to the next pad
+        v.bar = b; v.say.textContent = pg.label;
+        v.pads.forEach(p => p.classList.remove('is-down'));
+        const at = s.kb.press[b]; if (at) v.pads[at[1] * s.kb.top.length + at[0]].classList.add('is-down');
       }
-      ctx.restore();
-
-      // The keyboard: the held chord's keys pale blue, the keys sounding inked
-      ctx.fillStyle = PAPER; ctx.fillRect(0, top, L, bottom - top);
-      for (let p = s.lo; p <= s.hi; p++) {
-        const y = Y(p), black = BLACK.has(p % 12), w = black ? L * 0.62 : L;
-        ctx.fillStyle = sounding.has(p) ? INK : s.pcs[bar].has(p % 12) ? GRAPH : black ? PENCIL : PAPER;
-        ctx.globalAlpha = sounding.has(p) ? 1 : s.pcs[bar].has(p % 12) ? 0.45 : black ? 0.55 : 1;
-        ctx.fillRect(0, y, w, rowH); ctx.globalAlpha = 1;
-        if (p % 12 === 0 || p % 12 === 5) { ctx.strokeStyle = PENCIL; ctx.globalAlpha = 0.45; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, Math.round(y + rowH) + 0.5); ctx.lineTo(L, Math.round(y + rowH) + 0.5); ctx.stroke(); ctx.globalAlpha = 1; }
-      }
-      ctx.strokeStyle = INK; ctx.lineWidth = 1.6; ctx.strokeRect(0.8, top, L - 0.8, bottom - top);
     };
 
-    const span = (s, W) => s.barS * (W < 520 ? 2 : W < 760 ? 3 : 4);
-    const running = v => { const sp = span(v.s, v.canvas.clientWidth), now = v.audio.currentTime; return { t0: now - sp * 0.3, t1: now + sp * 0.7, now }; };
-    const whole = v => ({ t0: 0, t1: v.s.total, now: v.stoppedAt });
-    const tick = () => {
-      if (!live) return;
-      const v = live;
-      if (v.mode === 'run') { v.view = running(v); v.pen = true; v.rings = !still.matches; }
-      else {
-        const k = still.matches ? 1 : Math.min(1, (performance.now() - v.since) / 700), e = 1 - Math.pow(1 - k, 3), a = v.from, b = whole(v);
-        v.view = { t0: a.t0 + (b.t0 - a.t0) * e, t1: a.t1 + (b.t1 - a.t1) * e, now: b.now };
-        v.pen = v.stoppedAt > 0.05 && v.stoppedAt < v.s.total - 0.05; v.rings = false;
-        if (k >= 1) { draw(v); v.frame = 0; return; }
-      }
-      draw(v); v.frame = requestAnimationFrame(tick);
-    };
-    const close = v => { cancelAnimationFrame(v.frame); v.panel.hidden = true; };
-
+    const tick = () => { if (!live) return; draw(live, live.audio.currentTime); live.frame = requestAnimationFrame(tick); };
+    const close = () => { if (!live) return; cancelAnimationFrame(live.frame); live.panel.hidden = true; live = null; };
     document.addEventListener('snd:play', e => {
-      const row = e.target, s = scores[row.dataset.slug], panel = row.querySelector('.snd__score');
+      const row = e.target, s = scores[row.dataset.slug], panel = row.querySelector('.ink');
       if (!s || !panel) return;
-      if (live && live.row !== row) close(live);
-      if (!live || live.row !== row) {
+      if (live && live.row !== row) close();
+      if (!live) {
         panel.hidden = false;
         const canvas = panel.querySelector('canvas');
-        live = { row, panel, canvas, ctx: canvas.getContext('2d'), s: prepare(row, s), audio: e.detail.audio };
+        live = { row, panel, canvas, ctx: canvas.getContext('2d'), s: prepare(s), say: panel.querySelector('.ink__say'),
+                 pads: [...panel.querySelectorAll('.ink__pad')], bar: -1 };
       }
-      cancelAnimationFrame(live.frame); live.audio = e.detail.audio; live.mode = 'run'; live.frame = requestAnimationFrame(tick);
+      live.audio = e.detail.audio; cancelAnimationFrame(live.frame); live.frame = requestAnimationFrame(tick);
     });
-    document.addEventListener('snd:stop', e => {
-      if (!live || live.row !== e.target || live.mode !== 'run') return;
-      const a = live.audio, ended = a.ended || a.currentTime >= live.s.total - 0.1;
-      live.from = live.view || running(live); live.stoppedAt = ended ? live.s.total : a.currentTime;
-      live.mode = 'whole'; live.since = performance.now();
-      cancelAnimationFrame(live.frame); live.frame = requestAnimationFrame(tick);
-    });
-    addEventListener('resize', () => { if (live && !live.frame) draw(live); });
+    document.addEventListener('snd:stop', e => { if (live && live.row === e.target) close(); });
   })();
   </script>
 '''
+
 
 DOWNLOAD = '''  <script>
   // Download saves one .inksounds file (a pack's page, or a demo on the list). The pack is stored as .zip (see PACKS), and Safari would

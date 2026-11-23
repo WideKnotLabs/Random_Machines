@@ -117,17 +117,29 @@
 .credits p { margin: 0; }
 .credits ul { margin: 0 0 8px; padding-left: 1.1em; }
 .credits li { margin: 4px 0; overflow-wrap: anywhere; }
-/* The score view (SCORE in build_packs.py): under the playing row, a piano roll drawn on paper in ink, and the arp in words */
+/* INK at work (SCORE in build_packs.py), under the playing row: the chord keyboard in the sound's key, the held pad inked as the
+   app draws a pressed pad; the arp's shape for the bar, as the app's Arp tab draws it, larger; the arp in words. */
 .pack__hint { margin: 14px 0 0; font-family: var(--hand); font-size: 20px; line-height: 1.2; color: var(--pencil); }
-.snd__score { grid-column: 1 / -1; margin: 12px 0 4px; padding: 6px 8px 10px; border: var(--stroke) solid var(--ink); border-radius: var(--r1);
-  background: var(--paper); box-shadow: 4px 4px 0 var(--ink); animation: score-in 0.35s ease-out; }
-.snd__score[hidden] { display: none; }
-.snd__score canvas { display: block; width: 100%; height: 236px; }
-.snd__arp { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 18px; margin: 8px 2px 0; font-family: var(--hand); font-size: 20px; line-height: 1.15; }
-.snd__arpname { font-weight: 700; }
-.snd__moves { color: var(--pencil); }
-@keyframes score-in { from { opacity: 0; transform: translateY(-8px); } }
-@media (prefers-reduced-motion: reduce) { .snd__score { animation: none; } }
+.ink { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 10px 14px; margin: 10px 0 2px;
+  padding: 10px 12px 8px; border: var(--stroke) solid var(--ink); border-radius: var(--r1); background: var(--paper); animation: ink-in 0.25s ease-out; }
+.ink[hidden] { display: none; }
+.ink__key { display: flex; align-items: center; justify-content: space-between; margin: 0 0 4px; font-family: var(--hand); font-size: 19px; line-height: 1; }
+.ink__spice { padding: 2px 10px 3px; border: 1.4px solid var(--ink); border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 15px; }
+.ink__pads { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); grid-template-rows: auto 40px 40px; gap: 4px; }
+.ink__num { text-align: center; font-family: var(--hand); font-size: 14px; line-height: 1; color: var(--pencil); }
+.ink__pad { display: grid; place-items: center; min-width: 0; padding: 0 2px; border: 1.3px solid var(--ink); border-radius: 7px 5px 7px 6px / 6px 7px 5px 7px;
+  font-family: var(--hand); font-size: 15px; line-height: 0.95; text-align: center; overflow: hidden;
+  transition: background-color 0.08s, color 0.08s; }
+.ink__pad.is-down { color: var(--paper); background-color: var(--ink);
+  background-image: repeating-linear-gradient(-55deg, transparent 0 3px, color-mix(in srgb, var(--paper) 16%, transparent) 3px 4px); }
+.ink__arp { position: relative; min-height: 118px; border: 1.3px solid var(--ink); border-radius: 9px 7px 9px 8px / 8px 9px 7px 9px; }
+.ink__arp canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ink__say { position: absolute; top: 5px; left: 10px; font-family: var(--hand); font-size: 16px; color: var(--pencil); pointer-events: none; }
+.ink__words { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 16px; margin: 0; font-family: var(--hand); font-size: 18px; line-height: 1.15; }
+.ink__mode { font-weight: 700; }
+.ink__moves { color: var(--pencil); }
+@keyframes ink-in { from { opacity: 0; transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .ink { animation: none; } .ink__pad { transition: none; } }
 
 @media (max-width: 640px) {
   /* The name beside the play button, the line and the waveform under them */
@@ -135,7 +147,14 @@
   .snd--line .snd__text h3 { white-space: normal; }
   .snd--line .snd__wave { grid-column: 2; grid-row: 2; }
   .fams button { min-height: 36px; padding: 0 11px; font-size: 18px; }
-  .snd__score { box-shadow: 3px 3px 0 var(--ink); }
-  .snd__score canvas { height: 196px; }
-  .snd__arp { font-size: 18px; }
+  .ink { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 7px 7px 6px; }
+  .ink__key { font-size: 17px; }
+  .ink__spice { font-size: 13px; padding: 1px 8px 2px; }
+  .ink__num { font-size: 12px; }
+  .ink__pads { grid-template-rows: auto 30px 30px; gap: 3px; }
+  .ink__pad { padding: 0 1px; font-size: 11.5px; letter-spacing: -0.02em; }
+  .ink__arp { min-height: 78px; }
+  .ink__say { font-size: 14px; top: 3px; }
+  .ink__words { font-size: 15px; }
+  .ink__moves { display: none; }
 }
