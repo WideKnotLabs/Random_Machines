@@ -89,7 +89,7 @@ def moves(arcs):
         what, _, rest = a.partition(': ')
         pct = rest.endswith(' %')
         rest = rest[:-2] if pct else rest
-        vals = re.findall(r"\([^)]*\)|today's \S+(?: \S+)?(?= today's|$)|\S+", rest)
+        vals = re.findall(r"\([^)]*\)|today's (?:\S+ \d+ Steps|\S+(?: \S+)?)(?= today's|$)|\S+", rest)
         vals = [v.replace("today's ", '') + ('%' if pct else '') for v in vals]
         if len(vals) == 8 and len(set(vals)) > 1 and not any(v.startswith('(') for v in vals):
             out.append({'what': what, 'bars': vals})
@@ -124,7 +124,7 @@ def main(root, rnd='desk/r6'):
                                'arp': arp_line(c['new']), 'moves': moves(c.get('arcs')), 'kb': kb}
         print(f"{row['name']}: {len(notes)} notes, {scores[row['slug']]['arp']}" + ''.join(f" | {m['what']}" for m in scores[row['slug']]['moves']))
     out = HERE / 'arp-magic-scores.json'
-    out.write_text(json.dumps({'about': f'Made by scores_from_desk.py from {rnd} (placeholder: round 6 takes).', 'scores': scores},
+    out.write_text(json.dumps({'about': f'Made by scores_from_desk.py from {rnd}.', 'scores': scores},
                               separators=(',', ':')) + '\n')
     print(f'wrote {out.relative_to(HERE.parents[1])}: {out.stat().st_size / 1e3:.0f} KB')
 

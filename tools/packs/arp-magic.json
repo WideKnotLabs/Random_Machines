@@ -1,6 +1,5 @@
 {
- "about": "Arp Magic's page data for tools/build_packs.py: the pack's line, the families the page filters by, each sound (its file and clip name, family and one line), and the credits. PLACEHOLDER: the round 6 roster of 23 November 2026 (RM INK documentation/arp-demo-pack-plan.md, research/arp-demo-pack-2026-11-22/patches/order.json and kits/SOURCES.md), in the owner's order. Replace with the final roster when the pack lands.",
- "draft": "Draft for review. The sounds, demos and sizes are round 6 placeholders (23 November 2026), not the final pack.",
+ "about": "Arp Magic's page data for tools/build_packs.py: the pack's line, the families the page filters by, each sound (its file and clip name, family and one line), and the credits. The final pack of 23 November 2026 (RM INK research/arp-demo-pack-2026-11-22/FINAL.md, commit 9e8a2bd5a): 33 sounds in the pack's order (patches/order.json), 4 kits.",
  "line": "Keys, plucks, bells, winds and voices, each sound playing an arpeggio idiom, from a Bach prelude to a gamelan interlock.",
  "more": "Most are recorded instruments: pianos, mallets, harps, guitars, guzheng, flutes and choir.",
  "groups": [
@@ -33,10 +32,40 @@
    "line": "A hang in D minor as a handpan groove: the ding, then the tone field, call and answer."
   },
   {
+   "slug": "starfall-glock",
+   "name": "Starfall Glock",
+   "group": "bells",
+   "line": "Orchestra bells under soft mallets: one Lydian cascade a bar, as in a film score."
+  },
+  {
+   "slug": "drumming-wood",
+   "name": "Drumming Wood",
+   "group": "bells",
+   "line": "Soft-mallet marimba in a Reich build-up: the rests of the grid fill in, bar by bar."
+  },
+  {
    "slug": "ocarina-song",
    "name": "Ocarina Song",
    "group": "winds",
    "line": "A breathy ocarina in a slow song figure: legato for three bars, detached in the fourth."
+  },
+  {
+   "slug": "prelude-marimba",
+   "name": "Prelude Marimba",
+   "group": "bells",
+   "line": "A full marimba on the figure of Bach's Prelude in C, echoes bouncing left and right."
+  },
+  {
+   "slug": "glass-adagio",
+   "name": "Glass Adagio",
+   "group": "bells",
+   "line": "Tuned glasses after Mozart's Adagio for glass harmonica: one slow arch a bar, left ringing."
+  },
+  {
+   "slug": "additive-organ",
+   "name": "Additive Organ",
+   "group": "winds",
+   "line": "A Renaissance chamber organ in a toccata: a pedal point under a rising, then falling hand."
   },
   {
    "slug": "romanza-guitar",
@@ -84,13 +113,13 @@
    "slug": "gate-pluck",
    "name": "Gate Pluck",
    "group": "synths",
-   "line": "A supersaw trance arp: the chord in 16ths, an octave higher each beat, four octaves a bar."
+   "line": "A supersaw trance arp: a pedal on the top note over a climbing line, then a break into the drop."
   },
   {
    "slug": "pixel-run",
    "name": "Pixel Run",
    "group": "synths",
-   "line": "A square chip voice flicking five notes up and back at 32nds."
+   "line": "A square chip voice running staircases up and down at 32nds, a trill on each cadence."
   },
   {
    "slug": "horn-call",
@@ -102,25 +131,13 @@
    "slug": "tine-bloom",
    "name": "Tine Bloom",
    "group": "synths",
-   "line": "A tine electric piano in a ballad spread: bass and top, then out from the middle, all held."
-  },
-  {
-   "slug": "khim-tremolo",
-   "name": "Khim Tremolo",
-   "group": "bells",
-   "line": "A Thai khim's tremolo on the tune's note while the thumb climbs the chord beneath."
-  },
-  {
-   "slug": "starfall-glock",
-   "name": "Starfall Glock",
-   "group": "bells",
-   "line": "Orchestra bells under soft mallets: one Lydian cascade a bar, as in a film score."
+   "line": "A tine electric piano blooming once a bar: bass and top, then out from the middle."
   },
   {
    "slug": "neo-soul-rhodes",
    "name": "Neo-Soul Rhodes",
    "group": "pianos",
-   "line": "A Mark I Rhodes ballad: the bass low, rolled chord tones wandering over it."
+   "line": "A Mark I Rhodes ballad: the bass on 1, rolled syncopated voicings, the top singing a falling line."
   },
   {
    "slug": "kumbengo",
@@ -132,19 +149,7 @@
    "slug": "rootless-vibes",
    "name": "Rootless Vibes",
    "group": "bells",
-   "line": "Vibraphone in Bill Evans voicings, open and damped by turns."
-  },
-  {
-   "slug": "prelude-marimba",
-   "name": "Prelude Marimba",
-   "group": "bells",
-   "line": "A full marimba on the figure of Bach's Prelude in C, echoes bouncing left and right."
-  },
-  {
-   "slug": "glass-adagio",
-   "name": "Glass Adagio",
-   "group": "bells",
-   "line": "Tuned glasses after Mozart's Adagio for glass harmonica: one slow arch a bar, left ringing."
+   "line": "Vibraphone in Bill Evans voicings, twice a bar, with a falling fill into each cadence."
   },
   {
    "slug": "dayvan-tape",
@@ -165,16 +170,10 @@
    "line": "A taishogoto in koto danmono figures: the top ringing, the inner voice walking."
   },
   {
-   "slug": "drumming-wood",
-   "name": "Drumming Wood",
-   "group": "bells",
-   "line": "Soft-mallet marimba in a Reich build-up: the rests of the grid fill in, bar by bar."
-  },
-  {
    "slug": "delay-spires",
    "name": "Delay Spires",
    "group": "strings",
-   "line": "A clean Gretsch electric: straight 8ths into a dotted-eighth echo."
+   "line": "A clean Gretsch electric: a ringing top string over the thumb, cascading through a dotted-eighth echo."
   },
   {
    "slug": "fishing-boat-glissandi",
@@ -187,19 +186,13 @@
    "slug": "choir-entries",
    "name": "Choir Entries",
    "group": "winds",
-   "line": "An SATB choir entering voice by voice from the bass up: four, then eight."
-  },
-  {
-   "slug": "additive-organ",
-   "name": "Additive Organ",
-   "group": "winds",
-   "line": "A Renaissance chamber organ in a toccata: a pedal point under a rising, then falling hand."
+   "line": "An SATB choir entering voice by voice from the bass up and holding: four, then eight."
   },
   {
    "slug": "sikuri-hocket",
    "name": "Sikuri Hocket",
    "group": "winds",
-   "line": "Two Andean pan flutes trading notes in hocket."
+   "line": "Two Andean pan flutes, low and high, trading notes from the outside in."
   },
   {
    "slug": "kotekan",
@@ -211,35 +204,29 @@
    "slug": "sugar-plum-cascade",
    "name": "Sugar Plum Cascade",
    "group": "bells",
-   "line": "Celesta cascades after the Sugar Plum Fairy, doubling in speed into each cadence."
+   "line": "Celesta cascades after the Sugar Plum Fairy: the bass, then a fall from the top, twice a bar."
   },
   {
    "slug": "silver-flute",
    "name": "Silver Flute",
    "group": "winds",
-   "line": "One flute in Ravel's daybreak murmurs, thinning and returning."
+   "line": "A breathy flute song: one arch a bar, the top note held as the tune."
   },
   {
    "slug": "harp-arabesque",
    "name": "Harp Arabesque",
    "group": "strings",
-   "line": "Pedal harp in Debussy's first Arabesque: groups of three over the 16ths."
+   "line": "Pedal harp in Debussy's first Arabesque: two arches a bar, turned over at the cadences."
   },
   {
    "slug": "fox-night",
    "name": "Fox Night",
-   "group": "synths",
-   "line": "Felt and glass cells after Elijah Fox, growing from six notes to eight."
+   "group": "pianos",
+   "line": "A CP80 electric grand in Elijah Fox's rippling cells, one arch a bar."
   }
  ],
  "credits": {
   "required": [
-   {
-    "line": "Choir samples derived from VocalSet (Wilkins, Seetharaman, Wahl, Pardo 2018), CC BY 4.0, https://doi.org/10.5281/zenodo.1442513",
-    "recordings": [
-     "Choir SATB, ah"
-    ]
-   },
    {
     "line": "Casa da Música Gamelan Sample Library, Digitopia / Casa da Música (Porto); recordings by Pedro Augusto and Rui Penha; CC BY 3.0, https://creativecommons.org/licenses/by/3.0/",
     "recordings": [
@@ -247,98 +234,156 @@
     ]
    },
    {
-    "line": "Samples are from (or based on) jRhodes3d, https://github.com/sfzinstruments/jlearman.jRhodes3d, CC BY 4.0, https://creativecommons.org/licenses/by/4.0/",
+    "line": "Choir samples derived from VocalSet (Wilkins, Seetharaman, Wahl, Pardo 2018), CC BY 4.0, https://doi.org/10.5281/zenodo.1442513",
     "recordings": [
-     "Rhodes Mark I (jRhodes3d)"
+     "Choir SATB, ah"
     ]
    },
    {
-    "line": "Wurlitzer EP200, Yamaha CP80 and Hohner Pianet T samples by Greg Sullivan, http://www.sullivang.net, CC BY 3.0, https://creativecommons.org/licenses/by/3.0/",
+    "line": "Wurlitzer EP200, Yamaha CP80 and Hohner Pianet T samples by Greg Sullivan, http://www.sullivang.net, CC BY 3.0",
     "recordings": [
-     "Wurlitzer EP200"
+     "Yamaha CP80 electric grand"
+    ]
+   },
+   {
+    "line": "samples are from (or based on) jRhodes3d, https://github.com/sfzinstruments/jlearman.jRhodes3d (CC BY 4.0)",
+    "recordings": [
+     "Rhodes Mark I (jRhodes3d)"
     ]
    }
   ],
   "changes": "The recordings were cut into slices, retuned and level-matched for INK.",
   "courtesy": [
    {
-    "line": "VCSL and VSCO 2: Community Edition, Versilian Studios",
-    "recordings": [
-     "Knight upright",
-     "Steinway B grand",
-     "Tubular glockenspiel",
-     "Vibraphone, hard mallets",
-     "Marimba",
-     "Concert harp, forte",
-     "Dan tranh (zither)",
-     "Strumstick",
-     "Flemish harpsichord",
-     "Renaissance organ",
-     "Violin section, vibrato",
-     "Cello section, vibrato",
-     "French horn",
-     "Oboe",
-     "Ocarina",
-     "Flute, no vibrato",
-     "Tenor recorder",
-     "Marimba, soft mallets"
-    ]
-   },
-   {
-    "line": "University of Iowa Musical Instrument Samples (Lawrence Fritts, Electronic Music Studios)",
-    "recordings": [
-     "Glockenspiel (orchestra bells, soft mallets)"
-    ]
-   },
-   {
-    "line": "sfzinstruments: Osiris Piano, Karoryfer's Emily and Black and Green guitars, Cithara barbarica",
-    "recordings": [
-     "Osiris upright",
-     "Emily electric (direct)",
-     "Gretsch Anniversary clean",
-     "Cithara barbarica"
-    ]
-   },
-   {
-    "line": "Karoryfer Samples x bigcat instruments cello, Kamila Borowiak",
-    "recordings": [
-     "Cello, solo sustain",
-     "Cello, pizzicato"
-    ]
-   },
-   {
-    "line": "FreePats: Kalimba; Hang, recorded by Gonzalo and Roberto, played by Mar; Glasses of water, Roberto; Button Accordion HN, Jeff Stauffer's recording, michael02022",
-    "recordings": [
-     "Kalimba",
-     "Hang, D minor",
-     "Glasses of water",
-     "Accordion (Hohner)"
-    ]
-   },
-   {
-    "line": "pattingthestar instruments, SF2 by Yingchun Soul",
-    "recordings": [
-     "Khim (Thai hammered dulcimer)",
-     "Taishogoto (koto cousin)",
-     "Pan flute"
-    ]
-   },
-   {
-    "line": "A Sampled Celesta, Neil Bickford",
+    "line": "Celesta: Digital-Defiance/copyist-celesta, https://github.com/Digital-Defiance/copyist-celesta (CC0-1.0)",
     "recordings": [
      "Celesta"
     ]
    },
    {
-    "line": "jSteelDrum, Jeff Learman",
+    "line": "Cello, pizzicato: sfzinstruments/karoryfer-bigcat.cello, https://github.com/sfzinstruments/karoryfer-bigcat.cello (CC0-1.0)",
     "recordings": [
-     "Steel pan (jSteelDrum)"
+     "Cello, pizzicato"
     ]
    },
    {
-    "line": "Guzheng from Pufermufin (Freesound 396868) via XSXB-Band-Samples, sparklecatta-lang",
+    "line": "Cithara barbarica: sfzinstruments/cithara-barbarica, https://github.com/sfzinstruments/cithara-barbarica (CC0-1.0)",
+    "recordings": [
+     "Cithara barbarica"
+    ]
+   },
+   {
+    "line": "Concert harp, forte: sgossner/VCSL, https://github.com/sgossner/VCSL (CC0-1.0)",
+    "recordings": [
+     "Concert harp, forte"
+    ]
+   },
+   {
+    "line": "Flute, no vibrato: sgossner/VSCO-2-CE, https://github.com/sgossner/VSCO-2-CE (CC0-1.0)",
+    "recordings": [
+     "Flute, no vibrato"
+    ]
+   },
+   {
+    "line": "French horn: sgossner/VSCO-2-CE, https://github.com/sgossner/VSCO-2-CE (CC0-1.0)",
+    "recordings": [
+     "French horn"
+    ]
+   },
+   {
+    "line": "Glasses of water: freepats/glass, https://github.com/freepats/glass (CC0-1.0)",
+    "recordings": [
+     "Glasses of water"
+    ]
+   },
+   {
+    "line": "Glockenspiel (orchestra bells, soft mallets): uiowa/MIS-bells, https://github.com/uiowa/MIS-bells (Public domain (University of Iowa MIS: free use without restrictions))",
+    "recordings": [
+     "Glockenspiel (orchestra bells, soft mallets)"
+    ]
+   },
+   {
+    "line": "Gretsch Anniversary clean: sfzinstruments/karoryfer.black-and-green-guitars, https://github.com/sfzinstruments/karoryfer.black-and-green-guitars (CC0-1.0)",
+    "recordings": [
+     "Gretsch Anniversary clean"
+    ]
+   },
+   {
+    "line": "Guzheng: sparklecatta-lang/XSXB-Band-Samples, https://github.com/sparklecatta-lang/XSXB-Band-Samples (CC0-1.0)",
     "recordings": [
      "Guzheng"
+    ]
+   },
+   {
+    "line": "Hang, D minor: freepats/hang-d-minor, https://github.com/freepats/hang-d-minor (CC0-1.0)",
+    "recordings": [
+     "Hang, D minor"
+    ]
+   },
+   {
+    "line": "INK's recorded guitar (Karoryfer Shinyguitar): sfzinstruments/karoryfer.shinyguitar, https://github.com/sfzinstruments/karoryfer.shinyguitar (CC0-1.0)",
+    "recordings": [
+     "INK's recorded guitar (Karoryfer Shinyguitar)"
+    ]
+   },
+   {
+    "line": "Knight upright: sgossner/VCSL, https://github.com/sgossner/VCSL (CC0-1.0)",
+    "recordings": [
+     "Knight upright"
+    ]
+   },
+   {
+    "line": "Marimba, soft mallets: sgossner/VCSL, https://github.com/sgossner/VCSL (CC0-1.0)",
+    "recordings": [
+     "Marimba, soft mallets"
+    ]
+   },
+   {
+    "line": "Marimba: sgossner/VCSL, https://github.com/sgossner/VCSL (CC0-1.0)",
+    "recordings": [
+     "Marimba"
+    ]
+   },
+   {
+    "line": "Ocarina: sgossner/VCSL, https://github.com/sgossner/VCSL (CC0-1.0)",
+    "recordings": [
+     "Ocarina"
+    ]
+   },
+   {
+    "line": "Osiris upright: sfzinstruments/Osiris_Piano, https://github.com/sfzinstruments/Osiris_Piano (CC0-1.0)",
+    "recordings": [
+     "Osiris upright"
+    ]
+   },
+   {
+    "line": "Pan flute: NeoSoundFonts/pattingthestar-instruments, https://github.com/NeoSoundFonts/pattingthestar-instruments (CC0-1.0)",
+    "recordings": [
+     "Pan flute"
+    ]
+   },
+   {
+    "line": "Renaissance organ: sgossner/VCSL, https://github.com/sgossner/VCSL (CC0-1.0)",
+    "recordings": [
+     "Renaissance organ"
+    ]
+   },
+   {
+    "line": "Steinway B grand: sgossner/VCSL, https://github.com/sgossner/VCSL (CC0-1.0)",
+    "recordings": [
+     "Steinway B grand"
+    ]
+   },
+   {
+    "line": "Taishogoto (koto cousin): NeoSoundFonts/pattingthestar-instruments, https://github.com/NeoSoundFonts/pattingthestar-instruments (CC0-1.0)",
+    "recordings": [
+     "Taishogoto (koto cousin)"
+    ]
+   },
+   {
+    "line": "Vibraphone, hard mallets: sgossner/VCSL, https://github.com/sgossner/VCSL (CC0-1.0)",
+    "recordings": [
+     "Vibraphone, hard mallets"
     ]
    }
   ]

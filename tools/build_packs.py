@@ -327,8 +327,11 @@ def score_panel(sc):
         return ''
     kb = sc['kb']
     name = lambda n: escape(n).replace('add', '<wbr>add').replace('+maj', '+<wbr>maj').replace('/', '<wbr>/')   # a long name breaks only there
+    pc = lambda n: ('C D EF G A B'.index(n[0]) + {'#': 1, 'b': -1}.get(n[1:2], 0)) % 12   # a chord name's root, as a pitch class
+    # The degree of the pad's column, when the chord is named from that column's root (E6 is the vi pad's notes, but not vi).
+    num = lambda c, at: escape(kb['numerals'][at[0]]) if at and pc(c) == pc(kb['top'][at[0]]) else '&nbsp;'
     pads = ''.join(f'<button class="ink__pad" type="button" aria-pressed="false" aria-label="Bar {b + 1}: {escape(c)}">'
-                   f'<span class="ink__num">{escape(kb["numerals"][at[0]]) if at else "&nbsp;"}</span><span class="ink__name">{name(c)}</span></button>'
+                   f'<span class="ink__num">{num(c, at)}</span><span class="ink__name">{name(c)}</span></button>'
                    for b, ((c, _), at) in enumerate(zip(sc['chords'], kb['press'])))
     moves = ', '.join(m['what'] for m in sc['moves'])
     moving = f' <span class="ink__moves">Moving bar by bar: {escape(moves)}</span>' if moves else ''
@@ -407,7 +410,7 @@ PLAYER = '''  <script>
 
 KEYS = r'''  <script>
   // INK at work (a roster pack's page). Each take is 8 bars, one chord a bar, so its row plays it as INK's chord pads: 8 pads, a
-  // bar's chord on each. Play runs the take round and round, the pad of each bar going down as its bar plays. Tap a pad and the
+  // bar's chord on each. Play loops the take, the pad of each bar going down as its bar plays. Tap a pad and the
   // arp keeps playing that chord: the page loops that bar of the same recording (Web Audio, cut on the beat), so one file plays
   // every pad. Tap it again, or Stop, to stop. Beside the pads, the bar's arp as INK's Arp tab draws it, larger: a dot for each
   // note with its gate as a tail, an octave pass hollow and marked +1, the notes played in ink and the rest of the bar faint, a
@@ -503,24 +506,25 @@ KEYS = r'''  <script>
       return bufs.get(slug);
     };
 
-    // One recording, cut on the bar: Play is the whole take from its start (each pass rings on into the next, as a held loop
-    // would); a pad is its bar, start to end, again and again, with a few milliseconds of fade at each cut.
-    const voice = (when, from, len) => {
+    // One recording, cut on the bar. The take is a seamless 8-bar loop (its ringing tail folded onto its start), so Play loops
+    // exactly its 8 bars, sample for sample; a pad is its bar, start to end, again and again, with a few milliseconds of fade at
+    // each cut.
+    const voice = (when, from, len, loop) => {
       const src = ac.createBufferSource(), g = ac.createGain();
       src.buffer = run.buf; src.connect(g); g.connect(run.out);
       if (from > 0) { g.gain.setValueAtTime(0, when); g.gain.linearRampToValueAtTime(1, when + 0.003); }
-      if (len) { g.gain.setValueAtTime(1, when + len - 0.008); g.gain.linearRampToValueAtTime(0, when + len); src.start(when, from, len); }
-      else src.start(when, from);
-      run.srcs.push({ src, end: when + (len || run.buf.duration - from) });
+      if (loop) { src.loop = true; src.loopStart = 0; src.loopEnd = loop; src.start(when, from); }
+      else { g.gain.setValueAtTime(1, when + len - 0.008); g.gain.linearRampToValueAtTime(0, when + len); src.start(when, from, len); }
+      run.srcs.push({ src, end: loop ? Infinity : when + len });
     };
     const pump = () => {
       if (!run || !run.buf) return;
       const s = run.s, until = ac.currentTime + AHEAD;
-      for (;;) {
-        const when = run.t0 + run.k * (run.pad < 0 ? s.L : s.barS);
+      if (run.pad < 0) { if (!run.k++) voice(run.start, run.start - run.t0, 0, s.L); }
+      else for (;;) {
+        const when = run.t0 + run.k * s.barS;
         if (when >= until) break;
-        if (run.pad < 0) voice(Math.max(when, run.start), Math.max(0, run.start - when), 0);
-        else voice(when, run.pad * s.barS, s.barS);
+        voice(when, run.pad * s.barS, s.barS);
         run.k++;
       }
       run.srcs = run.srcs.filter(x => x.end > ac.currentTime);
