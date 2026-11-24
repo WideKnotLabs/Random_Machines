@@ -8,7 +8,8 @@ and the waveforms drawn here from those previews (ffmpeg decodes them). A pack w
 
 A pack with a 'roster' (Arp Magic) takes its line, each sound's name, family and line, and the credits from tools/packs/<slug>.json,
 and `prepare` writes its files from the pack INK's tools made and the demo takes:
-  files/<slug>.zip              the pack in the roster's order, its manifest naming the pack and its author (the folder and credit INK shows)
+  files/<slug>.zip              the pack in the roster's order, its manifest naming the pack and its author (the folder and credit INK shows),
+                                every sound signed by that author
   audio/<slug>/<sound>.m4a      the demo, AAC at 112 kb/s from the take each sound's row names in --clips (<sound>.wav, or <n>-<sound>-take.wav)
 It refuses a pack whose sounds and the roster's differ, and one with a recording no credit in the roster covers. The pack downloads
 whole only: one sound's own file would carry its whole kit, and the 34 of them came to 341 MB against the pack's 61 (owner, 23 November 2026).
@@ -192,9 +193,20 @@ def shell(*, title, description, canonical, up, body, script='', draft=False):
 '''
 
 
+def signed(file: Path):
+    """Stops on a pack file whose sounds are not all signed by the pack's author. INK shows a sound's own `by` before the pack's,
+    so one working credit left in a sound is the name people see on it (owner, 24 November 2026: every pack here is by Random Machines)."""
+    with zipfile.ZipFile(file) as z:
+        author = json.loads(z.read('manifest.json')).get('author')
+        others = sorted({str(snd.get('by')) for snd in json.loads(z.read('sounds.json'))['presets']} - {author})
+    if not author or others:
+        sys.exit(f"{file.name}: the pack is by {author}, its sounds by {', '.join(others) or author}. Every sound's `by` must be the pack's author.")
+
+
 def get_button(item, label, up='', price='Free'):
     """The Download button for a pack file (item: 'file', 'save_as') and the line beside it, which DOWNLOAD uses."""
     file = PACKS_DIR / 'files' / item['file']
+    signed(file)
     return (f'<a class="ink-btn ink-btn--fill pack__get" href="{up}files/{item["file"]}" download="{escape(item["save_as"])}" '
             f'data-bytes="{file.stat().st_size}" data-sha256="{hashlib.sha256(file.read_bytes()).hexdigest()}">'
             '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>'
@@ -786,11 +798,10 @@ def prepare(slug, source: Path, clips: Path = None):
                 put(e, z.read(e))
         tmp.replace(path)
 
-    order = [by_name[row['name'].casefold()] for row in p['rows']]
+    # Every sound is signed by the pack's author: INK shows a sound's own `by` before the pack's, so a working credit left in
+    # the source ("INK sound design", found 24 November 2026) was the name on every row.
+    order = [dict(by_name[row['name'].casefold()], by=p['author']) for row in p['rows']]
     write(PACKS_DIR / 'files' / p['file'], order)
-    authors = {snd.get('by') for snd in order} - {p['author'], None}
-    if authors:
-        print(f"note: the sounds say they are by {', '.join(sorted(authors))}, the pack by {p['author']}")
     print(f"{p['file']}: {size(PACKS_DIR / 'files' / p['file'])}, {len(order)} sounds, {len(kits_doc['kits'])} kits, {len(recordings)} recordings")
 
     if clips:
